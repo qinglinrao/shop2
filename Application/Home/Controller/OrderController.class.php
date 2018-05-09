@@ -1,0 +1,232 @@
+<?php
+namespace Home\Controller;
+use Think\Controller;
+
+class OrderController extends Controller {
+
+    // 检测管理员登录
+    protected function _initialize() {
+//		if (!session('?admin_id')) {
+//			$this->redirect('Public/login');
+//		} else {
+        // $auth = new \Think\Auth();
+        // if (!$auth->check(MODULE_NAME.'/'.CONTROLLER_NAME.'/'.ACTION_NAME, session('member_id'))) {
+        // 	$this->error('操作权限不足');
+        // }
+//		}
+    }
+
+    public function createOrder()
+    {
+        //
+        $goodId = I('post.goodId');
+        $sizeId = I('post.sizeId');
+        $userName = I('post.userName');
+        $phone = I('post.phone');
+        $address = I('post.address');
+        $code = I('post.code');
+        $email = I('post.email');
+        $remark = I('post.remark');
+        $payType = I('post.payType');
+        $goodCount = I('post.goodCount');
+        $refer = I('post.refer');
+
+        //验证数据
+        $check = 123;
+
+        //将地址信息写入用户表
+        $userModel = M('member');
+        $userData = array(
+            'phone' => $phone,
+            'username' => $userName,
+            'address' => $address,
+            'email' => $email,
+            'create_at' => date('Y-m-d H:i:s'),
+            'utype' => 1,
+            'code' => $code,
+        );
+        $userModel->create($userData);
+        $userId = $userModel -> add();
+        if ($userId <= 0) {
+            $res = array('code'=>1,'data'=>array('msg'=>'用户信息有误'));
+            echo json_encode($res);
+            die();
+        }
+
+        //根据商品id，查询商品信息
+        $goodsInfo = $goodInfo = M('goods')->find($goodId);
+        if (empty($goodsInfo)) {
+            $res = array('code'=>1,'data'=>array('msg'=>'商品有误'));
+            echo json_encode($res);
+            die();
+        }
+        $strDesc = '';
+
+        $price = $goodsInfo['goods_toprice']*$goodCount;
+
+        $priceAmount = $price;
+        //判断商品是否为团购商品
+        $tuanFlag = 0;
+        if ($goodsInfo['goods_istuan'] > 0) {
+            $tuanInfo = M('tourdiy')->find($goodsInfo['goods_istuan']);
+            $time = time();
+            if (strtotime($tuanInfo['start_at']) < $time && strtotime($tuanInfo['end_at']) > $time) {
+                $tuanFlag = 1;
+                $strDesc .= '团购价格为'.$goodsInfo['goods_twprice'];
+                $priceAmount = $goodsInfo['goods_twprice']*$goodCount;
+            }
+        }
+
+        //判断商品是否为促销商品
+        $promotionFlag = 0;
+        $goodsCountAmount = $goodCount;
+        if ($goodsInfo['goods_promotion'] > 0) {
+            //查询促销信息
+            $promotion = M('promotion')->find($goodsInfo['goods_promotion']);
+            if ($promotion) {
+                $promotionFlag = 1;
+                if ($promotion['ptype'] == 1 && $goodCount >= $promotion['first']) {
+                    $strDesc .= '/'.'买'.$promotion['first'].'送'.$promotion['second'];
+                    $goodsCountAmount = $goodCount + $promotion['second'];
+                } else if ($promotion['ptype'] == 2 && $goodCount >= $promotion['first']) {
+                    $strDesc .= '/'.'买'.$promotion['first'].'打'.$promotion['second'].'折';
+                    $num = $promotion['second']/10;
+                    $priceAmount = $price*$num;
+                }
+            }
+        }
+        //运费
+        $price += $goodInfo['goods_price'];
+        $priceAmount += $goodInfo['goods_price'];
+        $status = 1;
+        //如果为货到付款,修改订单状态为代发货
+        if ($payType == 5) {
+            $status = 10;
+        }
+
+        //将数据写入订单中
+        $orderId = date('YmdHis').rand(1000,9999);
+        $orderData = array(
+            'order_id' => $orderId,
+            'good_id' => $goodId,
+            'size_id' => $sizeId,
+            'good_count' => $goodsCountAmount,
+            'money' => $priceAmount,
+            'user_id' => $userId,
+            'from' => $refer,
+            'statue' => $status,
+            'create_at' => date('Y-m-d H:i:s'),
+            'old_price' => $price,
+            'old_count' => $goodCount,
+            'content' => $strDesc,
+            'remark' => $remark,
+            'pay_type' => $payType,
+        );
+
+        //添加订单
+        $orderModel = M('orders');
+        $orderModel->create($orderData);
+        $orderId = $orderModel -> add();
+
+        $res = array('code'=>0,'data'=>array("orderId"=>$orderId,'msg'=>'订单生产成功'));
+        echo json_encode($res);
+    }
+
+
+    /**
+     * 订单详情页
+     */
+    public function orderInfo()
+    {
+        $orderId = I('get.orderId');
+        if ($orderId <= 0) {
+            echo '订单错误';
+            die();
+        }
+
+        //根据订单id查询订单信息
+        $orderInfo = M('orders')->find($orderId);
+        if (empty($orderInfo)) {
+            echo '订单不存在';
+            die();
+        }
+
+        $userId = $orderInfo['user_id'];
+        if ($userId <= 0) {
+            echo '订单的用户id为空';
+            die();
+        }
+        //查询用户信息
+        $userInfo = M('member')->find($userId);
+        $orderInfo['wl_info'] = json_decode($orderInfo['wl_info']);
+        $orderInfo['pw_info'] = json_decode($orderInfo['pw_info']);
+        switch($orderInfo['statue']) {
+            case 1:
+                $orderInfo['status_desc'] = '待买家付款';
+                break;
+            case 2:
+                $orderInfo['status_desc'] = '待买家发货';
+                break;
+            case 3:
+                $orderInfo['status_desc'] = '已发货';
+                break;
+            case 4:
+                $orderInfo['status_desc'] = '已送达';
+                break;
+            case 5:
+                $orderInfo['status_desc'] = '已发货，待用户评价';
+                break;
+            case 6:
+                $orderInfo['status_desc'] = '已发货，用户已评价';
+                break;
+            case 7:
+                $orderInfo['status_desc'] = '待买家退货';
+                break;
+            case 8:
+                $orderInfo['status_desc'] = '退货完成';
+                break;
+            case 9:
+                $orderInfo['status_desc'] = '订单完成';
+                break;
+            case 10:
+                $orderInfo['status_desc'] = '待买家发货';
+                break;
+        }
+
+        switch ($orderInfo['pay_type']) {
+            case 1:
+                $orderInfo['pay_type_desc'] = '微信支付';
+                break;
+            case 2:
+                $orderInfo['pay_type_desc'] = '支付宝支付';
+                break;
+            case 3:
+                $orderInfo['pay_type_desc'] = '信用卡支付';
+                break;
+            case 4:
+                $orderInfo['pay_type_desc'] = 'paypal支付';
+                break;
+            case 5:
+                $orderInfo['pay_type_desc'] = '货到付款';
+                break;
+        }
+
+        //查询商品信息
+        $goodId = $orderInfo['good_id'];
+        $goodsInfo = $goodInfo = M('goods')->find($goodId);
+        if (empty($goodsInfo)) {
+            echo '订单商品不存在';
+            die();
+        }
+
+        if ($goodsInfo['goods_country'] == 'UN') {
+
+        } else if ($goodsInfo['goods_country'] == 'CK') {
+
+        }
+
+    }
+
+
+
+}
