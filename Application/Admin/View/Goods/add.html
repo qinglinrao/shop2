@@ -69,6 +69,13 @@
 			<div class="layui-form-mid layui-word-aux">商品副标题，必须填写</div>
 		</div>
 		<div class="layui-form-item">
+			<label class="layui-form-label">商品编号</label>
+			<div class="layui-input-inline">
+				<input type="text" name="goods_number" maxlength="10" lay-verify="required" class="layui-input">
+			</div>
+			<div class="layui-form-mid layui-word-aux">商品编号，必须填写</div>
+		</div>
+		<div class="layui-form-item">
 			<label class="layui-form-label">商品类别</label>
 			<div class="layui-input-inline">
 				<select class="layui-input layui-select" name="pid" lay-verify="required">
@@ -120,6 +127,13 @@
 				<input type="text" name="goods_price" maxlength="10" lay-verify="price" class="layui-input">
 			</div>
 			<div class="layui-form-mid layui-word-aux">商品运费，填0为包邮，必填，例如：9.99 、 9.9 、 9、0</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">商品介绍</label>
+			<div class="layui-input-inline">
+
+				<textarea rows="15" cols="30" name="goods_introduce"></textarea>
+			</div>
 		</div>
 		<div class="layui-form-item">
 			<label class="layui-form-label">购买须知</label>

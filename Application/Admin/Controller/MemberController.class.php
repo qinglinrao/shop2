@@ -8,6 +8,16 @@ use Think\Controller;
  * qq:330416922
  * */
 class MemberController extends CommonController {
+
+    function __construct()
+    {
+        parent::__construct();
+        if($_SESSION['admin_name'] != 'admim'){
+
+            print_r('没有权限');exit;
+        }
+    }
+
 	//用户列表
 	function tjrlist(){
 		$keyword = I('get.keyword');

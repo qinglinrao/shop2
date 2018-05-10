@@ -3,6 +3,14 @@ namespace Admin\Controller;
 use Think\Controller;
 //订单管理
 class OrdersController extends CommonController {
+    function __construct()
+    {
+        parent::__construct();
+        if($_SESSION['admin_name'] != 'admim'){
+
+            print_r('没有权限');exit;
+        }
+    }
 
 	// 订单列表
 	public function index() {

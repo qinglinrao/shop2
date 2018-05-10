@@ -82,6 +82,7 @@ class GoodsController extends CommonController {
 			$data['goods_country'] = I('goods_country');
 			$data['goods_title'] = I('goods_title');
 			$data['goods_subtitle'] = I('goods_subtitle');
+			$data['goods_number'] = I('goods_number');
 			$data['goods_toprice'] = I('goods_toprice');
 			$data['goods_trprice'] = I('goods_trprice');
 			$data['goods_twprice'] = I('goods_twprice');
@@ -90,6 +91,7 @@ class GoodsController extends CommonController {
 			//$data['goods_sort'] = I('goods_sort');
 			//$data['goods_gg'] = I('goods_gg');
 			$data['goods_price'] = ceil(I('goods_price'));
+			$data['goods_introduce'] = ceil(I('goods_introduce'));
 			$data['goods_notice'] = I('goods_notice');
 			$imglist = array_filter(I('lunbo'));
 			if($imglist){

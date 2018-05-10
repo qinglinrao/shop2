@@ -54,6 +54,9 @@ class IndexController extends CommonController {
 		}
 		$this->model = $goodInfo['goods_country'];
 		$province = M('province')->where("father = 0")->select();
+		# 評論開關
+        $this->assign('comment_switch',False);
+        $this->assign('lately_order_switch',False);
 		$this->assign('province',$province);
 		$this->display($html);
 	}

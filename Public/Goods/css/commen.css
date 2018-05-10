@@ -1042,11 +1042,11 @@ button, input, select, textarea {
 }
 .pay .pay-box a {
     float: left;
-    height: 30px;
-    line-height: 30px;
+    height: 45px;
+    line-height: 40px;
     padding: 0 15px;
     text-align: center;
-    font-size: 14px;
+    font-size: 20px;
     margin-right: 5px;
     box-sizing: border-box;
 }
