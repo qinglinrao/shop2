@@ -415,6 +415,8 @@
                 }
             }
 
+            /*修改名称*/
+            console.log( uploader.getFiles('complete') );
             $info.html( text );
         }
 
