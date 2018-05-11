@@ -7,6 +7,10 @@
 	<link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="__LAYUI__/css/layui.css" />
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/style.css" />
+
+	<!--批量上传-->
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/webuploader.css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/upload_style.css?v=GIYGDIAD" />
 	<style type="text/css">
 		.layui-form-item select{display: block;}
 
@@ -162,9 +166,42 @@
 					<input name="goods_det" sx='upimg6' type="hidden" value="" lay-verify="goods_det"/>
 				</div>
 			</div>
+
+
+
+
 			<div class="layui-form-mid layui-word-aux" style="float: left;">商品描述长图，图片大小推荐小于2M，图片过大会导致页面加载变慢<br>后台未做缩放剪裁
 			</div>
 		</div>
+
+		<!--批量上传-->
+		<div class="layui-form-item">
+			<label class="layui-form-label">商品描述长图2</label>
+		</div>
+			<div id="wrapper">
+			<div id="container">
+				<!--头部，相册选择和格式选择-->
+
+				<div id="uploader">
+					<div class="queueList">
+						<div id="dndArea" class="placeholder">
+							<div id="filePicker"></div>
+							<p>或将照片拖到这里，单次最多可选300张</p>
+						</div>
+					</div>
+					<div class="statusBar" style="display:none;">
+						<div class="progress">
+							<span class="text">0%</span>
+							<span class="percentage"></span>
+						</div><div class="info"></div>
+						<div class="btns">
+							<div id="filePicker2"></div><div class="uploadBtn">开始上传</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class="layui-form-item">
 			<label class="layui-form-label">商品轮播图</label>
 
@@ -247,6 +284,10 @@
 <script src="__LAYUI__/jquery-1.8.3.js"></script>
 <script src="__LAYUI__/layui.js"></script>
 <script src="__AJS__ajaxfileupload.js"></script>
+
+<!--批量上传-->
+<script src="__PUBLIC__/js/webuploader.js?v=GUIFIUYT"></script>
+<script src="__PUBLIC__/js/upload.js?v=JASDGKAS"></script>
 <script type="text/javascript">
 var idstr=''
  function fileChange(obj,str){
@@ -254,7 +295,7 @@ var idstr=''
  	var src = window.URL.createObjectURL(f)//预览图片url
  	$('.'+str).attr('src',src);
  	idstr = str;
- }	
+ }
  	layui.use(['upload'], function() {
  		layui.upload({
 			title: '上传图片　',
@@ -268,7 +309,7 @@ var idstr=''
 				} else {
 					//alert(idstr);
 					$("input[sx='"+idstr+"']").val(res.url);
-					
+
 				}
 			}
 		});
@@ -287,7 +328,7 @@ var idstr=''
 				} else {
 					//alert(idstr);
 					$("input[sx='"+idstr+"']").val(res.url);
-					
+
 				}
 			}
 		});
@@ -306,7 +347,7 @@ var idstr=''
 				} else {
 					//alert(idstr);
 					$("input[sx='"+idstr+"']").val(res.url);
-					
+
 				}
 			}
 		});
@@ -325,7 +366,7 @@ var idstr=''
 				} else {
 					//alert(idstr);
 					$("input[sx='"+idstr+"']").val(res.url);
-					
+
 				}
 			}
 		});
@@ -344,7 +385,7 @@ var idstr=''
 				} else {
 					//alert(idstr);
 					$("input[sx='"+idstr+"']").val(res.url);
-					
+
 				}
 			}
 		});
@@ -363,7 +404,7 @@ var idstr=''
 				} else {
 					//alert(idstr);
 					$("input[sx='"+idstr+"']").val(res.url);
-					
+
 				}
 			}
 		});
@@ -428,6 +469,7 @@ var idstr=''
 
 	});
 });
+
  </script>
 </body>
 </html>

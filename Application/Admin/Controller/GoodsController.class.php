@@ -8,6 +8,9 @@ class GoodsController extends CommonController {
 	//列表页
 		$keyword = I('get.keyword');
 		$db = M('goods');
+
+		# 管理员数据
+        $admin_data = M('admin')->field('admin_id, admin_name')->select();
 		if ($keyword) {
 			$where['goods_title'] = array('like','%' . $keyword . '%');
 			$wherestr['a.goods_title'] = array('like','%' . $keyword . '%');
@@ -45,6 +48,13 @@ class GoodsController extends CommonController {
 				$list[$k]['pro_name'] = $itemTuanInfo['pro_name'];
 			}
 
+			//合并管理员名称
+            foreach($admin_data as $admin_val){
+                if($v['admin_id'] == $admin_val['admin_id']){
+                    $list[$k]['admin_name'] = $admin_val['admin_name'];
+                }
+            }
+
 		}
 		$this->assign('keyword',$keyword);
 		$this->assign('page',$page->show());
@@ -80,6 +90,8 @@ class GoodsController extends CommonController {
 	//添加操作
 		if(IS_POST){
 			$data['goods_country'] = I('goods_country');
+			# 投放人（管理员）id
+			$data['admin_id'] = $_SESSION['admin_id'];
 			$data['goods_title'] = I('goods_title');
 			$data['goods_subtitle'] = I('goods_subtitle');
 			$data['goods_number'] = I('goods_number');
