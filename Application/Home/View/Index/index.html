@@ -351,7 +351,8 @@
     <div class="swiper-container">
         <div class="swiper-wrapper">
             <volist name="imgList" id="vo">
-            <div class="swiper-slide"><img src="{:trim($vo[image],'.')}"></div>
+            <!--<div class="swiper-slide"><img src="{:trim($vo[image],'.')}"></div>-->
+            <div class="swiper-slide"><img src="{$vo[image]}"></div>
             </volist>
         </div>
         <!-- Add Pagination -->
@@ -397,24 +398,38 @@
 </div>
 <div class="ucontent">
     <div class="uintro">
-        <img src="{:trim($info[goods_det],'.')}" alt="">
+        <!--<img src="{:trim($info[goods_det],'.')}" alt="">-->
+       <!-- <img src="{$info[goods_det]}" alt="">-->
+
+        # <!--批量上传的描述长图-->
+        <volist name="detailimgList" id="vo">
+            <!--<div class="swiper-slide"><img src="{:trim($vo[image],'.')}"></div>-->
+            <div class="swiper-slide"><img src="{$vo[image]}"></div>
+        </volist>
     </div>
     <div class="table-details">
-        <img src="{:trim($info[goods_notice],'.')}">
+        <!--<img src="{:trim($info[goods_notice],'.')}">-->
+        <img src="{$info[goods_notice]}">
     </div>
-    <div class="commen-head appraise-head">用戶評價</div>
-    <div id="app" class="appraise">
-        <ul class="app-container"></ul>
-    </div>
+    <if condition="$comment_switch">
+        <div class="commen-head appraise-head">用戶評價</div>
+        <div id="app" class="appraise">
+            <ul class="app-container"></ul>
+        </div>
+    </if>
+
     <div style="height: 5px;background: #f5f5f5;"></div>
-    <div class="commen-head">最近訂單</div>
-    <div id="app2">
-        <ul class="app2-container"></ul>
-    </div>
+    <if condition="$lately_order_switch">
+        <div class="commen-head">最近訂單</div>
+        <div id="app2">
+            <ul class="app2-container"></ul>
+        </div>
+    </if>
     <div style="height: 5px;background: #f5f5f5;"></div>
 </div>
 <div class="am-card-header">
-    <div class="am-card-header-content"><img id="size_img" src="{:trim($imgList[0][image],'.')}" style="max-width: 106px;">
+    <!--<div class="am-card-header-content"><img id="size_img" src="{:trim($imgList[0][image],'.')}" style="max-width: 106px;">-->
+    <div class="am-card-header-content"><img id="size_img" src="{$imgList[0][image]}" style="max-width: 106px;">
         <div style="display: flex;flex-direction: column;justify-content: space-between;height: 106px;width: 100%;">
             <div style="font-size: 14px;">{$info.goods_title}
                 <div style="color: rgb(153, 153, 153);font-size: 14px;word-wrap: break-word;margin-top: 10px;margin-bottom: 5px;">
@@ -672,6 +687,7 @@
     //立即购买锚点
     $('.ljgm,.ktbut').click(function(){
         var sizeId = $('#ggid').val();
+        alert(sizeId);return false;
         //alert(parseInt(sizeId));
         //判断规格是否选择
         //var _colorIndex=$('.color .sel').index();

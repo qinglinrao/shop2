@@ -81,8 +81,12 @@ if (isset($_REQUEST["name"])) {
     $fileName = uniqid("file_");
 }
 
-$filePath = $targetDir . DIRECTORY_SEPARATOR . $fileName;
-$uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
+$arr = explode('.', fileName);
+# 改成唯一id
+$fileNameNew = uniqid("file_") + $arr[1];
+
+$filePath = $targetDir . DIRECTORY_SEPARATOR . $fileNameNew;
+$uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileNameNew;
 
 // Chunking might be enabled
 $chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;

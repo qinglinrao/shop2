@@ -30,6 +30,11 @@ class IndexController extends CommonController {
 			$imgList = M('goods_image')->where('good_id=%d and stype=1',$id)->select();
 			$this->info = $goodInfo;
 			$this->imgList = $imgList;
+
+			# 描述长图
+            $detailimgList = M('goods_image')->where('good_id=%d and stype=2',$id)->select();
+            $this->detailimgList = $detailimgList;
+
 			$sizeList = M('goods_size')->where('good_id=%d',$id)->select();
 			if($sizeList){
 				$size = array();

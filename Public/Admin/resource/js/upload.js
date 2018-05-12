@@ -151,7 +151,8 @@
             swf: 'Public/Admin/resource/js//Uploader.swf',
             chunked: false,
             chunkSize: 512 * 1024,
-            server: "Public/Admin/resource/js/fileupload.php",
+            /*server: "Public/Admin/resource/js/fileupload.php",*/
+            server: "{:U('Goods/upload_file_more')}",
             // runtimeOrder: 'flash',
 
             // accept: {
@@ -413,10 +414,11 @@
                 if ( stats.uploadFailNum ) {
                     text += '，失败' + stats.uploadFailNum + '张';
                 }
+
+                /*修改名称*/
+                console.log( uploader.getFiles('complete') );
             }
 
-            /*修改名称*/
-            console.log( uploader.getFiles('complete') );
             $info.html( text );
         }
 
