@@ -133,7 +133,9 @@ class IndexController extends CommonController {
 		if($info['goods_country'] == 'CN'){
 			$html = 'buysuccess';
 		}else{
-			$html = 'buysuccess-en';
+			# $html = 'buysuccess-en';
+            # 修改成功页
+			$html = 'buysuccess-new';
 		}
 		$this->model = $info['goods_country'];
 		$this->info = $info;
