@@ -1071,6 +1071,8 @@ button, input, select, textarea {
 .pay .pay-box a.bg-orange {
     border: 1px solid #ff5000;
     color: #ff5000;
+   /* background: #ff5000;
+    color: #fff;*/
 }
 .pay .pay-box a.bg-orange.on{
     background: #ff5000;

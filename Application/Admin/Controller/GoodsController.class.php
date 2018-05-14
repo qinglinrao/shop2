@@ -878,8 +878,11 @@ class GoodsController extends CommonController {
             $fileName = uniqid("file_");
         }
 
+        # 不要原来名称，改成文件格式+随机数
+        $name_arr = explode('.', $fileName);
+        $fileName = $name_arr[count($name_arr)-1];
         # 改成唯一id
-        $fileNameNew = uniqid() . $fileName;
+        $fileNameNew = time() . uniqid() . '.'.$fileName;
 
         $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileNameNew;
         $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileNameNew;
