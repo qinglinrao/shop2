@@ -433,6 +433,7 @@ class GoodsController extends CommonController {
         }
     }
 
+    # 添加商品规格
     function doaddconfig()
     {
 		$id = I('get.goodId');
@@ -851,13 +852,43 @@ class GoodsController extends CommonController {
         // Settings
         // $targetDir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
 
-        # 批量上传目录
-        $targetDir = 'upload_tmp';
-        $uploadDir = 'upload/Goods';
 
         $cleanupTargetDir = true; // Remove old files
         $maxFileAge = 5 * 3600; // Temp file age in seconds
 
+
+
+
+        // Get a file name
+        if (isset($_REQUEST["name"])) {
+            $fileName = $_REQUEST["name"];
+        } elseif (!empty($_FILES)) {
+            $fileName = $_FILES["file"]["name"];
+        } else {
+            $fileName = uniqid("file_");
+        }
+        # 不要原来名称，改成文件格式+随机数
+        $name_arr = explode('.', $fileName);
+        $fileName = $name_arr[count($name_arr)-1];
+        # 改成唯一id
+        $fileNameNew = time() . uniqid() . '.'.$fileName;
+        # 如果是文件上传，没有后缀名或者上传不成功，可能是服务器显示上传大小的问题。
+        file_put_contents("./data.txt",'$fileName'.json_encode($fileName).PHP_EOL, FILE_APPEND);
+        file_put_contents("./data.txt",'$name_arr'.json_encode($name_arr).PHP_EOL, FILE_APPEND);
+        file_put_contents("./data.txt",'$fileNameNew'.json_encode($fileNameNew).PHP_EOL, FILE_APPEND);
+
+
+        # 批量上传目录
+        $targetDir = 'upload_tmp';
+        $arr = array("gif", "jpg", "jpeg", "bmp", "png");
+        if(in_array(strtolower($fileName), $arr)){
+            $uploadDir = 'upload/Goods';
+        }else{
+            $uploadDir = 'upload/Videos';
+        }
+        file_put_contents("./data.txt",'gettype($fileName)'.json_encode(gettype($fileName)).PHP_EOL, FILE_APPEND);
+
+        file_put_contents("./data.txt",'in_array(strtolower($fileName), $arr)'.json_encode(in_array(strtolower($fileName), $arr)).PHP_EOL, FILE_APPEND);
 
         // Create target dir
         if (!file_exists($targetDir)) {
@@ -868,21 +899,6 @@ class GoodsController extends CommonController {
         if (!file_exists($uploadDir)) {
             @mkdir($uploadDir);
         }
-
-        // Get a file name
-        if (isset($_REQUEST["name"])) {
-            $fileName = $_REQUEST["name"];
-        } elseif (!empty($_FILES)) {
-            $fileName = $_FILES["file"]["name"];
-        } else {
-            $fileName = uniqid("file_");
-        }
-
-        # 不要原来名称，改成文件格式+随机数
-        $name_arr = explode('.', $fileName);
-        $fileName = $name_arr[count($name_arr)-1];
-        # 改成唯一id
-        $fileNameNew = time() . uniqid() . '.'.$fileName;
 
         $filePath = $targetDir . DIRECTORY_SEPARATOR . $fileNameNew;
         $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileNameNew;
