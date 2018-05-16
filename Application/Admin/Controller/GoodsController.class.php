@@ -124,9 +124,22 @@ class GoodsController extends CommonController {
             if ($goodId > 0) {
                 $imgDb = M('goods_image');
                 foreach ($imglist as $k=>$v) {
+
+                    # 保存一下后缀名
+                    $name_arr = explode('.', $v);
+                    $postfix_name = $name_arr[count($name_arr)-1];
+
+                    $arr = array("gif", "jpg", "jpeg", "bmp", "png");
+                    if(in_array(strtolower($postfix_name), $arr)){
+                        $is_img = 1;
+                    }else{
+                        $is_img = 2;
+                    }
+
                     $imageData = array(
                         'good_id' => $goodId,
                         'image' => $v,
+                        'is_img' => $is_img,
                         'stype' => 1,
                         'add_time' => time(),
                     );
@@ -139,9 +152,22 @@ class GoodsController extends CommonController {
             if ($goodId > 0) {
                 $imgDb = M('goods_image');
                 foreach ($goods_det as $k=>$v) {
+
+                    # 保存一下后缀名
+                    $name_arr = explode('.', $v);
+                    $postfix_name = $name_arr[count($name_arr)-1];
+
+                    $arr = array("gif", "jpg", "jpeg", "bmp", "png");
+                    if(in_array(strtolower($postfix_name), $arr)){
+                        $is_img = 1;
+                    }else{
+                        $is_img = 2;
+                    }
+
                     $imageData = array(
                         'good_id' => $goodId,
                         'image' => $v,
+                        'is_img' => $is_img,
                         'stype' => 2,  //2是描述长图的类型
                         'add_time' => time(),
                     );
@@ -883,8 +909,10 @@ class GoodsController extends CommonController {
         $arr = array("gif", "jpg", "jpeg", "bmp", "png");
         if(in_array(strtolower($fileName), $arr)){
             $uploadDir = 'upload/Goods';
+            $path = 'Goods';
         }else{
             $uploadDir = 'upload/Videos';
+            $path = 'Videos';
         }
         file_put_contents("./data.txt",'gettype($fileName)'.json_encode(gettype($fileName)).PHP_EOL, FILE_APPEND);
 
@@ -994,6 +1022,6 @@ class GoodsController extends CommonController {
 
         // Return Success JSON-RPC response
         /*die('{"jsonrpc" : "2.0", "url" : "./Goods/'.$fileNameNew.'", "id" : "id"}');*/
-        die("./upload/Goods/$fileNameNew");
+        die("./upload/".$path."/$fileNameNew");
     }
 }

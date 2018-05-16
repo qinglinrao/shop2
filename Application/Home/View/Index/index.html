@@ -146,7 +146,9 @@
                         $('.cm').html(value);
                     }
 
-                    var url = '/index/getImg/id/'+id;
+                    /*var url = '/index/getImg/id/'+id;*/
+                    /*测试地址*/
+                    var url = 'index/getImg/id/'+id;
                     var weightColIndex = $('.weight li.sel').index();
                     if(weightColIndex > 0){
                         var  weightValue = $('.weight li.sel').html();
@@ -404,7 +406,32 @@
         <!--批量上传的描述长图-->
         <volist name="detailimgList" id="vo">
             <!--<div class="swiper-slide"><img src="{:trim($vo[image],'.')}"></div>-->
-            <div class="swiper-slide"><img src="{$vo[image]}"></div>
+            <div class="swiper-slide">
+                <!--需要判断是图片还是视频-->
+
+                <!--<if condition="$vo eq ''">
+                    <li class="normal disabled" param="size">{$vo}</li>
+                    <else />
+                    <li class="normal" param="size">{$vo}</li>
+                </if>-->
+
+                <if condition = "$vo[is_img] eq 1">
+                    <img src="{$vo[image]}">
+                <else />
+                    <!--<video controls="controls" style="max-width: 100%;margin: 0 auto">
+                        <source src="{$vo[image]}" type="video/mp4" />
+                        &lt;!&ndash;<source src="movie.ogg" type="video/ogg" />
+                        <source src="movie.webm" type="video/webm" />
+                        <object data="movie.mp4" width="320" height="240">
+                        <embed src="movie.swf" width="320" height="240" />&ndash;&gt;
+                        </object>
+                    </video>-->
+
+                    <video src="{$vo[image]}" controls="controls" style="max-width: 100%;margin: 0 auto">
+                        您的浏览器不支持 video 标签。
+                    </video>
+                </if>
+            </div>
         </volist>
     </div>
     <div class="table-details">
