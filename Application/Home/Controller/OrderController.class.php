@@ -45,21 +45,36 @@ class OrderController extends Controller {
             'utype' => 1,
             'code' => $code,
         );
-        $userModel->create($userData);
-        $userId = $userModel -> add();
-        if ($userId <= 0) {
-            $res = array('code'=>1,'data'=>array('msg'=>'用户信息有误'));
-            echo json_encode($res);
-            die();
+
+        //判断是返回英文还是中文。
+        $model = I('get.model');
+        if($model == 'CN'){
+            $msg1 = '商品有误';
+            $msg2 = '用户信息有误';
+            $msg3 = '订单生成成功';
+        }else{
+            $msg1 = 'something is wrong';
+            $msg2 = 'user is wrong';
+            $msg3 = 'Success of order generation';
         }
 
         //根据商品id，查询商品信息
         $goodsInfo = $goodInfo = M('goods')->find($goodId);
         if (empty($goodsInfo)) {
-            $res = array('code'=>1,'data'=>array('msg'=>'商品有误'));
+
+            $res = array('code'=>1,'data'=>array('msg'=>$msg1));
             echo json_encode($res);
             die();
         }
+
+        $userModel->create($userData);
+        $userId = $userModel -> add();
+        if ($userId <= 0) {
+            $res = array('code'=>1,'data'=>array('msg'=>$msg2));
+            echo json_encode($res);
+            die();
+        }
+
         $strDesc = '';
 
         $price = $goodsInfo['goods_toprice']*$goodCount;
@@ -128,7 +143,7 @@ class OrderController extends Controller {
         $orderModel->create($orderData);
         $orderId = $orderModel -> add();
 
-        $res = array('code'=>0,'data'=>array("orderId"=>$orderId,'msg'=>'订单生产成功'));
+        $res = array('code'=>0,'data'=>array("orderId"=>$orderId,'msg'=>$msg3));
         echo json_encode($res);
     }
 
