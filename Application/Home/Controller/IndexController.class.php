@@ -223,6 +223,10 @@ class IndexController extends CommonController {
 		$phone = I('phone');
 		$model = I('model');
 		$userInfo  = M('member')->where('phone=%s',$phone)->field('id')->find();
+
+		if(!$userInfo){
+            echo json_encode(array('code'=>-1,'msg'=>'Telephone number does not exist'));exit;
+        }
 		$fields = 'o.id,o.order_id,o.good_id,o.size_id,o.good_count,o.wl_info,o.statue,g.goods_title,g.goods_istuan,g.goods_country';
 		$ordersList = M('orders as o')->join('left join pt_goods as g on o.good_id=g.id')->field($fields)->where('o.user_id=%d',$userInfo['id'])->select();
 		if($ordersList){
@@ -235,14 +239,9 @@ class IndexController extends CommonController {
 			}
 
 		}
-		if($model == 'CN'){
-			$html = 'search';
-		}else{
-			$html = 'search-en';
-		}
-		$this->model = $model;
-		$this->list = $ordersList;
-		$this->display($html);
+
+        $res = array('code'=>0,'data'=>$ordersList, 'msg'=>'search success');
+        echo json_encode($res);
 	}
 
 	function evaOrder(){

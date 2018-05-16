@@ -24,7 +24,7 @@
 </div>
 
 <div class="searchBtn-bar">
-    <input type="submit" class="searchBtn" value="Query">
+    <input type="button" class="searchBtn" value="Query">
 </div>
     </form>
 
@@ -75,5 +75,34 @@
 <div class="return">
     <a target="_self" href="{:U('index/index', array('id'=>$vo[good_id],'model'=>$model) )}">Return</a>
 </div>
+<script src="__GJS__jQuery-3.3.1.js"></script>
+<script>
+    $(".searchBtn").click(function () {
+        var phone = $("#utel").val();
+        if(phone.length<=0){
+            alert('Telephone number does not exist');
+            return false;
+        }
+
+        var param = {"phone":phone};
+
+        /*$("form").submit();*/
+
+        $.ajax({
+            type: "post",
+            url: "/shop2/index/dosearch",
+            data: param,
+            dataType: "json",
+            success: function(data){
+                if (data.code == 0) {
+                    alert(data.data)
+                    //修改数据信息。
+                } else {
+                    alert(data.msg);
+                }
+            }
+        });
+    })
+</script>
 </body>
 </html>
