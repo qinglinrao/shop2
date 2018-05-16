@@ -403,6 +403,18 @@
         <!--<img src="{:trim($info[goods_det],'.')}" alt="">-->
        <!-- <img src="{$info[goods_det]}" alt="">-->
 
+        <div class="swiper-slide">
+            <if condition = "$info[video_url]">
+                <!--<video src="{$info[video_url]}" controls="controls" style="max-width: 100%;margin: 0 auto">
+                    您的浏览器不支持 video 标签。
+                </video>-->
+                <!--<iframe src="{$info[video_url]}"></iframe>-->
+
+                <!--嵌套youtube的视频-->
+                <iframe width="854" height="480" src="https://www.youtube.com/embed/{$info[video_url]}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </if>
+        </div>
+
         <!--批量上传的描述长图-->
         <volist name="detailimgList" id="vo">
             <!--<div class="swiper-slide"><img src="{:trim($vo[image],'.')}"></div>-->
