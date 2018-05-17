@@ -153,6 +153,8 @@
                         url += '/weight/'+weightValue;
                     }
                     var colorColIndex = $('.color li.sel').index();
+                    //为什么点击第一个的时候这里是空的，不切换颜色
+                    alert(colorColIndex);
                     if(colorColIndex > 0){
                         var  colorValue = $('.color li.sel').html();
                         url += '/color/'+colorValue;
@@ -166,8 +168,9 @@
                     $.get(url+'.html', function(result){
                         var data = JSON.parse(result);
                         console.log(data.count);
-
-                        if(data.img){
+                        //只有颜色才会切换图片
+                        alert(colorValue);
+                        if(data.img && colorColIndex > 0){
                             $('#size_img').attr('src',data.img);
                         }
                         if(data.count == 1){
@@ -182,9 +185,9 @@
                                 weightHtml[i] = $(e).html();
                             });
                             //全部失效
-                            $('.weight li').addClass('disabled');
+                            //$('.weight li').addClass('disabled');
                             //全部取消选中
-                            $('.weight li').removeClass('sel');
+                            //$('.weight li').removeClass('sel');
                             //循环当前有规格的
                             $.each(weightJson,function(ji,je){
                                 //循环全部当前规格
@@ -209,9 +212,9 @@
                                 colorHtml[i] = $(e).html();
                             });
                             //全部失效
-                            $('.color li').addClass('disabled');
+                            //$('.color li').addClass('disabled');
                             //全部取消选中
-                            $('.color li').removeClass('sel');
+                            //$('.color li').removeClass('sel');
                             //循环当前有规格的
                             $.each(colorJson,function(ji,je){
                                 //循环全部当前规格
@@ -236,9 +239,9 @@
                                 sizeHtml[i] = $(e).html();
                             });
                             //全部失效
-                            $('.size li').addClass('disabled');
+                            //$('.size li').addClass('disabled');
                             //全部取消选中
-                            $('.size li').removeClass('sel');
+                            //$('.size li').removeClass('sel');
                             //循环当前有规格的
                             $.each(sizeJson,function(ji,je){
                                 //循环全部当前规格
