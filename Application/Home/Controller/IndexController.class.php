@@ -163,6 +163,8 @@ class IndexController extends CommonController {
 	function evaluate(){
 		$model = I('get.model');
 		$id = I('get.id');
+        print_r($model);
+        print_r($id);exit;
 		$fields = 'o.good_id,o.size_id,o.good_count,g.goods_title,g.goods_subtitle';
 		$info = M('orders as o')->join('left join pt_goods as g on o.good_id=g.id')->field($fields)->where('o.id=%d',$id)->find();
 		$sizeInfo = M('orders as o')->join('left join pt_goods_size as s on o.good_id=s.good_id')->field('s.color,s.size,s.weight')->where('o.id=%d',$id)->find();
@@ -223,12 +225,26 @@ class IndexController extends CommonController {
 		$phone = I('phone');
 		$model = I('model');
 		$userInfo  = M('member')->where('phone=%s',$phone)->field('id')->find();
+		# 改成查询多条。
+		# $userInfo  = M('member')->where('phone=%s',$phone)->field('id')->select();
 
 		if(!$userInfo){
             echo json_encode(array('code'=>-1,'msg'=>'Telephone number does not exist'));exit;
         }
+
+        /*foreach($userInfo as $v){
+		    $arr[] = $v['id'];
+        }
+        thinkphp的in查询
+        $where = array();
+        $where['id'] = array('in','1,2,3');
+        M('table1')->where($where)->select();*/
+
 		$fields = 'o.id,o.order_id,o.good_id,o.size_id,o.good_count,o.wl_info,o.statue,g.goods_title,g.goods_istuan,g.goods_country';
-		$ordersList = M('orders as o')->join('left join pt_goods as g on o.good_id=g.id')->field($fields)->where('o.user_id=%d',$userInfo['id'])->select();
+		//$ordersList = M('orders as o')->join('left join pt_goods as g on o.good_id=g.id')->field($fields)->where('o.user_id=%d',$userInfo['id'])->select();
+		#改成直接查电话号码，因为用户信息可能存在多个电话号码，但是不同id。
+        $ordersList = M('orders as o')->join('left join pt_goods as g on o.good_id=g.id')->field($fields)->where('o.user_id=%d',$userInfo['id'])->select();
+
 		if($ordersList){
 			foreach($ordersList as $k=>$v){
 				$sizeInfo = array();
@@ -236,11 +252,44 @@ class IndexController extends CommonController {
 				$ordersList[$k]['color'] = $sizeInfo['color'];
 				$ordersList[$k]['size'] = $sizeInfo['size'];
 				$ordersList[$k]['weight'] = $sizeInfo['weight'];
+
+				if($v['statue'] == 1){
+                    $ordersList[$k]['statue'] = 'Unpaid';
+                }else if($v['statue'] == 2){
+                    $ordersList[$k]['statue'] = 'Already';
+                }else if($v['statue'] == 3){
+                    $ordersList[$k]['statue'] = 'Distribution';
+                }else if($v['statue'] == 4){
+                    $ordersList[$k]['statue'] = 'Have been delivered';
+                }else if($v['statue'] == 5){
+                    $ordersList[$k]['statue'] = 'Not appraised';
+                }else if($v['statue'] == 6){
+                    $ordersList[$k]['statue'] = 'Have been evaluated';
+                }else if($v['statue'] == 7){
+                    $ordersList[$k]['statue'] = 'Return to return';
+                }else if($v['statue'] == 8){
+                    $ordersList[$k]['statue'] = 'Returned goods';
+                }else if($v['statue'] == 9){
+                    $ordersList[$k]['statue'] = 'Completed';
+                }else if($v['statue'] == 10){
+                    $ordersList[$k]['statue'] = 'Consignment';
+                }
 			}
+        }
+        /*if($model == 'CN'){
+            $html = 'search';
+        }else{
+            $html = 'search-en';
+        }
+        $this->model = $model;
+        $this->list = $ordersList;
+        $this->display($html);*/
 
-		}
-
-        $res = array('code'=>0,'data'=>$ordersList, 'msg'=>'search success');
+        $ordersListNew = array();
+        foreach($ordersList as $v){
+            $ordersListNew[] = $v;
+        }
+        $res = array('code'=>0,'data'=>$ordersListNew, 'msg'=>'search success', 'model'=>$model);
         echo json_encode($res);
 	}
 

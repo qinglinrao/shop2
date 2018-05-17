@@ -354,7 +354,7 @@
         <div class="swiper-wrapper">
             <volist name="imgList" id="vo">
             <!--<div class="swiper-slide"><img src="{:trim($vo[image],'.')}"></div>-->
-            <div class="swiper-slide"><img src="{$vo[image]}"></div>
+            <div class="swiper-slide"><img src="{:trim($vo[image],'.')}"></div>
             </volist>
         </div>
         <!-- Add Pagination -->
@@ -434,7 +434,7 @@
                 </if>-->
 
                 <if condition = "$vo[is_img] eq 1">
-                    <img src="{$vo[image]}">
+                    <img src="{:trim($vo[image],'.')}">
                 <else />
                     <!--<video controls="controls" style="max-width: 100%;margin: 0 auto">
                         <source src="{$vo[image]}" type="video/mp4" />
@@ -445,7 +445,7 @@
                         </object>
                     </video>-->
 
-                    <video src="{$vo[image]}" controls="controls" style="max-width: 100%;margin: 0 auto">
+                    <video src="{:trim($vo[image],'.')}" controls="controls" style="max-width: 100%;margin: 0 auto">
                         您的浏览器不支持 video 标签。
                     </video>
                 </if>
@@ -454,7 +454,7 @@
     </div>
     <div class="table-details">
         <!--<img src="{:trim($info[goods_notice],'.')}">-->
-        <img src="{$info[goods_notice]}">
+        <img src="{:trim($info[goods_notice],'.')}">
     </div>
     <if condition="$comment_switch">
         <div class="commen-head appraise-head">用戶評價</div>
@@ -701,9 +701,9 @@
         <span class="progress-num">88</span>%
     </div>
 </div>
-<div class="bottom-btn" <if condition="$info['goods_istuan'] eq 0">id="bottom-btn"</if> >
-    <a class="ccdd" href="{:U('index/search',array('model'=>$info['goods_country']))}">查詢訂單</a>
-    <a class="ljgm">立即購買</a>
+<div class="bottom-btn" <if condition="$info['goods_istuan'] eq 0">id="bottom-btn"</if>>
+    <a class="ccdd" href="{:U('index/search',array('model'=>$info['goods_country']))}" style="cursor: pointer;">查詢訂單</a>
+    <a class="ljgm" style="cursor: pointer;">立即購買</a>
     <a class="ljkt">立即開團 <span class="yuan">￥</span>{$info.goods_twprice}</a>
 </div>
 <div class="bottom-to-top">
@@ -733,7 +733,6 @@
     //立即购买锚点
     $('.ljgm,.ktbut').click(function(){
         var sizeId = $('#ggid').val();
-        alert(sizeId);return false;
         //alert(parseInt(sizeId));
         //判断规格是否选择
         //var _colorIndex=$('.color .sel').index();
