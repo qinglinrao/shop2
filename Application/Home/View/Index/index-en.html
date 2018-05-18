@@ -354,7 +354,7 @@
                 <li><img src="__GIMG__star_01.png"></li>
             </ul>
             <div class="pl-num">99.99%</div>
-            <div class="pl-txt">High praise</div>
+            <!--<div class="pl-txt">High praise</div>-->
         </div>
     </div>
     <div class="tag-group">
@@ -584,7 +584,7 @@
         </div>
         <span class="right">Purchase quantity</span>
     </div>
-    <div class="single-price">Original price RM <i>{$info.goods_toprice}</i></div>
+    <!--<div class="single-price">Original price RM <i>{$info.goods_toprice}</i></div>-->
     <if condition="$info[goods_price] eq '0.00' or $info[goods_price] eq '0'">
     	<div class="you"><span>free shipping</span></div>
         <else />
@@ -596,67 +596,67 @@
     <div>
         <div class="ant-row ant-form-item">
             <div class="ant-form-item-label">
-                <label for="custom_name" class="ant-form-item-required" title=""><strong>Names</strong></label></div>
+                <label for="custom_name" class="ant-form-item-required" title=""><strong>Contact Name</strong></label></div>
             <div class="ant-form-item-control-wrapper">
                 <div class="ant-form-item-control ">
-				<input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Must fill out the recipient's name" value="" id="custom_name"></div>
+				<input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Please enter the contact name." value="" id="custom_name"></div>
             </div>
         </div>
         <div class="ant-row ant-form-item">
-            <div class="ant-form-item-label"><label for="custom_mobile" class="ant-form-item-required" title=""><strong>Cell-phone number</strong></label>
+            <div class="ant-form-item-label"><label for="custom_mobile" class="ant-form-item-required" title=""><strong>Phone Number</strong></label>
             </div>
             <div class="ant-form-item-control-wrapper">
                 <div class="ant-form-item-control ">
-					<input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Please fill in and fill in the receiver's contact number" value="" id="custom_mobile">
+					<input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Please enter the phone number." value="" id="custom_mobile">
 				</div>
             </div>
         </div>
         <div class="ant-row ant-form-item">
             <div class="ant-form-item-label">
-				<label for="address" class="ant-form-item-required" title=""><strong>Address list</strong></label>
+				<label for="address" class="ant-form-item-required" title=""><strong>Address</strong></label>
 			</div>
             <div class="ant-form-item-control-wrapper">
                 <div class="ant-form-item-control ">
-                    <input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Must fill out the address" value="" id="custom_address" >
+                    <input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Please enter the shipping address." value="" id="custom_address" >
                 </div>
             </div>
         </div>
         <div class="ant-row ant-form-item">
             <div class="ant-form-item-label">
-				<label for="postcode" class="ant-form-item-required" title=""><strong>Postcode</strong></label>
+				<label for="postcode" class="ant-form-item-required" title=""><strong>Post/Zip Code</strong></label>
 			</div>
             <div class="ant-form-item-control-wrapper">
                 <div class="ant-form-item-control ">
-					<input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Please fill in the postcode" value="" id="postcode">
+					<input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Please enter the post/zip code." value="" id="postcode">
 				</div>
             </div>
         </div>
         <div class="ant-row ant-form-item">
             <div class="ant-form-item-label"><label for="email" class="" title=""><strong>Email</strong></label></div>
             <div class="ant-form-item-control-wrapper">
-                <div class="ant-form-item-control "><input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Please fill in the recipient email address" value="" id="email"></div>
+                <div class="ant-form-item-control "><input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Please enter the email." value="" id="email"></div>
             </div>
         </div>
         <div class="ant-row ant-form-item">
-            <div class="ant-form-item-label"><label for="remark" class="" title=""><strong>Leave a message</strong></label></div>
+            <div class="ant-form-item-label"><label for="remark" class="" title=""><strong>Message</strong></label></div>
             <div class="ant-form-item-control-wrapper">
-                <div class="ant-form-item-control "><input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Optional, such as standby telephone, commodity specification or delivery time" value="" id="remark"></div>
+                <div class="ant-form-item-control "><input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Please enter the message." value="" id="remark"></div>
             </div>
         </div>
     </div>
 </div>
 <div class="pay">
-    <div class="pay-head">Payment method</div>
+    <div class="pay-head">Payment Method</div>
     <div class="pay-box">
         <!--<a class="bg-blue on" type="4">PayPal</a>
         <a class="bg-green" type="3">Credit Card</a>
-        <a class="bg-orange" type="5">Pay on delivery</a>-->
-        <a class="bg-orange on" type="5">Pay on delivery</a>
+        <a class="bg-orange" type="5">Cash On Delivery</a>-->
+        <a class="bg-orange on" type="5">Cash On Delivery</a>
     </div>
 </div>
 <div class="djs">
     <p class="dj">
-        Before the end of the campaign：
+        Ends in：
         <span class="dj2" id="_h"></span> &nbsp;：
         <span class="dj3" id="_m"></span> &nbsp;：
         <span class="dj4" id="_s"></span>
@@ -674,8 +674,8 @@
     </div>
 </div>
 <div class="bottom-btn" <if condition="$info['goods_istuan'] eq 0">id="bottom-btn"</if> >
-    <a class="ccdd" href="{:U('index/search',array('model'=>$info['goods_country']))}" style="cursor: pointer;">Query order</a>
-    <a class="ljgm" style="cursor: pointer;">Buy now</a>
+    <a class="ccdd" href="{:U('index/search',array('model'=>$info['goods_country']))}" style="cursor: pointer;">Query Order</a>
+    <a class="ljgm" style="cursor: pointer;">Buy Now</a>
     <a class="ljkt" id="">Immediately open group <span class="yuan">RM </span>{$info.goods_twprice}</a>
 </div>
 <div class="bottom-to-top">
@@ -705,6 +705,11 @@
 </script>
 
 <script>
+    $('input,textarea').on('focus',function(){
+        $(this).data('pla',$(this).attr('placeholder')).attr('placeholder','');
+    }).on('blur',function(){
+        $(this).attr('placeholder',$(this).data('pla'));
+    });
 
     //提示框
     function showMessage(message){
@@ -765,15 +770,16 @@
 
         if (name.length<=0) {
             /*alert('收件人名称不能为空');*/
-            showMessage('The recipient\'s name can not be empty');
+            showMessage('Please enter the contact name.');
             $('#custom_name').focus();
             return false;
         }
 
-        if (address.length <= 0) {
-            /*alert('收件地址不能为空');*/
-            showMessage('The address can not be empty');
-            $('#custom_address').focus();
+
+
+        if (phone.length<=0) {
+            showMessage('Please enter the phone number.');
+            $('#custom_mobile').focus();
             return false;
         }
 
@@ -781,6 +787,36 @@
         if (!myreg.test(phone)) {
             /*alert('收件人手机号错误');*/
             showMessage('The phone number is error');
+            $('#custom_mobile').focus();
+            return false;
+        }
+
+        if (address.length <= 0) {
+            /*alert('收件地址不能为空');*/
+            showMessage('Please enter the shipping address.');
+            $('#custom_address').focus();
+            return false;
+        }
+
+
+
+        if (code.length<=0) {
+            showMessage('Please enter the post/zip code.');
+            $('#postcode').focus();
+            return false;
+        }
+
+        var re= /^[1-9][0-9]{5}$/;
+        if(!re.test(code)) {
+            /*alert('邮编格式错误');*/
+            showMessage('The post/zip code is error');
+            $('#postcode').focus();
+            return false;
+        }
+
+        if (email.length<=0) {
+            showMessage('Please enter the email.');
+            $('#email').focus();
             return false;
         }
 
@@ -788,15 +824,11 @@
         if (!filter.test(email)) {
             /*alert('email格式有误');*/
             showMessage('The email is error');
+            $('#email').focus();
             return false;
         }
 
-        var re= /^[1-9][0-9]{5}$/;
-        if(!re.test(code)) {
-            /*alert('邮编格式错误');*/
-            showMessage('The postcode is error');
-            return false;
-        }
+
 
         //付款方式判断
         var _payIndex=$('.pay-box .on').index();
