@@ -154,7 +154,7 @@
                     }
                     var colorColIndex = $('.color li.sel').index();
                     //为什么点击第一个的时候这里是空的，不切换颜色
-                    alert(colorColIndex);
+                    colorColIndex = 1;
                     if(colorColIndex > 0){
                         var  colorValue = $('.color li.sel').html();
                         url += '/color/'+colorValue;
@@ -169,7 +169,7 @@
                         var data = JSON.parse(result);
                         console.log(data.count);
                         //只有颜色才会切换图片
-                        alert(colorValue);
+
                         if(data.img && colorColIndex > 0){
                             $('#size_img').attr('src',data.img);
                         }

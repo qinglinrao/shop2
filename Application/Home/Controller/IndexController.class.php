@@ -350,15 +350,17 @@ class IndexController extends CommonController {
 		$color = I('get.color');
 		$size = I('get.size');
 		$where['good_id'] = $id;
-		if($weight){
+
+		# 改成只切换图片就可以了。
+		/*if($weight){
 			$where['weight'] = $weight;
-		}
+		}*/
 		if($color){
 			$where['color'] = $color;
 		}
-		if($size){
+		/*if($size){
 			$where['size'] = $size;
-		}
+		}*/
 
 		$return = array('code'=>400,'msg'=>'fail');
 		$res = M('goods_size')->where($where)->select();
