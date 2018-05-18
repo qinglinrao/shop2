@@ -3,7 +3,7 @@
 //判断滑屏距离 确定导航位置
 $(window).scroll(function () {
     var scrollTop = $(this).scrollTop();
-    var saleHeight = $('.sale').height();
+    /*var saleHeight = $('.sale').height();
     if (scrollTop >= saleHeight) {
         $('.tabs').css({
             'position': 'fixed',
@@ -14,7 +14,7 @@ $(window).scroll(function () {
         $('.tabs').css({
             'position': 'static'
         })
-    }
+    }*/
     if(scrollTop>550){
         $('.bottom-to-top').show();
     }else{

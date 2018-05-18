@@ -13,6 +13,77 @@
     <script src="__GJS__swiper.min.js"></script>
     <script src="__GJS__scroll.js"></script>
     <script>
+
+
+        $(window).on('scroll', function() {
+
+            var time = new Date;
+            time.setTime(Math.round(time / 3600000) * 3600000 + 3600000);
+            timer(parseInt((time - (new Date)) / 1000));
+
+            function timer(diff) {
+                var ms = 0,
+                    _time = $('#seckill_time'),
+                    _hour = _time.find('.hour'),
+                    _minute = _time.find('.minute'),
+                    _second = _time.find('.s'),
+                    _msecond = _time.find('.ms');
+                var func = function() {
+                    if (diff < 0) return;
+                    if (--ms < 0) ms = 9;
+                    _msecond.text(ms);
+                    if (ms === 9) {
+                        --diff;
+                        var hour = Math.floor(diff / 3600),
+                            remain = diff - hour * 3600,
+                            minute = Math.floor(remain / 60),
+                            second = remain - minute * 60;
+                        if (hour < 10) hour = '0' + hour;
+                        if (minute < 10) minute = '0' + minute;
+                        if (second < 10) second = '0' + second;
+
+                        _hour.text(hour);
+                        _minute.text(minute);
+                        _second.text(second);
+                        if (diff == 0) {
+                            _msecond.text(0);
+                            clearInterval(seed);
+                        }
+                    }
+                };
+                func();
+                var seed = setInterval(func, 100);
+            }
+
+            var nav = $('.p-head'),
+                scrollTop = document.documentElement.scrollTop || document.body.scrollTop,
+                height = 48,
+                scrollDiv = $('#scrollTop'),
+                seckillDiv = $('.seckill-container'),
+                dH = document.documentElement.clientHeight,
+                imgH = parseInt($('.swiper-container').css('height')),
+                orderSubmit = $('#submit_order');
+            if (scrollTop > 5) {
+                orderSubmit.show();
+            }
+            if (scrollTop >= imgH) {
+                seckillDiv.addClass('fixed');
+            } else {
+                seckillDiv.removeClass('fixed');
+            }
+            if (scrollTop > dH + 100) {
+                scrollDiv.addClass('fadeInRight').addClass('loading').removeClass('fadeOutRight').show();
+            } else {
+                scrollDiv.removeClass('fadeInRight').removeClass('loading').addClass('fadeOutRight');
+                setTimeout(function() {
+                    if (!scrollDiv.hasClass('loading')) {
+                        scrollDiv.hide()
+                    }
+                }, 500);
+            }});
+
+
+        /*旧的倒计时*/
         $().ready(function () {
             var onOff = true;
             var goods_title = "{$info[goods_title]}";
@@ -117,7 +188,8 @@
                 p = p*1+1*1;
             }, 3000)
             var scrollTop = $(this).scrollTop();
-            var saleHeight = $('.sale').height();
+
+            /*var saleHeight = $('.sale').height();
             if (scrollTop >= saleHeight) {
                 $('.tabs').css({
                     'position': 'fixed',
@@ -128,7 +200,22 @@
                 $('.tabs').css({
                     'position': 'static'
                 })
-            }
+            }*/
+
+            //倒计时悬浮效果。
+            /*var djsHeight = $('.djs').height();
+            if (scrollTop >= djsHeight) {
+                $('.djs').css({
+                    'position': 'fixed',
+                    'top': 0,
+                    'max-width': '640px'
+                })
+            } else {
+                $('.djs').css({
+                    'position': 'static'
+                })
+            }*/
+
             //规格/颜色/尺码选中
             $('.sale-select-style ul li').click(function () {
                 if( !($(this).hasClass('disabled')) ){
@@ -313,9 +400,9 @@
                     }
                 }
                 //将倒计时赋值到div中
-                document.getElementById("_h").innerHTML = h;
+                /*document.getElementById("_h").innerHTML = h;
                 document.getElementById("_m").innerHTML = m;
-                document.getElementById("_s").innerHTML = s;
+                document.getElementById("_s").innerHTML = s;*/
                 leftTime-=1000;
                 //递归每秒调用countTime方法，显示动态时间效果
                 setTimeout(countTime, 1000);
@@ -336,11 +423,55 @@
         <!-- Add Pagination -->
         <div class="swiper-pagination"></div>
     </div>
-    <script>
+    <!--<div class="djs">
+        <p class="dj">
+            Ends in：
+            <span class="dj2" id="_h"></span> &nbsp;：
+            <span class="dj3" id="_m"></span> &nbsp;：
+            <span class="dj4" id="_s"></span>
+            &lt;!&ndash;<span class="dj4">8</span>&ndash;&gt;
+        </p>
 
-    </script>
+        <div class="pg">Sold
+            <span class="sale-count">9999</span>
+            Pieces
+
+            <div class="progress">
+                <div class="pro" style="width: 88%"></div>
+            </div>
+            <span class="progress-num">88</span>%
+        </div>
+    </div>-->
+
+    <div class="seckill-container fixed">
+        <div class="seckill-price-wrap">
+            <div class="seckill-price"><span class="seckill-big-price">RM {$info.goods_trprice}</span><span class="seckill-small-price">RM {$info.goods_toprice}</span></div>
+            <div class="seckill-btm-div">
+                <span class="skf-icon-pos">
+                    <i class="label-icon-div white-border have-icon-div">
+                        <i class="label-icon seckill-floor-icon"></i>
+                        <span class="label-text white-text" style="display: inline-block;vertical-align: middle;line-height: 0.8rem;font-style: normal;">Flash Deals</span>
+                    </i>
+                </span>
+                <div class="progress"><div class="progress-bar progress-bar-success" role="progressbar" style="width: 95%"> <span style="/* color:#b00; */">Sold 95%</span></div></div>
+            </div>
+        </div>
+        <div class="seckill-time-wrap">
+            <span class="seckil-time-title">Ends In:</span>
+            <div class="seckill-time-div" id="seckill_time">
+                <span class="seckill-time-num hour">00</span>
+                <span class="seckill-time-colon">:</span>
+                <span class="seckill-time-num minute">36</span>
+                <span class="seckill-time-colon">:</span>
+                <span class="seckill-time-num s">06</span>
+                <span class="seckill-time-colon">.</span>
+                <span class="seckill-time-num ms">6</span>
+            </div>
+        </div>
+    </div>
+
     <div class="sale-title">{$info.goods_title} {$info.goods_subtitle}</div>
-    <div class="data-group">
+    <!--<div class="data-group">
         <div class="price">
             <div class="price-now">RM <span>{$info.goods_trprice}</span></div>
             <div class="price-ago">RM <span>{$info.goods_toprice}</span></div>
@@ -354,9 +485,9 @@
                 <li><img src="__GIMG__star_01.png"></li>
             </ul>
             <div class="pl-num">99.99%</div>
-            <!--<div class="pl-txt">High praise</div>-->
+            &lt;!&ndash;<div class="pl-txt">High praise</div>&ndash;&gt;
         </div>
-    </div>
+    </div>-->
     <div class="tag-group">
         <if condition="isset($info[pro_name])"><span class="orange">{$info.pro_name}</span></if>
         <if condition="isset($tag)">
@@ -371,7 +502,7 @@
     <div class="tabs">
         <div class="tab tab-cur">Introduction</div>
         <div class="tab">Purchase notes</div>
-        <div class="tab">Evaluation<span></span></div>
+        <!--<div class="tab">Evaluation<span></span></div>-->
     </div>
 </div>
 <div class="ucontent">
@@ -654,25 +785,7 @@
         <a class="bg-orange on" type="5">Cash On Delivery</a>
     </div>
 </div>
-<div class="djs">
-    <p class="dj">
-        Ends in：
-        <span class="dj2" id="_h"></span> &nbsp;：
-        <span class="dj3" id="_m"></span> &nbsp;：
-        <span class="dj4" id="_s"></span>
-        <!--<span class="dj4">8</span>-->
-    </p>
 
-    <div class="pg">Sold
-        <span class="sale-count">9999</span>
-        Pieces
-
-        <div class="progress">
-            <div class="pro" style="width: 88%"></div>
-        </div>
-        <span class="progress-num">88</span>%
-    </div>
-</div>
 <div class="bottom-btn" <if condition="$info['goods_istuan'] eq 0">id="bottom-btn"</if> >
     <a class="ccdd" href="{:U('index/search',array('model'=>$info['goods_country']))}" style="cursor: pointer;">Query Order</a>
     <a class="ljgm" style="cursor: pointer;">Buy Now</a>
@@ -783,13 +896,13 @@
             return false;
         }
 
-        var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
+        /*var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
         if (!myreg.test(phone)) {
-            /*alert('收件人手机号错误');*/
+            /!*alert('收件人手机号错误');*!/
             showMessage('The phone number is error');
             $('#custom_mobile').focus();
             return false;
-        }
+        }*/
 
         if (address.length <= 0) {
             /*alert('收件地址不能为空');*/
@@ -806,13 +919,13 @@
             return false;
         }
 
-        var re= /^[1-9][0-9]{5}$/;
+        /*var re= /^[1-9][0-9]{5}$/;
         if(!re.test(code)) {
-            /*alert('邮编格式错误');*/
+            /!*alert('邮编格式错误');*!/
             showMessage('The post/zip code is error');
             $('#postcode').focus();
             return false;
-        }
+        }*/
 
         if (email.length<=0) {
             showMessage('Please enter the email.');
