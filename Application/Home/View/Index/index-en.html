@@ -458,9 +458,9 @@
                 </div>
             </div>
             <div class="product-gg">
-                <span class="gg">Specification1</span>/
-                <span class="ys">Color1</span>/
-                <span class="cm">S</span>
+                <if condition="$size[weight]"><span class="gg">Specification1</span>/</if>
+                <if condition="$size[color]"><span class="ys">Color1</span>/</if>
+                <if condition="$size[size]"><span class="cm">S</span></if>
             </div>
         </div>
     </div>
@@ -475,7 +475,9 @@
                     <ul>
                         <volist name="size.weight" id="vo">
                         <!--<li class="sel">{$vo}</li>-->
-                        <li class="normal" param="weight">{$vo}</li>
+                            <if condition="$vo">
+                                <li class="normal" param="weight">{$vo}</li>
+                            </if>
                         </volist>
                     </ul>
                 </div>
@@ -492,7 +494,9 @@
                     <ul>
                         <volist name="size.color" id="vo">
                         <!--<li class="sel">深藍色</li>-->
-                        <li class="normal" param="color">{$vo}</li>
+                            <if condition="$vo">
+                                <li class="normal" param="color">{$vo}</li>
+                            </if>
                         </volist>
                     </ul>
                 </div>
@@ -701,15 +705,6 @@
         var _sizeIndex=$('.size .sel').index();
         /*if(_colorIndex <0 || _weightIndex <0 || _sizeIndex <0){*/
 
-        //测试
-        sizeId = 1;
-        if(!sizeId){
-            $('body,html').animate({
-                'scrollTop': $('.price-box').offset().top - 45
-            }, 500);
-            alert('Please select the specification first');
-            return false;
-        }
 
         var goodId = $('#gid').val();
         var name = $('#custom_name').val();
@@ -719,6 +714,22 @@
         var email = $('#email').val();
         var remark = $('#remark').val();
         var num = $('.pc-num').html();
+
+        //测试
+        //sizeId = 1;
+        if(!sizeId){
+            $('body,html').animate({
+                'scrollTop': $('.price-box').offset().top - 45
+            }, 500);
+            //alert('Please select the specification first');
+
+            if(phone.length > 0){
+                alert('Please select the specification first');
+                return false;
+            }
+
+            return false;
+        }
 
         if (parseInt(num) <= 0) {
             /*alert('购买数量最少为1');*/

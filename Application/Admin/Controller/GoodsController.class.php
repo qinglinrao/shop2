@@ -532,7 +532,7 @@ class GoodsController extends CommonController {
                         $imageData = array(
                             'good_id' => $good_id,
                             'image' => I('image'),
-                            'stype' => 1,
+                            'stype' => 0,
                             'sid' => $id,
                             'add_time' => time(),
                         );

@@ -39,13 +39,13 @@ class IndexController extends CommonController {
 			if($sizeList){
 				$size = array();
 				foreach($sizeList as $k=>$v){
-					if(!in_array($v['color'],$size['color'])){
+					if($v['color'] && !in_array($v['color'],$size['color'])){
 						$size['color'][] = $v['color'];
 					}
-					if(!in_array($v['size'],$size['size'])){
+					if($v['size'] && !in_array($v['size'],$size['size'])){
 						$size['size'][] = $v['size'];
 					}
-					if(!in_array($v['weight'],$size['weight'])) {
+					if($v['weight'] && !in_array($v['weight'],$size['weight'])) {
 						$size['weight'][] = $v['weight'];
 					}
 				}
