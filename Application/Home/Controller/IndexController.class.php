@@ -36,7 +36,10 @@ class IndexController extends CommonController {
             $this->detailimgList = $detailimgList;
 
 			$sizeList = M('goods_size')->where('good_id=%d',$id)->select();
+            $ggid = 0;
 			if($sizeList){
+			    # 默认选择第一种风格。
+			    $ggid = $sizeList[0]['id'];
 				$size = array();
 				foreach($sizeList as $k=>$v){
 					if($v['color'] && !in_array($v['color'],$size['color'])){
@@ -52,7 +55,7 @@ class IndexController extends CommonController {
 				$this->size = $size;
 			}
 		}
-
+        $this->ggid = $ggid;
 		# 规格数量
 		$this->size_num = count($this->size) ? count($this->size) : 0;
 

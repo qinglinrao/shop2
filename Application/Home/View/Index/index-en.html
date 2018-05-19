@@ -610,7 +610,7 @@
                         <volist name="size.weight" id="vo">
                         <!--<li class="sel">{$vo}</li>-->
                             <if condition="$vo">
-                                <li class="normal" param="weight">{$vo}</li>
+                                <li class="normal <if condition="$i eq 1">sel</if>" param="weight">{$vo}</li>
                             </if>
                         </volist>
                     </ul>
@@ -631,7 +631,7 @@
                         <volist name="size.color" id="vo">
                         <!--<li class="sel">深藍色</li>-->
                             <if condition="$vo">
-                                <li class="normal" param="color">{$vo}</li>
+                                <li class="normal <if condition="$i eq 1">sel</if>" param="color">{$vo}</li>
                             </if>
                         </volist>
                     </ul>
@@ -653,9 +653,9 @@
                         <volist name="size.size" id="vo">
                         <!--<li class="sel">s</li>-->
                             <if condition="$vo eq ''">
-                                <li class="normal disabled" param="size">{$vo}</li>
+                                <li class="normal disabled <if condition="$i eq 1">sel</if>" param="size">{$vo}</li>
                                 <else />
-                                <li class="normal" param="size">{$vo}</li>
+                                <li class="normal <if condition="$i eq 1">sel</if>" param="size">{$vo}</li>
                             </if>
                         </volist>
                     </ul>
@@ -665,7 +665,7 @@
     </div>
             </if>
     <input type="hidden" id="gid" name="gid" value="{$info.id}" >
-    <input type="hidden" id="ggid" name="ggid" value="" >
+    <input type="hidden" id="ggid" name="ggid" value="{$ggid}" >
 
 </div>
 <!--<div class="cx">-->
