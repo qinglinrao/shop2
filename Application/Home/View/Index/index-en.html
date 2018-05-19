@@ -602,6 +602,7 @@
         <div class="ant-form-item-label">
             <label class="" title=""><strong>Select specifications/packages</strong></label>
         </div>
+        <input type="hidden" class="size_num" value="{$size_num}"/>
         <div class="ant-form-item-control-wrapper">
             <div class="ant-form-item-control ">
                 <div class="sale-select-style">
@@ -861,28 +862,29 @@
         if (parseInt(num) <= 0) {
             /*alert('购买数量最少为1');*/
             showMessage('Purchase at least 1 items');
-            $('.pc-num').val(1);
+            $('.pc-num').html(1);
             return false;
         }
 
         if (parseInt(num) > 2) {
             /*限购两个*/
-            showMessage('Purchase limit 3 items.');
-            $('.pc-num').val(2);
+            showMessage('Purchase limit 2 items.');
+            $('.pc-num').html(2);
             return false;
         }
 
         //测试
         //sizeId = 1;
         if(!sizeId){
+            var seckill_height = $('.seckill-container').height();
             $('body,html').animate({
-                /*'scrollTop': $('.price-box').offset().top - 45*/
-                'scrollTop': $('.am-card-header').offset().top - 45
+                'scrollTop': $('.am-card-header').offset().top - seckill_height
             }, 500);
             if(phone.length > 0){
                 showMessage('Please select the specification first');
 
                 /* <if condition="$size[weight]"><span class="gg">Specification1</span>/</if>*/
+
                 return false;
             }
 
@@ -961,6 +963,19 @@
             return false;
         }else{
             $('.pay-head i').hide();
+        }
+
+        //必须选择全部的规格
+        var size_num = $('.size_num').val();
+        var sel_num = document.getElementsByClassName('sel');
+        if(size_num != sel_num){
+            var seckill_height = $('.seckill-container').height();
+            $('body,html').animate({
+                'scrollTop': $('.am-card-header').offset().top - seckill_height
+            }, 500);
+
+            showMessage('Please select all the specification.');
+            return false;
         }
 
         //获取支付方式

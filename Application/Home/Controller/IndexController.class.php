@@ -52,6 +52,10 @@ class IndexController extends CommonController {
 				$this->size = $size;
 			}
 		}
+
+		# 规格数量
+		$this->size_num = count($this->size) ? count($this->size) : 0;
+
 		if($goodInfo['goods_country'] == 'CN'){
 			$html = 'index';
 		}else{
