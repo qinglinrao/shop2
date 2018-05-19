@@ -285,7 +285,7 @@ class IndexController extends CommonController {
                 }else if($v['statue'] == 9){
                     $ordersList[$k]['statue'] = 'Completed';
                 }else if($v['statue'] == 10){
-                    $ordersList[$k]['statue'] = 'Consignment';
+                    $ordersList[$k]['statue'] = 'Stocking';
                 }
 
                 if($v['pay_type'] == 3){

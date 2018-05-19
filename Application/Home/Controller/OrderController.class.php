@@ -77,7 +77,7 @@ class OrderController extends Controller {
 
         $strDesc = '';
 
-        $price = $goodsInfo['goods_toprice']*$goodCount;
+        $price = $goodsInfo['goods_trprice']*$goodCount;
 
         $priceAmount = $price;
         //判断商品是否为团购商品
