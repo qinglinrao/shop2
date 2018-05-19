@@ -374,7 +374,8 @@
                     look();
                 }, 11000);
             }, 8000);
-            var leftTime = 36000000;*/
+            */
+            var leftTime = 36000000;
             /* 倒计时 */
             function countTime() {           //获取当前时间
 //                var date = new Date();
@@ -725,6 +726,7 @@
         <else />
 		<div class="you">Postage RM <i>{$info.goods_price}</i></div>
 	</if>
+    <input type="hidden" value="{$info.goods_trprice}" class="one_price"/>
 	<div class="all-price">Total prices RM <i>{$info.goods_trprice}</i></div>
 </div>
 <div class="am-card-body">
@@ -804,7 +806,7 @@
     <div class="Validform_info"></div>
 </div>
 
-<script src="__GJS__index-en.js"></script>
+<script src="__GJS__index-en.js?569958"></script>
 <script>
     //轮播图
     var swiper = new Swiper('.swiper-container', {

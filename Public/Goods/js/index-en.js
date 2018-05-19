@@ -58,18 +58,25 @@ $('.kt-btn').click(function(){
 
 //购买数量 && 总价计算
 var curNum = Number($('.pc-num').html());
-var singPrice = Number($('.price-now span').html());
+var singPrice = Number($('.one_price').val());
 var youPrice=Number($('.you i').html());
-if(youPrice){
-    $('.all-price i').html(singPrice * curNum+youPrice);
-}else{
-    $('.all-price i').html(singPrice * curNum);
+
+function edit_price(){
+    curNum = Number($('.pc-num').html());
+    if(youPrice){
+        $('.all-price i').html(singPrice * curNum+youPrice);
+    }else{
+        alert(singPrice);
+        alert(curNum);
+        $('.all-price i').html(singPrice * curNum);
+    }
 }
+
 
 $('.pc-next').click(function () {
     curNum++;
     $('.pc-num').html(curNum);
-    var singPrice = Number($('.price-now span').html());
+    var singPrice = Number($('.one_price').val());
     var youPrice=Number($('.you i').html());
     if(youPrice){
         $('.all-price i').html(singPrice * curNum+youPrice);
@@ -81,7 +88,7 @@ $('.pc-prev').click(function () {
     if (curNum > 1) {
         curNum--;
         $('.pc-num').html(curNum);
-        var singPrice = Number($('.price-now span').html());
+        var singPrice = Number($('.one_price').val());
         var youPrice=Number($('.you i').html());
         if(youPrice){
             $('.all-price i').html(singPrice * curNum+youPrice);
