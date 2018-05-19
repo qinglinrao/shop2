@@ -236,14 +236,16 @@ class IndexController extends CommonController {
         }
 		# $userInfo  = M('member')->where('phone=%s',$phone)->field('id')->find();
 		# 改成查询多条。
-		$userInfo  = M('member')->where('phone=%s',$phone)->field('id')->select();
+		$userInfo  = M('member')->where('phone=%s',$phone)->field('id,phone,username,address,email,code,create_at')->select();
 
         $user_ids = array();
+        $userInfoNew = array();
 		if(!$userInfo){
             echo json_encode(array('code'=>-1,'msg'=>'Telephone number does not exist'));exit;
         }else{
 		    foreach($userInfo as $val){
                 $user_ids[] = $val['id'];
+                $userInfoNew[$val['id']] = $val;
             }
         }
 
@@ -251,10 +253,10 @@ class IndexController extends CommonController {
         $where = array();
         $where['o.user_id'] = array('in', $user_ids);
 
-		$fields = 'o.id,o.order_id,o.good_id,o.size_id,o.good_count,o.wl_info,o.statue,g.goods_title,g.goods_istuan,g.goods_country';
+		$fields = 'o.id,o.order_id,o.good_id,o.user_id,o.money,o.pay_type,o.size_id,o.good_count,o.wl_info,o.statue,g.goods_title,g.goods_istuan,g.goods_country';
 		//$ordersList = M('orders as o')->join('left join pt_goods as g on o.good_id=g.id')->field($fields)->where('o.user_id=%d',$userInfo['id'])->select();
 		#改成直接查电话号码，因为用户信息可能存在多个电话号码，但是不同id。
-        $ordersList = M('orders as o')->join('left join pt_goods as g on o.good_id=g.id')->field($fields)->where($where)->select();
+        $ordersList = M('orders as o')->order('o.id desc')->join('left join pt_goods as g on o.good_id=g.id')->field($fields)->where($where)->select();
 
 		if($ordersList){
 			foreach($ordersList as $k=>$v){
@@ -285,7 +287,18 @@ class IndexController extends CommonController {
                 }else if($v['statue'] == 10){
                     $ordersList[$k]['statue'] = 'Consignment';
                 }
+
+                if($v['pay_type'] == 3){
+                    $ordersList[$k]['pay_type_name'] = 'Credit card payment';
+                }else if($v['pay_type'] == 4){
+                    $ordersList[$k]['pay_type_name'] = 'PayPal payment';
+                }else if($v['pay_type'] == 5){
+                    $ordersList[$k]['pay_type_name'] = 'Cash On Delivery';
+                }
+
 			}
+        }else{
+		    # 没有订单数据。--todo？
         }
         /*if($model == 'CN'){
             $html = 'search';
@@ -297,8 +310,9 @@ class IndexController extends CommonController {
         $this->display($html);*/
 
         $ordersListNew = array();
-        foreach($ordersList as $v){
+        foreach($ordersList as $k=>$v){
             $ordersListNew[] = $v;
+            $ordersListNew[$k]['user_data'] = $userInfoNew[$v['user_id']];
         }
         $res = array('code'=>0,'data'=>$ordersListNew, 'msg'=>'search success', 'model'=>$model);
         echo json_encode($res);
