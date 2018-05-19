@@ -48,7 +48,8 @@
         <p style="color: red;margin-bottom: 1rem;">Thank you for your purchase!</p>
         <p style="margin-bottom: 1rem;">Your order number is: #{$info.order_id}</p>
 
-        <p class="shopping"><a href="javascript:history.go(-1)">Continue Shopping</a></p>
+        <!--<p class="shopping"><a href="javascript:history.go(-1)">Continue Shopping</a></p>-->
+        <p class="shopping"><a href="{:U('index/search',array('model'=>$info['goods_country']))}">Query Order{$info.goods_country}</a></p>
 
         <p style="font-weight:bold;margin-bottom: 1rem;">Tips</p>
         <p style="margin-bottom: 1rem;">
