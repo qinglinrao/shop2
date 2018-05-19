@@ -413,6 +413,28 @@
             }
             countTime();
         });
+
+        function getAddress(obj){
+            $('#add_area').hide();
+            var phone = $(obj).val();
+            $.get("{:U('index/getadd')}"+"?phone="+phone,function(data){
+                console.log(data);
+                if(data){
+                    var data = eval(data);
+                    $('#add_area').show();
+                    var str = '';
+                    $.each(data,function(i,e){
+                        str += '<option value="'+ e.address +'">'+ e.address +'</option>'
+                    });
+                    $('#address').empty().html(str);
+                    $('#custom_address').val(data[0].address);
+                }
+            });
+        }
+        function setAddr(obj){
+            var addr = $(obj).val();
+            $('#custom_address').val(addr);
+        }
     </script>
 </head>
 <body style="padding-bottom: 45px;">
@@ -746,7 +768,7 @@
             </div>
             <div class="ant-form-item-control-wrapper">
                 <div class="ant-form-item-control ">
-					<input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Please enter the phone number." value="" id="custom_mobile">
+					<input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Please enter the phone number." value="" id="custom_mobile" onblur="getAddress(this)">
 				</div>
             </div>
         </div>
@@ -754,9 +776,13 @@
             <div class="ant-form-item-label">
 				<label for="address" class="ant-form-item-required" title=""><strong>Address</strong></label>
 			</div>
-            <div class="ant-form-item-control-wrapper">
+            <div class="ant-form-item-control-wrapper" id="add_area" style="display: none;">
                 <div class="ant-form-item-control ">
                     <input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Please enter the shipping address." value="" id="custom_address" >
+
+                    <select name="" id="address" class="ant-input" style="margin-bottom:5px;" onchange="setAddr(this)">
+
+                    </select>
                 </div>
             </div>
         </div>
