@@ -123,16 +123,32 @@
                         result += '<span class="dd-title">Order number</span>';
                         result += '<span class="dd-txt">'+data.order_id+'</span>';
                         result += '</div>';
-                        result += '<div class="dd-item">';
+                        /*result += '<div class="dd-item">';
                         result += '<span class="dd-title">Order information</span>';
-                        result += '</div>';
+                        result += '</div>';*/
                         result += '<div class="dd-item">';
-                        result += '<span class="dd-title">goods name</span>';
+                        result += '<span class="dd-title">Goods name</span>';
                         result += '<span class="dd-txt">'+data.goods_title+'</span>';
                         result += '</div>';
                         result += '<div class="dd-item">';
-                        result += '<span class="dd-title">goods specifications</span>';
+                        result += '<span class="dd-title">Goods specifications and Purchase quantity</span>';
                         result += '<span class="dd-txt">'+data.color+'&nbsp'+data.size+'&nbsp'+data.weight+'</span>&nbsp&nbspX&nbsp&nbsp<i>'+data.good_count+'</i>';
+                        result += '</div>';
+                        result += '<div class="dd-item">';
+                        result += '<span class="dd-title">Contact Name</span>';
+                        result += '<span class="dd-txt">'+data.goods_title+'</span>';
+                        result += '</div>';
+                        result += '<div class="dd-item">';
+                        result += '<span class="dd-title">Phone Number</span>';
+                        result += '<span class="dd-txt">'+data.goods_title+'</span>';
+                        result += '</div>';
+                        result += '<div class="dd-item">';
+                        result += '<span class="dd-title">Payment Method</span>';
+                        result += '<span class="dd-txt">'+data.goods_title+'</span>';
+                        result += '</div>';
+                        result += '<div class="dd-item">';
+                        result += '<span class="dd-title">Total prices</span>';
+                        result += '<span class="dd-txt">'+data.goods_title+'</span>';
                         result += '</div>';
                         //result += '<div class="dd-item">';
                         //物流信息要怎么弄--todo

@@ -231,26 +231,30 @@ class IndexController extends CommonController {
 	function dosearch(){
 		$phone = I('phone');
 		$model = I('model');
-		$userInfo  = M('member')->where('phone=%s',$phone)->field('id')->find();
+		if(!$phone){
+		    exit;
+        }
+		# $userInfo  = M('member')->where('phone=%s',$phone)->field('id')->find();
 		# 改成查询多条。
-		# $userInfo  = M('member')->where('phone=%s',$phone)->field('id')->select();
+		$userInfo  = M('member')->where('phone=%s',$phone)->field('id')->select();
 
+        $user_ids = array();
 		if(!$userInfo){
             echo json_encode(array('code'=>-1,'msg'=>'Telephone number does not exist'));exit;
+        }else{
+		    foreach($userInfo as $val){
+                $user_ids[] = $val['id'];
+            }
         }
 
-        /*foreach($userInfo as $v){
-		    $arr[] = $v['id'];
-        }
-        thinkphp的in查询
+        # thinkphp的in查询
         $where = array();
-        $where['id'] = array('in','1,2,3');
-        M('table1')->where($where)->select();*/
+        $where['o.user_id'] = array('in', $user_ids);
 
 		$fields = 'o.id,o.order_id,o.good_id,o.size_id,o.good_count,o.wl_info,o.statue,g.goods_title,g.goods_istuan,g.goods_country';
 		//$ordersList = M('orders as o')->join('left join pt_goods as g on o.good_id=g.id')->field($fields)->where('o.user_id=%d',$userInfo['id'])->select();
 		#改成直接查电话号码，因为用户信息可能存在多个电话号码，但是不同id。
-        $ordersList = M('orders as o')->join('left join pt_goods as g on o.good_id=g.id')->field($fields)->where('o.user_id=%d',$userInfo['id'])->select();
+        $ordersList = M('orders as o')->join('left join pt_goods as g on o.good_id=g.id')->field($fields)->where($where)->select();
 
 		if($ordersList){
 			foreach($ordersList as $k=>$v){
