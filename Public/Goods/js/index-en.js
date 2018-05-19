@@ -66,8 +66,6 @@ function edit_price(){
     if(youPrice){
         $('.all-price i').html(singPrice * curNum+youPrice);
     }else{
-        alert(singPrice);
-        alert(curNum);
         $('.all-price i').html(singPrice * curNum);
     }
 }

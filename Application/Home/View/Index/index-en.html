@@ -614,7 +614,7 @@
                         <volist name="size.weight" id="vo">
                         <!--<li class="sel">{$vo}</li>-->
                             <if condition="$vo">
-                                <li class="normal <if condition="$i eq 1">sel</if>" param="weight">{$vo}</li>
+                                <li class="normal" param="weight">{$vo}</li>
                             </if>
                         </volist>
                     </ul>
@@ -635,7 +635,7 @@
                         <volist name="size.color" id="vo">
                         <!--<li class="sel">深藍色</li>-->
                             <if condition="$vo">
-                                <li class="normal <if condition="$i eq 1">sel</if>" param="color">{$vo}</li>
+                                <li class="normal" param="color">{$vo}</li>
                             </if>
                         </volist>
                     </ul>
@@ -657,9 +657,9 @@
                         <volist name="size.size" id="vo">
                         <!--<li class="sel">s</li>-->
                             <if condition="$vo eq ''">
-                                <li class="normal disabled <if condition="$i eq 1">sel</if>" param="size">{$vo}</li>
+                                <li class="normal disabled" param="size">{$vo}</li>
                                 <else />
-                                <li class="normal <if condition="$i eq 1">sel</if>" param="size">{$vo}</li>
+                                <li class="normal" param="size">{$vo}</li>
                             </if>
                         </volist>
                     </ul>
@@ -669,7 +669,8 @@
     </div>
             </if>
     <input type="hidden" id="gid" name="gid" value="{$info.id}" >
-    <input type="hidden" id="ggid" name="ggid" value="{$ggid}" >
+    <!--<input type="hidden" id="ggid" name="ggid" value="{$ggid}" >-->
+    <input type="hidden" id="ggid" name="ggid" value="" >
 
 </div>
 <!--<div class="cx">-->
@@ -806,7 +807,7 @@
     <div class="Validform_info"></div>
 </div>
 
-<script src="__GJS__index-en.js?569958"></script>
+<script src="__GJS__index-en.js?56995"></script>
 <script>
     //轮播图
     var swiper = new Swiper('.swiper-container', {
@@ -868,6 +869,7 @@
             /*alert('购买数量最少为1');*/
             showMessage('Purchase at least 1 items');
             $('.pc-num').html(1);
+            edit_price();
             return false;
         }
 
@@ -875,6 +877,7 @@
             /*限购两个*/
             showMessage('Purchase limit 2 items.');
             $('.pc-num').html(2);
+            edit_price();
             return false;
         }
 
