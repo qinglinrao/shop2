@@ -64,9 +64,9 @@ var youPrice=Number($('.you i').html());
 function edit_price(){
     curNum = Number($('.pc-num').html());
     if(youPrice){
-        $('.all-price i').html(singPrice * curNum+youPrice);
+        $('.all-price i').html(singPrice * curNum+youPrice+'.00');
     }else{
-        $('.all-price i').html(singPrice * curNum);
+        $('.all-price i').html(singPrice * curNum+'.00');
     }
 }
 
@@ -77,9 +77,9 @@ $('.pc-next').click(function () {
     var singPrice = Number($('.one_price').val());
     var youPrice=Number($('.you i').html());
     if(youPrice){
-        $('.all-price i').html(singPrice * curNum+youPrice);
+        $('.all-price i').html(singPrice * curNum+youPrice+'.00');
     }else{
-        $('.all-price i').html(singPrice * curNum);
+        $('.all-price i').html(singPrice * curNum+'.00');
     }
 });
 $('.pc-prev').click(function () {
@@ -89,9 +89,9 @@ $('.pc-prev').click(function () {
         var singPrice = Number($('.one_price').val());
         var youPrice=Number($('.you i').html());
         if(youPrice){
-            $('.all-price i').html(singPrice * curNum+youPrice);
+            $('.all-price i').html(singPrice * curNum+youPrice+'.00');
         }else{
-            $('.all-price i').html(singPrice * curNum);
+            $('.all-price i').html(singPrice * curNum+'.00');
 
         }
     }
