@@ -443,7 +443,7 @@
         </div>
     </div>-->
 
-    <div class="seckill-container fixed">
+    <div class="seckill-container">
         <div class="seckill-price-wrap">
             <div class="seckill-price"><span class="seckill-big-price">RM {$info.goods_trprice}</span><span class="seckill-small-price">RM {$info.goods_toprice}</span></div>
             <div class="seckill-btm-div">
@@ -968,7 +968,8 @@
         //必须选择全部的规格
         var size_num = $('.size_num').val();
         var sel_num = document.getElementsByClassName('sel');
-        if(size_num != sel_num){
+
+        if(parseInt(size_num) != parseInt(sel_num.length)){
             var seckill_height = $('.seckill-container').height();
             $('body,html').animate({
                 'scrollTop': $('.am-card-header').offset().top - seckill_height
