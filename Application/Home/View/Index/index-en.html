@@ -709,9 +709,9 @@
 <div class="price-count">
     <div class="pc-btn">
         <div class="pc-box">
-            <span class="pc-prev handle">-</span>
+            <span class="pc-prev handle" style="cursor: pointer;">-</span>
             <span class="pc-num">1</span>
-            <span class="pc-next handle">+</span>
+            <span class="pc-next handle" style="cursor: pointer;">+</span>
         </div>
         <span class="right">Purchase quantity</span>
     </div>
@@ -858,6 +858,20 @@
         var remark = $('#remark').val();
         var num = $('.pc-num').html();
 
+        if (parseInt(num) <= 0) {
+            /*alert('购买数量最少为1');*/
+            showMessage('Purchase at least 1 items');
+            $('.pc-num').val(1);
+            return false;
+        }
+
+        if (parseInt(num) > 2) {
+            /*限购两个*/
+            showMessage('Purchase limit 3 items.');
+            $('.pc-num').val(2);
+            return false;
+        }
+
         //测试
         //sizeId = 1;
         if(!sizeId){
@@ -872,12 +886,6 @@
                 return false;
             }
 
-            return false;
-        }
-
-        if (parseInt(num) <= 0) {
-            /*alert('购买数量最少为1');*/
-            showMessage('The number of purchases was at least 1');
             return false;
         }
 
