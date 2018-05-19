@@ -15,7 +15,39 @@
     <script>
 
 
+
         $(window).on('scroll', function() {
+
+            var nav = $('.p-head'),
+                scrollTop = document.documentElement.scrollTop || document.body.scrollTop,
+                height = 48,
+                scrollDiv = $('#scrollTop'),
+                seckillDiv = $('.seckill-container'),
+                dH = document.documentElement.clientHeight,
+                imgH = parseInt($('.swiper-container').css('height')),
+                orderSubmit = $('#submit_order');
+            if (scrollTop > 5) {
+                orderSubmit.show();
+            }
+            if (scrollTop >= imgH) {
+                seckillDiv.addClass('fixed');
+            } else {
+                seckillDiv.removeClass('fixed');
+            }
+            if (scrollTop > dH + 100) {
+                scrollDiv.addClass('fadeInRight').addClass('loading').removeClass('fadeOutRight').show();
+            } else {
+                scrollDiv.removeClass('fadeInRight').removeClass('loading').addClass('fadeOutRight');
+                setTimeout(function() {
+                    if (!scrollDiv.hasClass('loading')) {
+                        scrollDiv.hide()
+                    }
+                }, 500);
+            }});
+
+
+        /*旧的倒计时*/
+        $().ready(function () {
 
             var time = new Date;
             time.setTime(Math.round(time / 3600000) * 3600000 + 3600000);
@@ -55,36 +87,6 @@
                 var seed = setInterval(func, 100);
             }
 
-            var nav = $('.p-head'),
-                scrollTop = document.documentElement.scrollTop || document.body.scrollTop,
-                height = 48,
-                scrollDiv = $('#scrollTop'),
-                seckillDiv = $('.seckill-container'),
-                dH = document.documentElement.clientHeight,
-                imgH = parseInt($('.swiper-container').css('height')),
-                orderSubmit = $('#submit_order');
-            if (scrollTop > 5) {
-                orderSubmit.show();
-            }
-            if (scrollTop >= imgH) {
-                seckillDiv.addClass('fixed');
-            } else {
-                seckillDiv.removeClass('fixed');
-            }
-            if (scrollTop > dH + 100) {
-                scrollDiv.addClass('fadeInRight').addClass('loading').removeClass('fadeOutRight').show();
-            } else {
-                scrollDiv.removeClass('fadeInRight').removeClass('loading').addClass('fadeOutRight');
-                setTimeout(function() {
-                    if (!scrollDiv.hasClass('loading')) {
-                        scrollDiv.hide()
-                    }
-                }, 500);
-            }});
-
-
-        /*旧的倒计时*/
-        $().ready(function () {
             var onOff = true;
             var goods_title = "{$info[goods_title]}";
             $.getJSON('{:U("index/evaOrder",array("type"=>1,"f"=>1))}', function (data) {
@@ -365,13 +367,14 @@
                 }, 3000);
             }
 
-            setTimeout(function () {
+            /*暂时取消有多少人购买的提示*/
+            /*setTimeout(function () {
                 look();
                 setInterval(function () {
                     look();
                 }, 11000);
             }, 8000);
-            var leftTime = 36000000;
+            var leftTime = 36000000;*/
             /* 倒计时 */
             function countTime() {           //获取当前时间
 //                var date = new Date();
@@ -470,7 +473,7 @@
         </div>
     </div>
 
-    <div class="sale-title"><p style="font-size: 25px;margin-bottom: 10px;">{$info.goods_title} <p/>{$info.goods_subtitle}</div>
+    <div class="sale-title"><p style="font-size: 25px;margin-bottom: 10px;">{$info.goods_title} <p/><p style="color: red;">{$info.goods_subtitle}</p></div>
     <!--<div class="data-group">
         <div class="price">
             <div class="price-now">RM <span>{$info.goods_trprice}</span></div>
