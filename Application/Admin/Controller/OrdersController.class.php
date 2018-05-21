@@ -6,10 +6,10 @@ class OrdersController extends CommonController {
     function __construct()
     {
         parent::__construct();
-        if($_SESSION['admin_name'] != 'admim'){
+        /*if($_SESSION['admin_name'] != 'admim'){
 
             print_r('没有权限');exit;
-        }
+        }*/
     }
 
 	// 订单列表
