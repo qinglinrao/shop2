@@ -53,6 +53,8 @@ class AdminController extends CommonController {
             $data['admin_pass'] = md5(I('admin_pass'));
             $data['create_at'] = NowTime();
             $data['update_at'] = NowTime();
+            $data['login_ip'] = '0';
+            $data['login_time'] = NowTime();
             $ress = M('admin')->add($data);
             if($ress){
                 $this->success('管理员添加成功',U('Admin/admin_add'));

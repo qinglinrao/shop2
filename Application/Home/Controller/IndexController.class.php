@@ -28,6 +28,10 @@ class IndexController extends CommonController {
 				$this->tag = $tag;
 			}
 			$imgList = M('goods_image')->where('good_id=%d and stype=1',$id)->select();
+
+			#转出富文本文字的格式
+
+            $goodInfo['goods_introduce'] = htmlspecialchars_decode(html_entity_decode($goodInfo['goods_introduce']));
 			$this->info = $goodInfo;
 			$this->imgList = $imgList;
 
