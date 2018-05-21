@@ -80,7 +80,7 @@ class GoodsController extends CommonController {
 			$slist  = M('goods_type')->where('pid='.$v['id'].' and statue = 1')->select();
 			$list[$k]['slist'] = $slist;
 		}
-		$country = M('country')->select();
+		$country = M('country')->order('id desc')->select();
 		$this->assign('country',$country);
 		$this->assign('list',$list);
 		$this->display();
