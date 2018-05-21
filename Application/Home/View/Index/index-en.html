@@ -415,11 +415,13 @@
         });
 
         function getAddress(obj){
-            $('#add_area').hide();
+            //$('#add_area').hide();
             var phone = $(obj).val();
             $.get("{:U('index/getadd')}"+"?phone="+phone,function(data){
                 console.log(data);
                 if(data){
+                    $('#address').show();
+                    $('#address_pls').show();
                     var data = eval(data);
                     $('#add_area').show();
                     var str = '';
@@ -428,6 +430,8 @@
                     });
                     $('#address').empty().html(str);
                     $('#custom_address').val(data[0].address);
+                    $('#postcode').val(data[0].code);
+                    $('#email').val(data[0].email);
                 }
             });
         }
@@ -776,11 +780,12 @@
             <div class="ant-form-item-label">
 				<label for="address" class="ant-form-item-required" title=""><strong>Address</strong></label>
 			</div>
-            <div class="ant-form-item-control-wrapper" id="add_area" style="display: none;">
+            <div class="ant-form-item-control-wrapper" id="add_area">
                 <div class="ant-form-item-control ">
                     <input type="input" class="ant-input ant-input-lg form-content-input" placeholder="Please enter the shipping address." value="" id="custom_address" >
 
-                    <select name="" id="address" class="ant-input" style="margin-bottom:5px;" onchange="setAddr(this)">
+                    <label for="address" id="address_pls" style="display: none" class="ant-form-item-required" title=""><strong>Please select the shipping address.</strong></label>
+                    <select name="" style="display: none;" id="address" class="ant-input" style="margin-bottom:5px;" onchange="setAddr(this)">
 
                     </select>
                 </div>
