@@ -1033,6 +1033,18 @@ class GoodsController extends CommonController {
         die("./upload/".$path."/$fileNameNew");
     }
 
+    #采购链接界面。
+    function purchase_url_view(){
+        $id = I('get.id');
+        $info = M('goods')->find($id);
+        if($info){
+            $info['goods_purchase_url'] = htmlspecialchars_decode(html_entity_decode($info['goods_purchase_url']));
+
+        }
+        $this->assign('info',$info);
+        $this->display();
+    }
+
     # 检查商品编号的唯一性
     public function checkNumber(){
         $num = I('get.number');
