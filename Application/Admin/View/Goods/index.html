@@ -26,6 +26,7 @@
 		<table class="layui-table" lay-even lay-skin="line">
 			<thead>
 				<tr>
+					<th>操作</th>
 					<th>ID</th>
 					<th>URL</th>
 					<th>投放人</th>
@@ -48,13 +49,18 @@
 					<th>拼团状态</th>
 					<th>促销标签</th>
 					<th>普通标签</th>
-					<th>操作</th>
+
 				</tr>
 			</thead>
 			<tbody>
 				<notempty name="list">
 				<foreach name="list" item="vo">
 				<tr>
+					<td>
+					<a class="layui-btn layui-btn-mini" href="{:U('Goods/edit',array('id'=>$vo['id']))}">编辑</a>
+					<a class="layui-btn layui-btn-mini" href="{:U('Goods/configlist',array('id'=>$vo['id']))}">规格列表</a>
+					<a class="layui-btn layui-btn-mini layui-btn-danger" href="{:U('Goods/del',array('id'=>$vo['id']))}" onclick="javascript:if(confirm('确定要删除此信息商品吗？')){alert('删除成功！');return true;}return false;">删除</a>
+					</td>
 					<td>{$vo.id}</td>
 					<td><a href="http://bestcod.net/home/Index/index/id/{$vo.id}" target="_blank">商品地址</a></td>
 					<td>{$vo.admin_name}</td>
@@ -96,11 +102,7 @@
 						<gt name="vo.goods_tag" value="0">{$vo.tag_name} <a class="layui-btn layui-btn-mini" href="{:U('Goods/goods_tag',array('id'=>$vo['id'],'type'=>2))}">编辑</a></gt>
 						<eq name="vo.goods_tag" value="0">无 <a class="layui-btn layui-btn-mini" href="{:U('Goods/goods_tag',array('id'=>$vo['id'],'type'=>1))}">添加</a></eq>
 					</td>
-					<td>
-						<a class="layui-btn layui-btn-mini" href="{:U('Goods/edit',array('id'=>$vo['id']))}">编辑</a>
-						<a class="layui-btn layui-btn-mini" href="{:U('Goods/configlist',array('id'=>$vo['id']))}">规格列表</a>
-						<a class="layui-btn layui-btn-mini layui-btn-danger" href="{:U('Goods/del',array('id'=>$vo['id']))}">删除</a>
-					</td>
+
 				</tr>
 				</foreach>
 				<else />
