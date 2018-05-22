@@ -1032,4 +1032,17 @@ class GoodsController extends CommonController {
         /*die('{"jsonrpc" : "2.0", "url" : "./Goods/'.$fileNameNew.'", "id" : "id"}');*/
         die("./upload/".$path."/$fileNameNew");
     }
+
+    # 检查商品编号的唯一性
+    public function checkNumber(){
+        $num = I('get.number');
+        $where['goods_number'] = $num;
+        $info = M('goods')->where($where)->select();
+
+        $return = array('code'=>0);
+        if($info){
+            $return['code'] = 1;
+        }
+        echo json_encode($return);
+    }
 }

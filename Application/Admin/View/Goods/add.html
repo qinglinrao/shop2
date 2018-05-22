@@ -76,9 +76,9 @@
 		<div class="layui-form-item">
 			<label class="layui-form-label">商品编号</label>
 			<div class="layui-input-inline">
-				<input type="text" name="goods_number" maxlength="100" lay-verify="required" class="layui-input">
+				<input type="text" name="goods_number" maxlength="100" lay-verify="required" class="layui-input" onblur="checkNumber(this)">
 			</div>
-			<div class="layui-form-mid layui-word-aux">商品编号，必须填写</div>
+			<div class="layui-form-mid layui-word-aux">商品编号，必须填写，<span style="color: red;">注意：不能重复</span></div>
 		</div>
 		<div class="layui-form-item">
 			<label class="layui-form-label">商品类别</label>
@@ -170,7 +170,7 @@
 					<input name="goods_notice" sx='upimg0' type="hidden" value="" lay-verify="goods_notice"/>
 				</div>
 			</div>
-			<div class="layui-form-mid layui-word-aux" style="float: left;">购买须知，推荐上传正方形图片<br>后台已做正方形剪裁缩放
+			<div class="layui-form-mid layui-word-aux" style="float: left;">购买须知，推荐上传正方形图片<br>后台已做正方形剪裁缩放<br><span style="color:red;">可以不填</span>
 			</div>
 		</div>
 		<!--<div class="layui-form-item">
@@ -199,12 +199,12 @@
 			<div class="layui-input-inline">
 				<input type="text" name="video_url" maxlength="100" lay-verify="video_url" class="layui-input">
 			</div>
-			<div class="layui-form-mid layui-word-aux">注意：视频地址，只需要填写视频id</div>
+			<div class="layui-form-mid layui-word-aux">注意：视频地址，<span style="color:red;">注意：只需要填写视频id</span></div>
 		</div>
 
 		<!--批量上传-->
 		<div class="layui-form-item">
-			<label class="layui-form-label">商品描述长图2</label>
+			<label class="layui-form-label">商品描述长图</label>
 		</div>
 			<div id="wrapper">
 			<div id="container">
@@ -1714,6 +1714,22 @@ var idstr=''
         $('.editor_value').val(UE.getEditor('editor').getContent());
         //进行下一步
         return true;
+    }
+
+    //检查商品编号的唯一性
+	function checkNumber(obj) {
+        var number = $(obj).val();
+        /*$.get("{:U('Goods/checkNumber')}"+"?number="+number,function(data){*/
+        $.get("/admin.php?m=admin&c=Goods&a=checkNumber"+"&number="+number,function(data){
+
+            // JSON.parse() 方法用于将一个 JSON 字符串转换为对象。
+            var res = JSON.parse(data);
+            if(res.code == 1){
+                alert('商品编号已经存在，不能重复！');
+                $(obj).val('');
+            }
+        });
+
     }
 
 </script>
