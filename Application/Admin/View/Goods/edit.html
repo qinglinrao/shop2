@@ -57,14 +57,14 @@
 	<div class="layui-form-item">
 		<label class="layui-form-label">商品主标题</label>
 		<div class="layui-input-inline">
-			<input type="text" name="goods_title" maxlength="10" value="{$info.goods_title}" lay-verify="required" class="layui-input">
+			<input type="text" name="goods_title" maxlength="500" value="{$info.goods_title}" lay-verify="required" class="layui-input">
 		</div>
 		<div class="layui-form-mid layui-word-aux">商品的主标题，必须填写</div>
 	</div>
 	<div class="layui-form-item">
 		<label class="layui-form-label">商品副标题</label>
 		<div class="layui-input-inline">
-			<input type="text" name="goods_subtitle" value="{$info.goods_subtitle}" maxlength="10" lay-verify="required" class="layui-input">
+			<input type="text" name="goods_subtitle" value="{$info.goods_subtitle}" maxlength="500" lay-verify="required" class="layui-input">
 		</div>
 		<div class="layui-form-mid layui-word-aux">商品副标题，必须填写</div>
 	</div>
@@ -103,7 +103,42 @@
 		<div class="layui-input-inline">
 			<input type="text" name="goods_twprice" value="{$info.goods_twprice}" maxlength="10" lay-verify="twprice" value="0" class="layui-input">
 		</div>
-		<div class="layui-form-mid layui-word-aux">商品在其所在类别列表的排序（数字），必填，例如：9.99 、 9.9 、 9</div>
+
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">商品编号</label>
+		<div class="layui-input-inline">
+			<input type="text" name="goods_number" value="{$info.goods_number}" maxlength="100" lay-verify="goods_number" value="0" class="layui-input">
+		</div>
+
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">采购价</label>
+		<div class="layui-input-inline">
+			<input type="text" name="goods_psprice" value="{$info.goods_psprice}" maxlength="10" lay-verify="goods_psprice" value="0" class="layui-input">
+		</div>
+
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">采购链接</label>
+		<div class="layui-input-inline">
+			<input type="text" name="goods_purchase_url" value="{$info.goods_purchase_url}" maxlength="500" lay-verify="goods_purchase_url" value="0" class="layui-input">
+		</div>
+
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">商品介绍</label>
+		<div class="layui-input-inline">
+			<input type="text" name="goods_introduce" value="{$info.goods_introduce}" maxlength="10000" lay-verify="goods_introduce" value="0" class="layui-input">
+		</div>
+
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">视频链接</label>
+		<div class="layui-input-inline">
+			<input type="text" name="video_url" value="{$info.video_url}" maxlength="500" lay-verify="video_url" value="0" class="layui-input">
+		</div>
+		<div class="layui-form-mid layui-word-aux">youtube的视频链接</div>
 	</div>
 	<!--
     <div class="layui-form-item">
@@ -136,7 +171,7 @@
 		<div class="layui-form-mid layui-word-aux" style="float: left;">商品描述长图，图片大小推荐小于2M，图片过大会导致页面加载变慢<br>后台未做缩放剪裁
 		</div>
 	</div>
-	<div class="layui-form-item">
+	<!--<div class="layui-form-item">
 		<label class="layui-form-label">商品描述长图</label>
 
 		<div class="layui-input-inline imgyl"  style="width: 128px;">
@@ -215,7 +250,7 @@
 			</div>
 		</div>
 		<div class="layui-form-mid layui-word-aux" style="float: left;">商品轮播图，推荐上传正方形图片<br>后台已做正方形剪裁缩放</div>
-	</div>
+	</div>-->
 	<!--
 	<div class="layui-form-item">
 		<label class="layui-form-label">商品详情</label>

@@ -232,6 +232,11 @@ class GoodsController extends CommonController {
                 $data['goods_toprice'] = I('goods_toprice');
                 $data['goods_trprice'] = I('goods_trprice');
                 $data['goods_twprice'] = I('goods_twprice');
+                $data['goods_number'] = I('goods_number');
+                $data['goods_psprice'] = I('goods_psprice');
+                $data['goods_purchase_url'] = I('goods_purchase_url');
+                $data['video_url'] = I('video_url');
+                $data['goods_introduce'] = I('goods_introduce');
                 $data['cate_id'] = I('pid');
                 $data['cate_id_2'] = I('pid');
                 //$data['goods_sort'] = I('goods_sort');
@@ -247,7 +252,7 @@ class GoodsController extends CommonController {
 				$db = M('goods');
 				$db->create($data);
 				$res = $db -> where($where) ->save();
-				if ($id > 0) {
+				/*if ($id > 0) {
                     $imgDb = M('goods_image');
                     $res = $imgDb->where('good_id=%d and sid = 0',$id)->delete();
 				    foreach ($imglist as $k=>$v) {
@@ -260,7 +265,7 @@ class GoodsController extends CommonController {
                         $imgDb->create($imageData);
                         $res = $imgDb -> add();
                     }
-                }
+                }*/
 				$this->success('信息更新成功',U('Goods/index'));
 			}else{
 				$this->error('请求参数错误',U('Goods/index'));
