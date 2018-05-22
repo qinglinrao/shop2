@@ -29,8 +29,19 @@ class IndexController extends CommonController {
 			}
 			$imgList = M('goods_image')->where('good_id=%d and stype=1',$id)->select();
 
-			#转出富文本文字的格式
+            # 商品名称需要换行的处理。用###来标志。
+            if(preg_match('/\#\#\#/', $goodInfo['goods_title'], $matches)){
+                #存在多个名称
+                $str = '';
+                $name_arr = explode('###', $goodInfo['goods_title']);
+                for($i=0;$i<(count($name_arr)-1);$i++){
+                    $str .= $name_arr[$i].'<br/>';
+                }
+                $str .= $name_arr[count($name_arr)-1];
+                $goodInfo['goods_title'] = $str;
+            }
 
+            #转出富文本文字的格式
             $goodInfo['goods_introduce'] = htmlspecialchars_decode(html_entity_decode($goodInfo['goods_introduce']));
 			$this->info = $goodInfo;
 			$this->imgList = $imgList;
