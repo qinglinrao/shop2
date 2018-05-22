@@ -39,6 +39,8 @@
 					<th>原价</th>
 					<th>零售价</th>
 					<th>团购价</th>
+					<th>采购价</th>
+					<th>采购链接</th>
 					<th>运费</th>
 					<!--<th>销量</th>-->
 					<th>状态</th>
@@ -65,6 +67,8 @@
 					<td>{$vo.goods_toprice}</td>
 					<td>{$vo.goods_trprice}</td>
 					<td>{$vo.goods_twprice}</td>
+					<td>{$vo.goods_psprice}</td>
+					<td><a href="{$vo.goods_purchase_url}" target="_blank">采购链接</a></td>
 					<td>{$vo.goods_price}</td>
 					<td>
 						<eq name="vo.goods_stats" value="1">
