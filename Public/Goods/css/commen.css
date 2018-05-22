@@ -1166,6 +1166,7 @@ button, input, select, textarea {
     bottom: 0;
     width: 100%;
     max-width: 640px;
+    z-index: 999;
 }
 
 .bottom-btn a {
