@@ -127,7 +127,12 @@
 		<div class="layui-form-item">
 			<label class="layui-form-label">采购链接</label>
 			<div class="layui-input-inline">
-				<input type="text" name="goods_purchase_url" maxlength="500" lay-verify="purchase_url" value="0" class="layui-input">
+				<!--<input type="text" name="goods_purchase_url" maxlength="500" lay-verify="purchase_url" value="0" class="layui-input">-->
+				<textarea rows="15" cols="30" name="goods_purchase_url" class="editor_value2" style="display: none;"></textarea>
+				<!-- 加载编辑器的容器 -->
+				<script id="editor2" type="text/plain" style="width:1024px;height:500px;">
+
+				</script>
 			</div>
 			<div class="layui-form-mid layui-word-aux">采购商品的链接</div>
 		</div>
@@ -1707,11 +1712,13 @@ var idstr=''
 <!-- 实例化编辑器 -->
 <script type="text/javascript">
 	var ue = UE.getEditor('editor');
+	var ue2 = UE.getEditor('editor2');
 
     function checkForm(){
         var form = document.getElementsByClassName('layui-form');
         //可在此修改input
         $('.editor_value').val(UE.getEditor('editor').getContent());
+        $('.editor_value2').val(UE.getEditor('editor2').getContent());
         //进行下一步
         return true;
     }

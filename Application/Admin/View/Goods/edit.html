@@ -127,9 +127,16 @@
 	</div>
 	<div class="layui-form-item">
 		<label class="layui-form-label">采购链接</label>
-		<div class="layui-input-inline">
+		<!--<div class="layui-input-inline">
 			<input type="text" name="goods_purchase_url" value="{$info.goods_purchase_url}" maxlength="500" lay-verify="goods_purchase_url" value="0" class="layui-input">
+		</div>-->
+		<div id="editor_old2" style="display: none;">
+			{$info.goods_purchase_url}
 		</div>
+		<textarea rows="15" cols="30" name="goods_purchase_url" class="editor_value2" style="display: none;"></textarea>
+		<!-- 加载编辑器的容器 -->
+		<script id="editor2" type="text/plain" style="width:1024px;height:500px;">
+		</script>
 
 	</div>
 	<div class="layui-form-item">
@@ -430,11 +437,11 @@
 					return '商品描述长图不能为空，请上传图片';
 				}
 			},
-			goods_notice: function(value, item){ //value：表单的值、item：表单的DOM对象
+			/*goods_notice: function(value, item){ //value：表单的值、item：表单的DOM对象
 				if($(item).val() == ''){
 					return '购买须知不能为空，请上传图片';
 				}
-			},
+			},*/
 			first: function(value, item){ //value：表单的值、item：表单的DOM对象
 				if($(item).val() == ''){
 					return '轮播图不能为空，最少上传第一张';
@@ -473,12 +480,19 @@
 <!-- 实例化编辑器 -->
 <script type="text/javascript">
 	var ue = UE.getEditor('editor');
+	var ue2 = UE.getEditor('editor2');
 	//var content = "{$info.goods_introduce}";
 	var content = $("#editor_old").text();
+	var content2 = $("#editor_old2").text();
 
     ue.addListener("ready", function () {
         // editor准备好之后才可以使用
         ue.setContent(content);
+        //ue.execCommand('insertHtml', content);
+    });
+    ue2.addListener("ready", function () {
+        // editor准备好之后才可以使用
+        ue2.setContent(content2);
         //ue.execCommand('insertHtml', content);
     });
 
@@ -486,6 +500,7 @@
 		var form = document.getElementsByClassName('layui-form');
 		//可在此修改input
 		$('.editor_value').val(UE.getEditor('editor').getContent());
+		$('.editor_value2').val(UE.getEditor('editor2').getContent());
 		//进行下一步
 		return true;
 	}
