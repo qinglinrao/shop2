@@ -99,6 +99,8 @@ class GoodsController extends CommonController {
 			$data['goods_toprice'] = I('goods_toprice');
 			$data['goods_trprice'] = I('goods_trprice');
 			$data['goods_twprice'] = I('goods_twprice');
+			$data['goods_psprice'] = I('goods_psprice');
+			$data['goods_purchase_url'] = I('goods_purchase_url');
 			$data['cate_id'] = I('pid');
 			$data['cate_id_2'] = I('pid');
 			//$data['goods_sort'] = I('goods_sort');
