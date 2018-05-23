@@ -42,14 +42,22 @@ class OrdersController extends CommonController {
 		$limit 	= $page->firstRow.','.$page->listRows;		
 		$table 	= 'pt_orders o';
 		$join 	= array('LEFT JOIN pt_goods g on o.good_id=g.id');
-		$field 	= 'o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at';
+		$field 	= 'o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id';
 		$order 	= 'o.id desc';
 		$list 	= M()->table($table)->join($join)->where($where)->field($field)->limit($limit)->order($order)->select();
+        # 查询投放人名称
+        $admin_data = M('admin')->field('admin_id, admin_name')->select();
 		foreach($list as $k=>$v){
 			$userInfo = M('member')->field('phone,username,address')->find($v['user_id']);
 			$list[$k]['phone'] = $userInfo['phone'];
 			$list[$k]['username'] = $userInfo['username'];
 			$list[$k]['address'] = $userInfo['address'];
+            //合并管理员名称
+            foreach($admin_data as $admin_val){
+                if($v['admin_id'] == $admin_val['admin_id']){
+                    $list[$k]['admin_name'] = $admin_val['admin_name'];
+                }
+            }
 		}
 		$this->assign('time_area',$area);
 		$this->assign('statue',$statue);
