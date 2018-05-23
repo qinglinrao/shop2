@@ -61,10 +61,12 @@
 			<thead>
 				<tr>
 					<th>编号</th>
-					<th>商品名称</th>
+					<th>投放人</th>
+					<th>商品名称<br/>(###表示换行)</th>
 					<th>用户姓名</th>
 					<th>用户电话</th>
 					<th>用户地址</th>
+					<th>用户留言</th>
 					<th>配送信息</th>
 					<th>物流信息</th>
 					<th>订单来源</th>
@@ -78,12 +80,14 @@
 				<foreach name="list" item="vo">
 					<tr>
 						<td>{$vo.id}</td>
-						<td>{$vo.goods_name}</td>
+						<td>{$vo.admin_name}</td>
+						<td>{$vo.goods_title}</td>
 						<td>{$vo.username}</td>
 						<td>{$vo.phone}</td>
 						<td>{$vo.address}</td>
-						<td>{$vo.pw_info}</td>
-						<td>{$vo.wl_info}</td>
+						<td>{$vo.remark}</td>
+						<td><a href="{$vo.pw_info}" target="_blank">外链</a></td>
+						<td><a href="{$vo.wl_info}" target="_blank">外链</a></td>
 						<td>{$vo.from}</td>
 						<td>{$vo.create_at}</td>
 						<td>
