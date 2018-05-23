@@ -9,445 +9,16 @@
     <title>{$info.goods_title}</title>
     <link rel="stylesheet" href="__GCSS__swiper.min.css">
     <link rel="stylesheet" href="__GCSS__commen.css?v=444">
-    <script src="__GJS__jQuery-3.3.1.js"></script>
-    <script src="__GJS__swiper.min.js"></script>
-    <script src="__GJS__scroll.js"></script>
-    <script>
 
-
-
-        $(window).on('scroll', function() {
-
-            var nav = $('.p-head'),
-                scrollTop = document.documentElement.scrollTop || document.body.scrollTop,
-                height = 48,
-                scrollDiv = $('#scrollTop'),
-                seckillDiv = $('.seckill-container'),
-                dH = document.documentElement.clientHeight,
-                imgH = parseInt($('.swiper-container').css('height')),
-                orderSubmit = $('#submit_order');
-            if (scrollTop > 5) {
-                orderSubmit.show();
-            }
-            if (scrollTop >= imgH) {
-                seckillDiv.addClass('fixed');
-            } else {
-                seckillDiv.removeClass('fixed');
-            }
-            if (scrollTop > dH + 100) {
-                scrollDiv.addClass('fadeInRight').addClass('loading').removeClass('fadeOutRight').show();
-            } else {
-                scrollDiv.removeClass('fadeInRight').removeClass('loading').addClass('fadeOutRight');
-                setTimeout(function() {
-                    if (!scrollDiv.hasClass('loading')) {
-                        scrollDiv.hide()
-                    }
-                }, 500);
-            }});
-
-
-        /*旧的倒计时*/
-        $().ready(function () {
-
-            var time = new Date;
-            time.setTime(Math.round(time / 3600000) * 3600000 + 3600000);
-            timer(parseInt((time - (new Date)) / 1000));
-
-            function timer(diff) {
-                var ms = 0,
-                    _time = $('#seckill_time'),
-                    _hour = _time.find('.hour'),
-                    _minute = _time.find('.minute'),
-                    _second = _time.find('.s'),
-                    _msecond = _time.find('.ms');
-                var func = function() {
-                    if (diff < 0) return;
-                    if (--ms < 0) ms = 9;
-                    _msecond.text(ms);
-                    if (ms === 9) {
-                        --diff;
-                        var hour = Math.floor(diff / 3600),
-                            remain = diff - hour * 3600,
-                            minute = Math.floor(remain / 60),
-                            second = remain - minute * 60;
-                        if (hour < 10) hour = '0' + hour;
-                        if (minute < 10) minute = '0' + minute;
-                        if (second < 10) second = '0' + second;
-
-                        _hour.text(hour);
-                        _minute.text(minute);
-                        _second.text(second);
-                        if (diff == 0) {
-                            _msecond.text(0);
-                            clearInterval(seed);
-                        }
-                    }
-                };
-                func();
-                var seed = setInterval(func, 100);
-            }
-
-            var onOff = true;
-            var goods_title = "{$info[goods_title]}";
-            $.getJSON('{:U("index/evaOrder",array("type"=>1,"f"=>1))}', function (data) {
-                $.each(data, function (i, item) {
-                    var uname = item.username;
-                    uname = uname.toString().slice(0, 1) + '**';
-                    var uphone = item.phone;
-                    uphone = '*******' + uphone.toString().slice(7);
-                    var utime = item.time;
-                    var utext = goods_title;
-                    var ucountry = item.country;
-                    $('<li><div class="user_infor"><span class="user_name">' + uname + '</span><span class="user_id">' + uphone + '</span><span class="now_time">' + utime + '分鐘前</span><span class="user_addr">' + ucountry + '</span></div><div class="utxt">' + utext + '</div></li>').appendTo($('#app2 .app2-container'));
-                });
-                $('#app2').myScroll({
-                    speed: 35, //數值越大，速度越慢
-                    rowHeight: 56 //li的高度
-                });
-            });
-            setInterval(function () {
-                $.getJSON('{:U("index/evaOrder",array("type"=>1,"f"=>2))}', function (data) {
-                    $.each(data, function (i, item) {
-                        var uname = item.username;
-                        uname = uname.toString().slice(0, 1) + '**';
-                        var uphone = item.phone;
-                        uphone = '*******' + uphone.toString().slice(7);
-                        var utime = item.time;
-                        var utext = item.goods_title;
-                        var ucountry = item.country;
-                        $('<li><div class="user_infor"><span class="user_name">' + uname + '</span><span class="user_id">' + uphone + '</span><span class="now_time">' + utime + '分鐘前</span><span class="user_addr">' + ucountry + '</span></div><div class="utxt">' + utext + '</div></li>').appendTo($('#app2 .app2-container'));
-                    });
-                });
-
-            }, 3000);
-            $.getJSON('{:U("index/evaOrder",array("type"=>2,"f"=>1,"g"=>$info[id]))}', function (data) {
-                $.each(data, function (i, item) {
-                    var uname = item.username;
-                    uname = uname.toString().slice(0, 1) + '**';
-                    var uphone = item.phone;
-                    uphone = '*******' + uphone.toString().slice(7);
-                    var utime = item.create_at;
-                    var utext = item.text;
-                    var ulevel = item.level;
-                    var uleveltxt = '';
-                    var upic = '';
-                    for (var i = 0; i < ulevel; i++) {
-                        uleveltxt += '<div class="ustar-item"><img src="/Public/Goods/img/star_01.png"> </div>';
-                    }
-                    var imgsrc1 = item.img1;
-                    var imgsrc2 = item.img2;
-                    var imgsrc3 = item.img3;
-                    var imgsrc4 = item.img4;
-                    var attr = [];
-                    attr[0]=imgsrc1;
-                    attr[1]=imgsrc2;
-                    attr[2]=imgsrc3;
-                    attr[3]=imgsrc4;
-                    for (i = 0; i < attr.length; i++) {
-                        if (!(attr[i] == '')) {
-                            upic += '<div class="comment-img-item"><img src="' + attr[i] + '"></div>';
-                        }
-                    }
-                    upic = '<div class="comment-img-container"><div class="img-container J_ping">' + upic + '</div></div>';
-                    $('<li><div class="user_infor"><span class="user_name">' + uname + '</span><span class="user_id change1">' + uphone + '</span><span class="now_time">' + utime + '</span> </div><div class="ustar">滿意度：<div class="ustar-list">' + uleveltxt + '</div></div><div class="utxt">' + utext + '</div>' + upic + '</li>').appendTo($('#app .app-container'));
-                });
-
-                $('#app').myScroll({
-                    speed: 35, //數值越大，速度越慢
-                    rowHeight: 10000 //li的高度
-                });
-            });
-            var p=1;
-            setInterval(function () {
-                $.getJSON('{:U("index/evaOrder",array("type"=>2,"f"=>2,"g"=>$info[id]))}'+'?p='+p, function (data) {
-                    $.each(data, function (i, item) {
-                        var uname = item.username;
-                        uname = uname.toString().slice(0, 1) + '**';
-                        var uphone = item.phone;
-                        uphone = '*******' + uphone.toString().slice(7);
-                        var utime = item.create_at;
-                        var utext = item.text;
-                        var ulevel = item.level;
-                        var uleveltxt = '';
-                        var upic = '';
-                        for (var i = 0; i < ulevel; i++) {
-                            uleveltxt += '<div class="ustar-item"><img src="/Public/Goods/img/star_01.png"> </div>';
-                        }
-                        var imgsrc1 = item.img1;
-                        var imgsrc2 = item.img2;
-                        var imgsrc3 = item.img3;
-                        var imgsrc4 = item.img4;
-                        var attr = [imgsrc1, imgsrc2, imgsrc3, imgsrc4];
-                        for (i = 0; i < attr.length; i++) {
-                            if (!(attr[i] == '')) {
-                                upic += '<div class="comment-img-item"><img src="' + attr[i] + '"></div>';
-                            }
-                        }
-                        upic = '<div class="comment-img-container"><div class="img-container J_ping">' + upic + '</div></div>';
-                        $('<li><div class="user_infor"><span class="user_name">' + uname + '</span><span class="user_id change1">' + uphone + '</span><span class="now_time">' + utime + '</span> </div><div class="ustar">滿意度：<div class="ustar-list">' + uleveltxt + '</div></div><div class="utxt">' + utext + '</div>' + upic + '</li>').appendTo($('#app .app-container'));
-                    });
-                });
-                p = p*1+1*1;
-            }, 3000)
-            var scrollTop = $(this).scrollTop();
-
-            /*var saleHeight = $('.sale').height();
-            if (scrollTop >= saleHeight) {
-                $('.tabs').css({
-                    'position': 'fixed',
-                    'top': 0,
-                    'max-width': '640px'
-                })
-            } else {
-                $('.tabs').css({
-                    'position': 'static'
-                })
-            }*/
-
-            //倒计时悬浮效果。
-            /*var djsHeight = $('.djs').height();
-            if (scrollTop >= djsHeight) {
-                $('.djs').css({
-                    'position': 'fixed',
-                    'top': 0,
-                    'max-width': '640px'
-                })
-            } else {
-                $('.djs').css({
-                    'position': 'static'
-                })
-            }*/
-
-            //规格/颜色/尺码选中
-            $('.sale-select-style ul li').click(function () {
-                if( !($(this).hasClass('disabled')) ){
-
-                    $(this).addClass('sel').siblings('li').removeClass('sel');
-
-                    var id = "{$info[id]}";
-                    var param = $(this).attr('param');
-                    var value = $(this).html();
-                    if(param == 'weight'){
-                        $('.gg').html(value);
-                    }else if(param == 'color'){
-                        $('.ys').html(value);
-                    }else if(param == 'size'){
-                        $('.cm').html(value);
-                    }
-
-                    var url = '/index/getImg/id/'+id;
-                    var weightColIndex = $('.weight li.sel').index();
-                    if(weightColIndex > 0){
-                        var  weightValue = $('.weight li.sel').html();
-                        url += '/weight/'+weightValue;
-                    }
-                    var colorColIndex = $('.color li.sel').index();
-                    //为什么点击第一个的时候这里是空的，不切换颜色
-                    colorColIndex = 1;
-                    if(colorColIndex > 0){
-                        var  colorValue = $('.color li.sel').html();
-                        url += '/color/'+colorValue;
-                    }
-                    var sizeColIndex = $('.size li.sel').index();
-                    if(sizeColIndex > 0){
-                        var  sizeValue = $('.size li.sel').html();
-                        url += '/size/'+sizeValue;
-                    }
-
-                    $.get(url+'.html', function(result){
-                        var data = JSON.parse(result);
-                        console.log(data.count);
-                        //只有颜色才会切换图片
-
-                        if(data.img && colorColIndex > 0){
-                            $('#size_img').attr('src',data.img);
-                        }
-                        if(data.count == 1){
-                            $('#ggid').val(data.id);
-                        }
-                        if(param != 'weight' && data.data.weight){
-                            var weightJson = data.data.weight;
-                            var weightObjList = $('.weight li'); //weight列表
-                            var weightCheck = $('.weight li.sel').index(); //weight列表中的选中
-                            var weightHtml = [];
-                            weightObjList.each(function(i,e){
-                                weightHtml[i] = $(e).html();
-                            });
-                            //全部失效
-                            //$('.weight li').addClass('disabled');
-                            //全部取消选中
-                            //$('.weight li').removeClass('sel');
-                            //循环当前有规格的
-                            $.each(weightJson,function(ji,je){
-                                //循环全部当前规格
-                                $.each(weightHtml,function(ai,ae){
-                                    if(je == ae){
-                                        //对应规格存在，生效可选
-                                        $('.weight li:eq('+ai+')').removeClass('disabled');
-                                        //已选中的，重新变为选中
-                                        if(weightCheck > 0 && weightCheck==ai){
-                                            $('.weight li:eq('+ai+')').addClass('sel');
-                                        }
-                                    }
-                                });
-                            });
-                        }
-                        if(param != 'color' && data.data.color){
-                            var colorJson = data.data.color;
-                            var colorObjList = $('.color li'); //weight列表
-                            var colorCheck = $('.color li.sel').index(); //weight列表中的选中
-                            var colorHtml = [];
-                            colorObjList.each(function(i,e){
-                                colorHtml[i] = $(e).html();
-                            });
-                            //全部失效
-                            //$('.color li').addClass('disabled');
-                            //全部取消选中
-                            //$('.color li').removeClass('sel');
-                            //循环当前有规格的
-                            $.each(colorJson,function(ji,je){
-                                //循环全部当前规格
-                                $.each(colorHtml,function(ai,ae){
-                                    if(je == ae){
-                                        //对应规格存在，生效可选
-                                        $('.color li:eq('+ai+')').removeClass('disabled');
-                                        //已选中的，重新变为选中
-                                        if(colorCheck > 0 && colorCheck==ai){
-                                            $('.color li:eq('+ai+')').addClass('sel');
-                                        }
-                                    }
-                                });
-                            });
-                        }
-                        if(param != 'size' && data.data.size){
-                            var sizeJson = data.data.size;
-                            var sizeObjList = $('.size li'); //weight列表
-                            var sizeCheck = $('.size li.sel').index(); //weight列表中的选中
-                            var sizeHtml = [];
-                            sizeObjList.each(function(i,e){
-                                sizeHtml[i] = $(e).html();
-                            });
-                            //全部失效
-                            //$('.size li').addClass('disabled');
-                            //全部取消选中
-                            //$('.size li').removeClass('sel');
-                            //循环当前有规格的
-                            $.each(sizeJson,function(ji,je){
-                                //循环全部当前规格
-                                $.each(sizeHtml,function(ai,ae){
-                                    if(je == ae){
-                                        //对应规格存在，生效可选
-                                        $('.size li:eq('+ai+')').removeClass('disabled');
-                                        //已选中的，重新变为选中
-                                        if(sizeCheck > 0 && sizeCheck==ai){
-                                            $('.size li:eq('+ai+')').addClass('sel');
-                                        }
-                                    }
-                                });
-                            });
-                        }
-                    });
-                }
-            });
-
-            //付款方式点击
-            $('.pay-box a').click(function(){
-                $(this).addClass('on').siblings('a').removeClass('on');
-            });
-
-            function look() {
-                if ($('.ulook')) {
-                    $('.ulook').remove();
-                }
-                var mnum = Math.floor(Math.random() * 10 + 1)
-                var mstr = '<div class="ulook"><div class="lookbg"></div><h3><span>'+mnum+'</span> people are browsing the product</h3></div>';
-                $(mstr).appendTo($('body')).fadeIn(200);
-                setTimeout(function () {
-                    $('.ulook').fadeOut(200);
-                }, 3000);
-            }
-
-            /*暂时取消有多少人购买的提示*/
-            /*setTimeout(function () {
-                look();
-                setInterval(function () {
-                    look();
-                }, 11000);
-            }, 8000);
-            */
-            var leftTime = 36000000;
-            /* 倒计时 */
-            function countTime() {           //获取当前时间
-//                var date = new Date();
-//                var now = date.getTime();
-//                //设置截止时间
-//                var str = "2018/5/7 00:00:00";
-//                var endDate = new Date(str);
-//                var end = endDate.getTime();
-//
-//                //时间差
-//                var leftTime = end - now;
-                //定义变量 d,h,m,s保存倒计时的时间
-                var d, h, m, s;
-                if (leftTime >= 0) {
-                    h = Math.floor(leftTime / 1000 / 60 / 60);
-                    if(h.toString().length<2){
-                        h='0'+h;
-                    }
-                    m = Math.floor(leftTime / 1000 / 60 % 60);
-                    if(m.toString().length<2){
-                        m='0'+m;
-                    }
-                    s = Math.floor(leftTime / 1000 % 60);
-                    if(s.toString().length<2){
-                        s='0'+s;
-                    }
-                }
-                //将倒计时赋值到div中
-                /*document.getElementById("_h").innerHTML = h;
-                document.getElementById("_m").innerHTML = m;
-                document.getElementById("_s").innerHTML = s;*/
-                leftTime-=1000;
-                //递归每秒调用countTime方法，显示动态时间效果
-                setTimeout(countTime, 1000);
-            }
-            countTime();
-        });
-
-        function getAddress(obj){
-            //$('#add_area').hide();
-            var phone = $(obj).val();
-            $.get("{:U('index/getadd')}"+"?phone="+phone,function(data){
-                console.log(data);
-                if(data){
-                    $('#address').show();
-                    $('#address_pls').show();
-                    var data = eval(data);
-                    $('#add_area').show();
-                    var str = '';
-                    $.each(data,function(i,e){
-                        str += '<option value="'+ e.address +'">'+ e.address +'</option>'
-                    });
-                    $('#address').empty().html(str);
-                    $('#custom_address').val(data[0].address);
-                    $('#postcode').val(data[0].code);
-                    $('#email').val(data[0].email);
-                }
-            });
-        }
-        function setAddr(obj){
-            var addr = $(obj).val();
-            $('#custom_address').val(addr);
-        }
-    </script>
 </head>
+
 <body style="padding-bottom: 45px;">
 <div class="sale">
     <div class="swiper-container">
         <div class="swiper-wrapper">
             <volist name="imgList" id="vo">
             <!--<div class="swiper-slide"><img src="{:trim($vo[image],'.')}"></div>-->
-            <div class="swiper-slide"><img src="{:trim($vo[image],'.')}"></div>
+            <div class="swiper-slide"><img src="{:trim($vo[image],'.')}" /></div>
             </volist>
         </div>
         <!-- Add Pagination -->
@@ -568,7 +139,7 @@
                 </if>-->
 
                 <if condition = "$vo[is_img] eq 1">
-                    <img src="{:trim($vo[image],'.')}">
+                    <img class="lazy" data-original="{:trim($vo[image],'.')}">
                     <else />
                     <!--<video controls="controls" style="max-width: 100%;margin: 0 auto">
                         <source src="{$vo[image]}" type="video/mp4" />
@@ -837,6 +408,448 @@
     <div class="Validform_info"></div>
 </div>
 
+<script src="__GJS__jQuery-3.3.1.js"></script>
+<!--图片延迟加载-->
+<script src="__GJS__jquery.lazyload.js"></script>
+<script src="__GJS__swiper.min.js"></script>
+<script src="__GJS__scroll.js"></script>
+
+<script>
+
+
+
+    $(window).on('scroll', function() {
+
+
+
+        var nav = $('.p-head'),
+            scrollTop = document.documentElement.scrollTop || document.body.scrollTop,
+            height = 48,
+            scrollDiv = $('#scrollTop'),
+            seckillDiv = $('.seckill-container'),
+            dH = document.documentElement.clientHeight,
+            imgH = parseInt($('.swiper-container').css('height')),
+            orderSubmit = $('#submit_order');
+        if (scrollTop > 5) {
+            orderSubmit.show();
+        }
+        if (scrollTop >= imgH) {
+            seckillDiv.addClass('fixed');
+        } else {
+            seckillDiv.removeClass('fixed');
+        }
+        if (scrollTop > dH + 100) {
+            scrollDiv.addClass('fadeInRight').addClass('loading').removeClass('fadeOutRight').show();
+        } else {
+            scrollDiv.removeClass('fadeInRight').removeClass('loading').addClass('fadeOutRight');
+            setTimeout(function() {
+                if (!scrollDiv.hasClass('loading')) {
+                    scrollDiv.hide()
+                }
+            }, 500);
+        }});
+
+
+    /*旧的倒计时*/
+    $().ready(function () {
+
+        $("img.lazy").lazyload({
+            threshold : 300,
+            effect : "fadeIn",
+            /*placeholder : "__PUBLIC__/Goods/img/o_loading.gif"*/
+        });
+
+        var time = new Date;
+        time.setTime(Math.round(time / 3600000) * 3600000 + 3600000);
+        timer(parseInt((time - (new Date)) / 1000));
+
+        function timer(diff) {
+            var ms = 0,
+                _time = $('#seckill_time'),
+                _hour = _time.find('.hour'),
+                _minute = _time.find('.minute'),
+                _second = _time.find('.s'),
+                _msecond = _time.find('.ms');
+            var func = function() {
+                if (diff < 0) return;
+                if (--ms < 0) ms = 9;
+                _msecond.text(ms);
+                if (ms === 9) {
+                    --diff;
+                    var hour = Math.floor(diff / 3600),
+                        remain = diff - hour * 3600,
+                        minute = Math.floor(remain / 60),
+                        second = remain - minute * 60;
+                    if (hour < 10) hour = '0' + hour;
+                    if (minute < 10) minute = '0' + minute;
+                    if (second < 10) second = '0' + second;
+
+                    _hour.text(hour);
+                    _minute.text(minute);
+                    _second.text(second);
+                    if (diff == 0) {
+                        _msecond.text(0);
+                        clearInterval(seed);
+                    }
+                }
+            };
+            func();
+            var seed = setInterval(func, 100);
+        }
+
+        var onOff = true;
+        var goods_title = "{$info[goods_title]}";
+        $.getJSON('{:U("index/evaOrder",array("type"=>1,"f"=>1))}', function (data) {
+            $.each(data, function (i, item) {
+                var uname = item.username;
+                uname = uname.toString().slice(0, 1) + '**';
+                var uphone = item.phone;
+                uphone = '*******' + uphone.toString().slice(7);
+                var utime = item.time;
+                var utext = goods_title;
+                var ucountry = item.country;
+                $('<li><div class="user_infor"><span class="user_name">' + uname + '</span><span class="user_id">' + uphone + '</span><span class="now_time">' + utime + '分鐘前</span><span class="user_addr">' + ucountry + '</span></div><div class="utxt">' + utext + '</div></li>').appendTo($('#app2 .app2-container'));
+            });
+            $('#app2').myScroll({
+                speed: 35, //數值越大，速度越慢
+                rowHeight: 56 //li的高度
+            });
+        });
+        setInterval(function () {
+            $.getJSON('{:U("index/evaOrder",array("type"=>1,"f"=>2))}', function (data) {
+                $.each(data, function (i, item) {
+                    var uname = item.username;
+                    uname = uname.toString().slice(0, 1) + '**';
+                    var uphone = item.phone;
+                    uphone = '*******' + uphone.toString().slice(7);
+                    var utime = item.time;
+                    var utext = item.goods_title;
+                    var ucountry = item.country;
+                    $('<li><div class="user_infor"><span class="user_name">' + uname + '</span><span class="user_id">' + uphone + '</span><span class="now_time">' + utime + '分鐘前</span><span class="user_addr">' + ucountry + '</span></div><div class="utxt">' + utext + '</div></li>').appendTo($('#app2 .app2-container'));
+                });
+            });
+
+        }, 3000);
+        $.getJSON('{:U("index/evaOrder",array("type"=>2,"f"=>1,"g"=>$info[id]))}', function (data) {
+            $.each(data, function (i, item) {
+                var uname = item.username;
+                uname = uname.toString().slice(0, 1) + '**';
+                var uphone = item.phone;
+                uphone = '*******' + uphone.toString().slice(7);
+                var utime = item.create_at;
+                var utext = item.text;
+                var ulevel = item.level;
+                var uleveltxt = '';
+                var upic = '';
+                for (var i = 0; i < ulevel; i++) {
+                    uleveltxt += '<div class="ustar-item"><img src="/Public/Goods/img/star_01.png"> </div>';
+                }
+                var imgsrc1 = item.img1;
+                var imgsrc2 = item.img2;
+                var imgsrc3 = item.img3;
+                var imgsrc4 = item.img4;
+                var attr = [];
+                attr[0]=imgsrc1;
+                attr[1]=imgsrc2;
+                attr[2]=imgsrc3;
+                attr[3]=imgsrc4;
+                for (i = 0; i < attr.length; i++) {
+                    if (!(attr[i] == '')) {
+                        upic += '<div class="comment-img-item"><img src="' + attr[i] + '"></div>';
+                    }
+                }
+                upic = '<div class="comment-img-container"><div class="img-container J_ping">' + upic + '</div></div>';
+                $('<li><div class="user_infor"><span class="user_name">' + uname + '</span><span class="user_id change1">' + uphone + '</span><span class="now_time">' + utime + '</span> </div><div class="ustar">滿意度：<div class="ustar-list">' + uleveltxt + '</div></div><div class="utxt">' + utext + '</div>' + upic + '</li>').appendTo($('#app .app-container'));
+            });
+
+            $('#app').myScroll({
+                speed: 35, //數值越大，速度越慢
+                rowHeight: 10000 //li的高度
+            });
+        });
+        var p=1;
+        setInterval(function () {
+            $.getJSON('{:U("index/evaOrder",array("type"=>2,"f"=>2,"g"=>$info[id]))}'+'?p='+p, function (data) {
+                $.each(data, function (i, item) {
+                    var uname = item.username;
+                    uname = uname.toString().slice(0, 1) + '**';
+                    var uphone = item.phone;
+                    uphone = '*******' + uphone.toString().slice(7);
+                    var utime = item.create_at;
+                    var utext = item.text;
+                    var ulevel = item.level;
+                    var uleveltxt = '';
+                    var upic = '';
+                    for (var i = 0; i < ulevel; i++) {
+                        uleveltxt += '<div class="ustar-item"><img src="/Public/Goods/img/star_01.png"> </div>';
+                    }
+                    var imgsrc1 = item.img1;
+                    var imgsrc2 = item.img2;
+                    var imgsrc3 = item.img3;
+                    var imgsrc4 = item.img4;
+                    var attr = [imgsrc1, imgsrc2, imgsrc3, imgsrc4];
+                    for (i = 0; i < attr.length; i++) {
+                        if (!(attr[i] == '')) {
+                            upic += '<div class="comment-img-item"><img src="' + attr[i] + '"></div>';
+                        }
+                    }
+                    upic = '<div class="comment-img-container"><div class="img-container J_ping">' + upic + '</div></div>';
+                    $('<li><div class="user_infor"><span class="user_name">' + uname + '</span><span class="user_id change1">' + uphone + '</span><span class="now_time">' + utime + '</span> </div><div class="ustar">滿意度：<div class="ustar-list">' + uleveltxt + '</div></div><div class="utxt">' + utext + '</div>' + upic + '</li>').appendTo($('#app .app-container'));
+                });
+            });
+            p = p*1+1*1;
+        }, 3000)
+        var scrollTop = $(this).scrollTop();
+
+        /*var saleHeight = $('.sale').height();
+        if (scrollTop >= saleHeight) {
+            $('.tabs').css({
+                'position': 'fixed',
+                'top': 0,
+                'max-width': '640px'
+            })
+        } else {
+            $('.tabs').css({
+                'position': 'static'
+            })
+        }*/
+
+        //倒计时悬浮效果。
+        /*var djsHeight = $('.djs').height();
+        if (scrollTop >= djsHeight) {
+            $('.djs').css({
+                'position': 'fixed',
+                'top': 0,
+                'max-width': '640px'
+            })
+        } else {
+            $('.djs').css({
+                'position': 'static'
+            })
+        }*/
+
+        //规格/颜色/尺码选中
+        $('.sale-select-style ul li').click(function () {
+            if( !($(this).hasClass('disabled')) ){
+
+                $(this).addClass('sel').siblings('li').removeClass('sel');
+
+                var id = "{$info[id]}";
+                var param = $(this).attr('param');
+                var value = $(this).html();
+                if(param == 'weight'){
+                    $('.gg').html(value);
+                }else if(param == 'color'){
+                    $('.ys').html(value);
+                }else if(param == 'size'){
+                    $('.cm').html(value);
+                }
+
+                var url = '/index/getImg/id/'+id;
+                var weightColIndex = $('.weight li.sel').index();
+                if(weightColIndex > 0){
+                    var  weightValue = $('.weight li.sel').html();
+                    url += '/weight/'+weightValue;
+                }
+                var colorColIndex = $('.color li.sel').index();
+                //为什么点击第一个的时候这里是空的，不切换颜色
+                colorColIndex = 1;
+                if(colorColIndex > 0){
+                    var  colorValue = $('.color li.sel').html();
+                    url += '/color/'+colorValue;
+                }
+                var sizeColIndex = $('.size li.sel').index();
+                if(sizeColIndex > 0){
+                    var  sizeValue = $('.size li.sel').html();
+                    url += '/size/'+sizeValue;
+                }
+
+                $.get(url+'.html', function(result){
+                    var data = JSON.parse(result);
+                    console.log(data.count);
+                    //只有颜色才会切换图片
+
+                    if(data.img && colorColIndex > 0){
+                        $('#size_img').attr('src',data.img);
+                    }
+                    if(data.count == 1){
+                        $('#ggid').val(data.id);
+                    }
+                    if(param != 'weight' && data.data.weight){
+                        var weightJson = data.data.weight;
+                        var weightObjList = $('.weight li'); //weight列表
+                        var weightCheck = $('.weight li.sel').index(); //weight列表中的选中
+                        var weightHtml = [];
+                        weightObjList.each(function(i,e){
+                            weightHtml[i] = $(e).html();
+                        });
+                        //全部失效
+                        //$('.weight li').addClass('disabled');
+                        //全部取消选中
+                        //$('.weight li').removeClass('sel');
+                        //循环当前有规格的
+                        $.each(weightJson,function(ji,je){
+                            //循环全部当前规格
+                            $.each(weightHtml,function(ai,ae){
+                                if(je == ae){
+                                    //对应规格存在，生效可选
+                                    $('.weight li:eq('+ai+')').removeClass('disabled');
+                                    //已选中的，重新变为选中
+                                    if(weightCheck > 0 && weightCheck==ai){
+                                        $('.weight li:eq('+ai+')').addClass('sel');
+                                    }
+                                }
+                            });
+                        });
+                    }
+                    if(param != 'color' && data.data.color){
+                        var colorJson = data.data.color;
+                        var colorObjList = $('.color li'); //weight列表
+                        var colorCheck = $('.color li.sel').index(); //weight列表中的选中
+                        var colorHtml = [];
+                        colorObjList.each(function(i,e){
+                            colorHtml[i] = $(e).html();
+                        });
+                        //全部失效
+                        //$('.color li').addClass('disabled');
+                        //全部取消选中
+                        //$('.color li').removeClass('sel');
+                        //循环当前有规格的
+                        $.each(colorJson,function(ji,je){
+                            //循环全部当前规格
+                            $.each(colorHtml,function(ai,ae){
+                                if(je == ae){
+                                    //对应规格存在，生效可选
+                                    $('.color li:eq('+ai+')').removeClass('disabled');
+                                    //已选中的，重新变为选中
+                                    if(colorCheck > 0 && colorCheck==ai){
+                                        $('.color li:eq('+ai+')').addClass('sel');
+                                    }
+                                }
+                            });
+                        });
+                    }
+                    if(param != 'size' && data.data.size){
+                        var sizeJson = data.data.size;
+                        var sizeObjList = $('.size li'); //weight列表
+                        var sizeCheck = $('.size li.sel').index(); //weight列表中的选中
+                        var sizeHtml = [];
+                        sizeObjList.each(function(i,e){
+                            sizeHtml[i] = $(e).html();
+                        });
+                        //全部失效
+                        //$('.size li').addClass('disabled');
+                        //全部取消选中
+                        //$('.size li').removeClass('sel');
+                        //循环当前有规格的
+                        $.each(sizeJson,function(ji,je){
+                            //循环全部当前规格
+                            $.each(sizeHtml,function(ai,ae){
+                                if(je == ae){
+                                    //对应规格存在，生效可选
+                                    $('.size li:eq('+ai+')').removeClass('disabled');
+                                    //已选中的，重新变为选中
+                                    if(sizeCheck > 0 && sizeCheck==ai){
+                                        $('.size li:eq('+ai+')').addClass('sel');
+                                    }
+                                }
+                            });
+                        });
+                    }
+                });
+            }
+        });
+
+        //付款方式点击
+        $('.pay-box a').click(function(){
+            $(this).addClass('on').siblings('a').removeClass('on');
+        });
+
+        function look() {
+            if ($('.ulook')) {
+                $('.ulook').remove();
+            }
+            var mnum = Math.floor(Math.random() * 10 + 1)
+            var mstr = '<div class="ulook"><div class="lookbg"></div><h3><span>'+mnum+'</span> people are browsing the product</h3></div>';
+            $(mstr).appendTo($('body')).fadeIn(200);
+            setTimeout(function () {
+                $('.ulook').fadeOut(200);
+            }, 3000);
+        }
+
+        /*暂时取消有多少人购买的提示*/
+        /*setTimeout(function () {
+            look();
+            setInterval(function () {
+                look();
+            }, 11000);
+        }, 8000);
+        */
+        var leftTime = 36000000;
+        /* 倒计时 */
+        function countTime() {           //获取当前时间
+//                var date = new Date();
+//                var now = date.getTime();
+//                //设置截止时间
+//                var str = "2018/5/7 00:00:00";
+//                var endDate = new Date(str);
+//                var end = endDate.getTime();
+//
+//                //时间差
+//                var leftTime = end - now;
+            //定义变量 d,h,m,s保存倒计时的时间
+            var d, h, m, s;
+            if (leftTime >= 0) {
+                h = Math.floor(leftTime / 1000 / 60 / 60);
+                if(h.toString().length<2){
+                    h='0'+h;
+                }
+                m = Math.floor(leftTime / 1000 / 60 % 60);
+                if(m.toString().length<2){
+                    m='0'+m;
+                }
+                s = Math.floor(leftTime / 1000 % 60);
+                if(s.toString().length<2){
+                    s='0'+s;
+                }
+            }
+            //将倒计时赋值到div中
+            /*document.getElementById("_h").innerHTML = h;
+            document.getElementById("_m").innerHTML = m;
+            document.getElementById("_s").innerHTML = s;*/
+            leftTime-=1000;
+            //递归每秒调用countTime方法，显示动态时间效果
+            setTimeout(countTime, 1000);
+        }
+        countTime();
+    });
+
+    function getAddress(obj){
+        //$('#add_area').hide();
+        var phone = $(obj).val();
+        $.get("{:U('index/getadd')}"+"?phone="+phone,function(data){
+            console.log(data);
+            if(data){
+                $('#address').show();
+                $('#address_pls').show();
+                var data = eval(data);
+                $('#add_area').show();
+                var str = '';
+                $.each(data,function(i,e){
+                    str += '<option value="'+ e.address +'">'+ e.address +'</option>'
+                });
+                $('#address').empty().html(str);
+                $('#custom_address').val(data[0].address);
+                $('#postcode').val(data[0].code);
+                $('#email').val(data[0].email);
+            }
+        });
+    }
+    function setAddr(obj){
+        var addr = $(obj).val();
+        $('#custom_address').val(addr);
+    }
+</script>
 <script src="__GJS__index-en.js?5699"></script>
 <script>
     //轮播图
