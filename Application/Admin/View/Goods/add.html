@@ -99,7 +99,7 @@
 		<div class="layui-form-item">
 			<label class="layui-form-label">原价</label>
 			<div class="layui-input-inline">
-				<input type="text" name="goods_toprice" maxlength="10" lay-verify="toprice" value="0" class="layui-input">
+				<input type="text" name="goods_toprice" maxlength="10" lay-verify="toprice" value="0" class="layui-input goods_toprice">
 			</div>
 			<div class="layui-form-mid layui-word-aux">商品页中划删除线的价格（数字），必填，例如：9.99 、 9.9 、 9</div>
 		</div>
@@ -228,7 +228,8 @@
 							<span class="percentage"></span>
 						</div><div class="info"></div>
 						<div class="btns">
-							<div id="filePicker2"></div><div class="uploadBtn">开始上传</div>
+							<div id="filePicker2"></div><div class="uploadBtn" onclick="$('.uploader_check').val(1);">开始上传</div>
+							<input type="hidden" value="0" class="uploader_check"/>
 						</div>
 					</div>
 				</div>
@@ -318,7 +319,8 @@
 							<span class="percentage"></span>
 						</div><div class="info"></div>
 						<div class="btns">
-							<div id="filePicker4"></div><div class="uploadBtn">开始上传</div>
+							<div id="filePicker4"></div><div class="uploadBtn" onclick="$('.uploader2_check').val(1);">开始上传</div>
+							<input type="hidden" value="0" class="uploader2_check"/>
 						</div>
 					</div>
 				</div>
@@ -334,7 +336,7 @@
 
 		
 		<div class="layui-form-item">
-			<div class="layui-input-block">
+			<div class="layui-input-block" onclick="javascript:if($('.uploader_check').val() != 1){alert('必须上传详情图！记得点击开始上传按钮！');return false;}if($('.uploader2_check').val() != 1){alert('必须上传轮播图！记得点击开始上传按钮！');return false;}else{return true;}return false;">
 				<button class="layui-btn layui-btn-danger" lay-submit lay-filter="Submit">立即提交</button>
 			</div>
 		</div>
@@ -508,17 +510,37 @@ var idstr=''
 			if( !( /^\d+(\.\d{1,2})?$/.test( $(item).val() ) ) ){
 				return '原价输入不合法';
 			}
+            if($(item).val() <= 0){
+                return '原价必须大于0';
+            }
 		},
 		trprice: function(value, item){ //value：表单的值、item：表单的DOM对象
 			if( !( /^\d+(\.\d{1,2})?$/.test( $(item).val() ) ) ){
 				return '零售价输入不合法';
 			}
+            if($(item).val() <= 0){
+                return '零售价必须大于0';
+            }
+            if($(item).val() >= $('.goods_toprice').val()){
+                return '零售价最好小于原价！';
+            }
 		},
 		twprice: function(value, item){ //value：表单的值、item：表单的DOM对象
 			if( !( /^\d+(\.\d{1,2})?$/.test( $(item).val() ) ) ){
 				return '拼团价输入不合法';
 			}
+            if($(item).val() <= 0){
+                return '拼团价必须大于0';
+            }
 		},
+        psprice: function(value, item){ //value：表单的值、item：表单的DOM对象
+            if( !( /^\d+(\.\d{1,2})?$/.test( $(item).val() ) ) ){
+                return '采购价输入不合法';
+            }
+            if($(item).val() <= 0){
+                return '采购价必须大于0';
+            }
+        },
 		price: function(value, item){ //value：表单的值、item：表单的DOM对象
 			if( !( /^\d+(\.\d{1,2})?$/.test( $(item).val() ) ) ){
 				return '运费输入不合法';
@@ -1738,6 +1760,7 @@ var idstr=''
         });
 
     }
+
 
 </script>
 
