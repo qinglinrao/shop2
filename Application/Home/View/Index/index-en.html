@@ -498,6 +498,7 @@
 
         var onOff = true;
         var goods_title = "{$info[goods_title]}";
+        /* 取消不断请求最近购买订单
         $.getJSON('{:U("index/evaOrder",array("type"=>1,"f"=>1))}', function (data) {
             $.each(data, function (i, item) {
                 var uname = item.username;
@@ -597,7 +598,7 @@
                 });
             });
             p = p*1+1*1;
-        }, 3000)
+        }, 3000)*/
         var scrollTop = $(this).scrollTop();
 
         /*var saleHeight = $('.sale').height();
