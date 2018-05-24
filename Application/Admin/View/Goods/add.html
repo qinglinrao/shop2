@@ -521,7 +521,7 @@ var idstr=''
             if($(item).val() <= 0){
                 return '零售价必须大于0';
             }
-            if($(item).val() >= $('.goods_toprice').val()){
+            if(parseInt($(item).val()) >= parseInt($('.goods_toprice').val())){
                 return '零售价最好小于原价！';
             }
 		},
