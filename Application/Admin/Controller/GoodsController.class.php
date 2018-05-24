@@ -672,9 +672,11 @@ class GoodsController extends CommonController {
 		$folder = 'Goods';
 		$item = 'upimg0';
 		$name = "";
-		$width = 900;
-		$height = 900;
-		$this->_ajaxupload($type,$folder,$item,$name,$width,$height);
+		//取消购买须知图片裁剪
+		//$width = 900;
+		//$height = 900;
+		$this->_ajaxupload($type,$folder,$item,$name);
+		//$this->_ajaxupload($type,$folder,$item,$name,$width,$height);
 	}
 
     public function imgupcsv() {
