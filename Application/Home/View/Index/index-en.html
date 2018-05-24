@@ -853,9 +853,17 @@
 <script>
     //轮播图
     var swiper = new Swiper('.swiper-container', {
-        autoplay: true,
+        //autoplay: true,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        lazy: {
+            loadPrevNext: true,
+            loadPrevNextAmount: 1,
+        },
         //懒加载
-        lazy:true,
+        //lazy:true,
         loop: false,
         pagination: {
             el: '.swiper-pagination',
