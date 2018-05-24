@@ -85,7 +85,7 @@
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn layui-btn-danger" lay-submit lay-filter="Submit" style="display: none;">立即提交</button>
+            <button class="layui-btn layui-btn-danger" lay-submit lay-filter="Submit">立即提交</button>
         </div>
     </div>
 </form>
@@ -99,6 +99,7 @@
         var src = window.URL.createObjectURL(f)//预览图片url
         $('.'+str).attr('src',src);
         idstr = str;
+        $(".layui-btn-danger").hide();
     }
     layui.use(['upload'], function() {
         layui.upload({
