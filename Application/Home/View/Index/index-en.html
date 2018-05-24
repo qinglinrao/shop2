@@ -17,7 +17,7 @@
     <div class="swiper-container">
         <div class="swiper-wrapper">
             <volist name="imgList" id="vo">
-            <div class="swiper-slide"><img class="swiper-lazy" data-src="{:trim($vo[image],'.')}"/></div>
+            <div class="swiper-slide"><img class="swiper-lazy" data-src="{:trim($vo[image],'.')}"/><div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div></div>
             </volist>
         </div>
         <!-- Add Pagination -->
@@ -455,7 +455,7 @@
         $("img.lazy").lazyload({
             threshold : 300,
             effect : "fadeIn",
-            /*placeholder : "__PUBLIC__/Goods/img/o_loading.gif"*/
+            placeholder : "__GIMG__loading.gif"
         });
 
         var time = new Date;
@@ -860,6 +860,7 @@
             disableOnInteraction: false,
         },
         lazy: {
+            /*__PUBLIC__/Goods/img/loading.gif*/
             loadPrevNext: true,
             loadPrevNextAmount: 2,
         },
