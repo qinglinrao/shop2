@@ -46,6 +46,7 @@
 </ul>
 <form method="post" autocomplete="off" action="{:U('Goods/doaddconfig',array('goodId'=>$goodId))}" class="layui-form">
     <input type="hidden" value="{$goodId}" name = 'good_id'>
+    <div class="layui-form-item"><p style="color: red;">注意：名称不能有&或者\的符号。</p></div>
     <div class="layui-form-item">
         <label class="layui-form-label">颜色</label>
         <div class="layui-input-inline">
