@@ -17,8 +17,7 @@
     <div class="swiper-container">
         <div class="swiper-wrapper">
             <volist name="imgList" id="vo">
-            <!--<div class="swiper-slide"><img src="{:trim($vo[image],'.')}"></div>-->
-            <div class="swiper-slide"><img src="{:trim($vo[image],'.')}" /></div>
+            <div class="swiper-slide"><img class="swiper-lazy" data-src="{:trim($vo[image],'.')}"/></div>
             </volist>
         </div>
         <!-- Add Pagination -->
@@ -159,8 +158,8 @@
 
     </div>
     <div class="table-details">
-        <!--<img src="{:trim($info[goods_notice],'.')}">-->
-        <img src="{:trim($info[goods_notice],'.')}">
+        <!--购买须知-->
+        <img class="lazy" data-original="{:trim($info[goods_notice],'.')}">
     </div>
 
     <if condition="$comment_switch">
@@ -855,6 +854,8 @@
     //轮播图
     var swiper = new Swiper('.swiper-container', {
         autoplay: true,
+        //懒加载
+        lazy:true,
         loop: false,
         pagination: {
             el: '.swiper-pagination',
