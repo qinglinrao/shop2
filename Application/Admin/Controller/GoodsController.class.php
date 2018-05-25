@@ -777,8 +777,8 @@ class GoodsController extends CommonController {
         $folder = 'Sizes';
         $item = 'upimg0';
         $name = "";
-        $width = 105;
-        $height = 105;
+        $width = 300;
+        $height = 300;
         $this->_ajaxupload($type,$folder,$item,$name, $width, $height);
         //$this->_ajaxupload($type,$folder,$item,$name,$width,$height);
     }
