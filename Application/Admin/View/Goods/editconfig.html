@@ -45,7 +45,7 @@
     <li class="layui-this"><a href="javascript:void(0);">编辑商品规格</a></li>
 </ul>
 <form method="post" autocomplete="off" action="{:U('Goods/doeditconfig')}" class="layui-form">
-    <input type="hidden" value="{$info.id}" name = 'id'>
+    <input type="hidden" value="{$info.id}" name = 'id' id="size_id">
     <input type="hidden" value="{$info.good_id}" name = 'good_id'>
     <div class="layui-form-item"><p style="color: red;">注意：名称不能有&或者\的符号。</p></div>
     <div class="layui-form-item">
@@ -102,12 +102,14 @@
         idstr = str;
         $(".layui-btn-danger").hide();
     }
+
+    var size_id = $("#size_id").val();
     layui.use(['upload'], function() {
         layui.upload({
             title: '上传图片　',
             elem: '.upload0',
             /*url: "{:U('Goods/imgup0')}",*/
-            url: "{:U('Goods/imgup_size')}",
+            url: "{:U('Goods/imgup_size')}" + "&sid=" + size_id,
             type: 'images',
             ext: 'png|gif|jpg|jpeg',
             success: function(res) {

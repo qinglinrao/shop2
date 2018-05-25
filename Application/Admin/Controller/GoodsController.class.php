@@ -749,6 +749,30 @@ class GoodsController extends CommonController {
 
 	# 这里是上传规格图的，需要裁剪。
     public function imgup_size() {
+        # 修改商品规格的同时，删除原来图片和图片记录。
+        $sid = I('get.sid');
+        if($sid){
+            $sdata = M('goods_image')->field('image')->where('sid=%d',$sid)->find();
+
+            try{
+                //删除规格图片
+                if(file_exists($sdata['image'])){
+                    unlink($sdata['image']);
+                }
+
+                // 启动事务
+                $model = new \Think\Model();
+                $model->startTrans();
+                M('goods_image')->field('image')->where('sid=%d',$sid)->delete();
+                // 提交事务
+                $model->commit();
+
+            }catch (Exception $e){
+                // 回滚事务
+                $model->rollback();
+                echo '删除文件错误: ' .$e->getMessage();
+            }
+        }
         $type = 'images';
         $folder = 'Sizes';
         $item = 'upimg0';
