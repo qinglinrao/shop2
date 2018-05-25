@@ -29,16 +29,22 @@ class IndexController extends CommonController {
 			}
 			$imgList = M('goods_image')->where('good_id=%d and stype=1',$id)->select();
 
+			# goods_title是商品名称，goods_title2这个是去掉###的网站title。
+            $goodInfo['goods_title2'] = $goodInfo['goods_title'];
             # 商品名称需要换行的处理。用###来标志。
             if(preg_match('/\#\#\#/', $goodInfo['goods_title'], $matches)){
                 #存在多个名称
                 $str = '';
+                $str_title = '';
                 $name_arr = explode('###', $goodInfo['goods_title']);
                 for($i=0;$i<(count($name_arr)-1);$i++){
                     $str .= $name_arr[$i].'<br/>';
+                    $str_title .= $name_arr[$i];
                 }
                 $str .= $name_arr[count($name_arr)-1];
+                $str_title .= $name_arr[count($name_arr)-1];
                 $goodInfo['goods_title'] = $str;
+                $goodInfo['goods_title2'] = $str_title;
             }
 
             #转出富文本文字的格式
