@@ -106,7 +106,8 @@
         layui.upload({
             title: '上传图片　',
             elem: '.upload0',
-            url: "{:U('Goods/imgup0')}",
+            /*url: "{:U('Goods/imgup0')}",*/
+            url: "{:U('Goods/imgup_size')}",
             type: 'images',
             ext: 'png|gif|jpg|jpeg',
             success: function(res) {

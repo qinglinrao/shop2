@@ -52,6 +52,7 @@ class IndexController extends CommonController {
 
 			$sizeList = M('goods_size')->where('good_id=%d',$id)->select();
             $ggid = 0;
+            //$size_ids = array();
 			if($sizeList){
 			    # 默认选择第一种风格。
 			    $ggid = $sizeList[0]['id'];
@@ -66,10 +67,15 @@ class IndexController extends CommonController {
 					if($v['weight'] && !in_array($v['weight'],$size['weight'])) {
 						$size['weight'][] = $v['weight'];
 					}
+                    //$size_ids[] = $v['id'];
 				}
 				$this->size = $size;
 			}
 		}
+		//$where['sid'] = array('in', $size_ids);
+		//$where['stype'] = 0;
+		# 全部规格。
+       // $size_imgs = M('goods_image')->field('id, image')->where($where)->select();
         $this->ggid = $ggid;
 		# 规格数量
 		$this->size_num = count($this->size) ? count($this->size) : 0;

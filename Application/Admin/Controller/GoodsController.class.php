@@ -561,7 +561,34 @@ class GoodsController extends CommonController {
         $goodId = I('get.goodId');
         $id = I('get.id');
         if($id){
-            $res = M('goods_size')->where('id=%d',$id)->delete();
+            # 1.删除规格图片
+            $img_data = M('goods_image')->where('sid=%d',$id)->field('image')->select();
+            try{
+                //删除购买须知图片
+                if(file_exists($img_data[0]['image'])){
+                    unlink($img_data[0]['image']);
+                }
+            }catch (Exception $e){
+                echo '删除文件错误: ' .$e->getMessage();
+            }
+
+            # 2. 删除图片、规格记录
+            $model = new \Think\Model();
+
+            // 启动事务
+            $res = 0;
+            $model->startTrans();
+            try{
+                M('goods_image')->where('sid=%d',$id)->delete();
+                M('goods_size')->where('id=%d',$id)->delete();
+                // 提交事务
+                $model->commit();
+                $res = 1;
+            } catch (\Exception $e) {
+                // 回滚事务
+                $model->rollback();
+            }
+
             if($res){
                 $this->success('信息更新成功',U('Goods/configlist',array('id'=>$goodId)));
             }else{
@@ -576,7 +603,46 @@ class GoodsController extends CommonController {
 	//删除操作
 		$id = I('get.id');
 		if($id){
-			$res = M('goods')->where('id=%d',$id)->delete();
+		    # 要删除图片和相关规格记录、规格图片。
+
+            # 1.删除商品、规格图片
+            $img_data = M('goods_image')->where('good_id=%d',$id)->field('image')->select();
+            $img_notic = M('goods')->where('id=%d',$id)->field('goods_notice')->select();
+
+            try{
+                foreach ($img_data as $val){
+                    //删除
+                    if(file_exists($val['image'])){
+                        unlink($val['image']);
+                    }
+                }
+                //删除购买须知图片
+                if(file_exists($img_notic[0]['goods_notice'])){
+                    unlink($img_notic[0]['goods_notice']);
+                }
+            }catch (Exception $e){
+                echo '删除文件错误: ' .$e->getMessage();
+            }
+
+            # 2. 删除商品、图片、规格记录
+            $model = new \Think\Model();
+
+            // 启动事务
+            $res = 0;
+            $model->startTrans();
+            try{
+                # goods表的购买须知图片也要删除，goods_notice
+                M('goods')->where('id=%d',$id)->delete();
+                M('goods_image')->where('good_id=%d',$id)->delete();
+                M('goods_size')->where('good_id=%d',$id)->delete();
+                // 提交事务
+                $model->commit();
+                $res = 1;
+            } catch (\Exception $e) {
+                // 回滚事务
+                $model->rollback();
+            }
+
 			if($res){
 				$this->success('信息删除成功',U('Goods/index'));
 			}else{
@@ -669,7 +735,9 @@ class GoodsController extends CommonController {
 
 	public function imgup0() {
 		$type = 'images';
-		$folder = 'Goods';
+		/*$folder = 'Goods';*/
+        # 这里是上传购买须知图片的。
+		$folder = 'Notices';
 		$item = 'upimg0';
 		$name = "";
 		//取消购买须知图片裁剪
@@ -678,6 +746,18 @@ class GoodsController extends CommonController {
 		$this->_ajaxupload($type,$folder,$item,$name);
 		//$this->_ajaxupload($type,$folder,$item,$name,$width,$height);
 	}
+
+	# 这里是上传规格图的，需要裁剪。
+    public function imgup_size() {
+        $type = 'images';
+        $folder = 'Sizes';
+        $item = 'upimg0';
+        $name = "";
+        $width = 105;
+        $height = 105;
+        $this->_ajaxupload($type,$folder,$item,$name, $width, $height);
+        //$this->_ajaxupload($type,$folder,$item,$name,$width,$height);
+    }
 
     public function imgupcsv() {
         $type = 'file';
