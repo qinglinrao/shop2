@@ -467,31 +467,68 @@ class GoodsController extends CommonController {
         }
     }
 
-    # 添加商品规格
+    # 添加商品规格,支持批量添加
     function doaddconfig()
     {
 		$id = I('get.goodId');
         if(IS_POST){
-            $data = array();
-            $data['good_id'] = I('good_id');
-            $data['color'] = I('color');
-            $data['size'] = I('size');
-            $data['weight'] = I('weight');
-            $data['add_time'] = time();
-            $db = M('goods_size');
-            $db->create($data);
-            $sid = $db -> add();
-            $imageData = array(
-                'good_id' => $data['good_id'],
-                'image' => I('image'),
-                'sid' => $sid,
-                'stype' => 0,
-                'add_time' => time(),
-            );
-            $imgDb = M('goods_image');
-            $imgDb->create($imageData);
-            $res = $imgDb -> add();
+            # 如果是尺寸和重量有###符号就是批量添加的。60###61###62
+            if(preg_match('/\#\#\#/', I('size'), $matches) && !I('image')){
+                #存在多个名称
+                $name_arr = explode('###', I('size'));
+
+                foreach ($name_arr as $val){
+                    $data = array();
+                    $data['good_id'] = I('good_id');
+                    $data['color'] = I('color');
+                    $data['size'] = $val;
+                    $data['weight'] = I('weight');
+                    $data['add_time'] = time();
+                    $db = M('goods_size');
+                    $db->create($data);
+                    $db -> add();
+                }
+
+            }elseif(preg_match('/\#\#\#/', I('weight'), $matches) && !I('image')){
+                #存在多个名称
+                $name_arr = explode('###', I('weight'));
+
+                foreach ($name_arr as $val){
+                    $data = array();
+                    $data['good_id'] = I('good_id');
+                    $data['color'] = I('color');
+                    $data['size'] = I('size');
+                    $data['weight'] = $val;
+                    $data['add_time'] = time();
+                    $db = M('goods_size');
+                    $db->create($data);
+                    $db -> add();
+                }
+
+            }else{
+                $data = array();
+                $data['good_id'] = I('good_id');
+                $data['color'] = I('color');
+                $data['size'] = I('size');
+                $data['weight'] = I('weight');
+                $data['add_time'] = time();
+                $db = M('goods_size');
+                $db->create($data);
+                $sid = $db -> add();
+                $imageData = array(
+                    'good_id' => $data['good_id'],
+                    'image' => I('image'),
+                    'sid' => $sid,
+                    'stype' => 0,
+                    'add_time' => time(),
+                );
+                $imgDb = M('goods_image');
+                $imgDb->create($imageData);
+                $res = $imgDb -> add();
+            }
+
             $this->success('信息更新成功',U('Goods/configlist',array('id'=>$data['good_id'])));
+
         }else{
             $this->error('参数错误',U('Goods/configlist',array('id'=>$id)));
         }
