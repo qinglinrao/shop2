@@ -16,6 +16,7 @@
 		<div class="layui-input-inline">
 			<select name="statue">
 				<option value="0" <if condition="$statue eq 0">selected</if>>订单状态</option>
+				<option value="10" <if condition="$statue eq 10">selected</if> style="color: red;">代发货</option>
 				<option value="1" <if condition="$statue eq 1">selected</if>>未付款</option>
 				<option value="2" <if condition="$statue eq 2">selected</if>>已付款</option>
 				<option value="3" <if condition="$statue eq 3">selected</if>>配送中</option>
@@ -25,7 +26,7 @@
 				<option value="7" <if condition="$statue eq 7">selected</if>>待退货</option>
 				<option value="8" <if condition="$statue eq 8">selected</if>>已退货</option>
 				<option value="9" <if condition="$statue eq 9">selected</if>>已完成</option>
-				<option value="10" <if condition="$statue eq 10">selected</if>>拼团中</option>
+				<!--<option value="10" <if condition="$statue eq 10">selected</if>>拼团中</option>-->
 			</select>
 			<div class="layui-unselect layui-form-select">
 				<div class="layui-select-title">
@@ -33,6 +34,7 @@
 					<i class="layui-edge"></i>
 				</div>
 				<dl class="layui-anim layui-anim-upbit">
+					<dd lay-value="10" class=""><span style="color: red;">代发货</span></dd>
 					<dd lay-value="1" class="">未付款</dd>
 					<dd lay-value="2" class="">已付款</dd>
 					<dd lay-value="3" class="">配送中</dd>
@@ -42,9 +44,12 @@
 					<dd lay-value="7" class="">待退货</dd>
 					<dd lay-value="8" class="">待退货</dd>
 					<dd lay-value="9" class="">待退货</dd>
-					<dd lay-value="10" class="">拼团中</dd>
+					<!--<dd lay-value="10" class="">拼团中</dd>-->
 				</dl>
 			</div>
+		</div>
+		<div class="layui-input-inline" style="width: 295px;">
+			<input type="text" name="keyword_num" value="{$keyword_num}" placeholder="输入商品编号" class="layui-input">
 		</div>
 		<div class="layui-input-inline" style="width: 295px;">
 			<input type="text" name="keyword" value="{$keyword}" placeholder="输入商品名称" class="layui-input">
@@ -62,6 +67,7 @@
 				<tr>
 					<th>编号</th>
 					<th>投放人</th>
+					<th>商品编号</th>
 					<th>商品名称<br/>(###表示换行)</th>
 					<th>用户姓名</th>
 					<th>用户电话</th>
@@ -81,6 +87,7 @@
 					<tr>
 						<td>{$vo.id}</td>
 						<td>{$vo.admin_name}</td>
+						<td>{$vo.goods_number}</td>
 						<td>{$vo.goods_title}</td>
 						<td>{$vo.username}</td>
 						<td>{$vo.phone}</td>
@@ -91,7 +98,8 @@
 						<td>{$vo.from}</td>
 						<td>{$vo.create_at}</td>
 						<td>
-							<if condition="$statue eq 10">
+							<!--可能之前团购的状态是10，现在改成11，因为货到付款是10了。-->
+							<if condition="$statue eq 11">
 								拼团中
 								<else />
 							<eq name="vo.statue" value='1'>未付款</eq>
@@ -103,6 +111,7 @@
 							<eq name="vo.statue" value='7'>待退货</eq>
 							<eq name="vo.statue" value='8'>已退货</eq>
 							<eq name="vo.statue" value='9'>已完成</eq>
+							<eq name="vo.statue" value='10'><span style="color: red;">代发货</span></eq>
 
 							</if>
 						</td>
@@ -136,6 +145,7 @@
 		$ = layui.jquery;
 		form.on('submit(search)', function() {
 			var keyword = $("input[name='keyword']").val();
+			var keyword_num = $("input[name='keyword_num']").val();
 			var statue = $("select[name='statue']").val();
 			var time_area = $("input[name='time_area']").val();
 			var url = '{:U("Orders/index")}';
@@ -145,6 +155,9 @@
 			if(keyword){
 				url += '&keyword='+ keyword;
 			}
+            if(keyword_num){
+                url += '&keyword_num='+ keyword_num;
+            }
 			if(time_area){
 				url += '&time_area='+ time_area;
 			}

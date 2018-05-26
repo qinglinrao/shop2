@@ -16,14 +16,22 @@ class OrdersController extends CommonController {
 	public function index() {
 		$db = M('orders');
 		$keyword = I('get.keyword') ? I('get.keyword') : '';
+		$keyword_num = I('get.keyword_num') ? I('get.keyword_num') : '';
 		if ($keyword) {
-			$where['g.goods_name'] = array('like','%' . $keyword . '%');
+			$where['g.goods_title'] = array('like','%' . $keyword . '%');
 		}
+
+		# 查询商品编号
+        if ($keyword_num) {
+            $where['g.goods_number'] = array('like','%' . $keyword_num . '%');
+        }
 
 		$tuanTime = date('Y-m-d H:i:s',time()-300);
 		$statue = I('get.statue') ? I('get.statue') : '';
 		if ($statue) {
-			if($statue == 10){
+			/*if($statue == 10){*/
+            # 可能之前团购的状态是10，现在改成11，因为货到付款是10了。
+			if($statue == 11){
 				$where['o.create_at'] = array('gt',$tuanTime);
 			}else{
 				$where['o.statue'] = $statue;
@@ -42,10 +50,11 @@ class OrdersController extends CommonController {
 		$limit 	= $page->firstRow.','.$page->listRows;		
 		$table 	= 'pt_orders o';
 		$join 	= array('LEFT JOIN pt_goods g on o.good_id=g.id');
-		$field 	= 'o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id';
+		$field 	= 'o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
 		$order 	= 'o.id desc';
 		$list 	= M()->table($table)->join($join)->where($where)->field($field)->limit($limit)->order($order)->select();
-        # 查询投放人名称
+
+		# 查询投放人名称
         $admin_data = M('admin')->field('admin_id, admin_name')->select();
 		foreach($list as $k=>$v){
 			$userInfo = M('member')->field('phone,username,address')->find($v['user_id']);
@@ -62,6 +71,7 @@ class OrdersController extends CommonController {
 		$this->assign('time_area',$area);
 		$this->assign('statue',$statue);
 		$this->assign('keyword',$keyword);
+		$this->assign('keyword_num',$keyword_num);
 		$this->assign('page',$page->show());
 		$this->assign('list',$list);
 		$this->display(); 
