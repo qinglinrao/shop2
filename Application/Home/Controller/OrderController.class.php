@@ -31,6 +31,10 @@ class OrderController extends Controller {
         $goodCount = I('post.goodCount');
         $refer = I('post.refer');
 
+        # 这里需要安全验证的操作--todo
+        if(!$goodId || !$phone){
+            exit;
+        }
         //验证数据
         $check = 123;
 
