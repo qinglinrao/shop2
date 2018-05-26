@@ -84,7 +84,7 @@ class IndexController extends CommonController {
        // $size_imgs = M('goods_image')->field('id, image')->where($where)->select();
         $this->ggid = $ggid;
 		# 规格数量
-		$this->size_num = count($this->size) ? count($this->size) : 0;
+        $this->size_num = count($size) ? count($size) : 0;
 
 		if($goodInfo['goods_country'] == 'CN'){
 			$html = 'index';

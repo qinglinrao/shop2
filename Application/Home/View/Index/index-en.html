@@ -1042,8 +1042,13 @@
         //获取支付方式
         var payType = $('.pay-box .on').attr('type');
 
+
+        var color_sel=$('.color .sel').text();
+        var weight_sel=$('.weight .sel').text();
+        var size_sel=$('.size .sel').text();
+
         //判断goodId，和sizeId
-        var param = {"userName":name,"goodId":goodId, "sizeId":sizeId, "address":address,"phone":phone,"email":email,"code":code,"remark":remark,"goodCount":num,"payType":payType};
+        var param = {"color":color_sel,"weight":weight_sel,"size":size_sel,"userName":name,"goodId":goodId, "sizeId":sizeId, "address":address,"phone":phone,"email":email,"code":code,"remark":remark,"goodCount":num,"payType":payType};
         //ajax提交数据
         $.ajax({
             type: "post",

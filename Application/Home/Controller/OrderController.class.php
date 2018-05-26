@@ -128,7 +128,7 @@ class OrderController extends Controller {
         $orderData = array(
             'order_id' => $orderId,
             'good_id' => $goodId,
-            'size_id' => $sizeId,
+            'size_id' => $sizeId,     //sizeId是不准的。
             'good_count' => $goodsCountAmount,
             'money' => $priceAmount,
             'user_id' => $userId,
@@ -146,6 +146,27 @@ class OrderController extends Controller {
         $orderModel = M('orders');
         $orderModel->create($orderData);
         $orderId = $orderModel -> add();
+
+
+        //添加记录到新的订单规格表。
+        $color = I('post.color');
+        $weight = I('post.weight');
+        $size = I('post.size');
+        if($color || $weight || $size){
+            $sizeData = array();
+            $sizeData['color'] = $color;
+            $sizeData['weight'] = $weight;
+            $sizeData['size'] = $size;
+            $sizeData['user_id'] = $userId;
+            $sizeData['good_id'] = $goodId;
+            $sizeData['order_id'] = $orderId;
+            $sizeData['num'] = $goodsCountAmount;
+            $sizeData['add_time'] = date('Y-m-d H:i:s');
+
+            $orderSizeModel = M('orders_size');
+            $orderSizeModel->create($sizeData);
+            $orderSizeModel -> add();
+        }
 
         $res = array('code'=>0,'data'=>array("orderId"=>$orderId,'msg'=>$msg3));
         echo json_encode($res);
