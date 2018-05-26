@@ -511,6 +511,8 @@ class GoodsController extends CommonController {
                 $data['color'] = I('color');
                 $data['size'] = I('size');
                 $data['weight'] = I('weight');
+                //开启令牌验证需要手动提交token，坑逼！！！--todo
+                //$data['token'] = I('token');
                 $data['add_time'] = time();
                 $db = M('goods_size');
                 $db->create($data);
