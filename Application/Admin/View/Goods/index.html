@@ -16,6 +16,9 @@
 	</ul>
 	<div class="layui-form-item layui-form">
 		<div class="layui-input-inline">
+			<input type="text" name="keyword_num" value="{$keyword_num}" placeholder="输入商品编号" class="layui-input">
+		</div>
+		<div class="layui-input-inline">
 			<input type="text" name="keyword" value="{$keyword}" placeholder="输入商品名称" class="layui-input">
 		</div>
 		<div class="layui-inline">
@@ -120,8 +123,9 @@
 		var form = layui.form();
 		$ = layui.jquery;
 		form.on('submit(search)', function() {
-			keyword = $("input[name='keyword']").val();
-			window.location.href = '{:U("Goods/index")}&keyword='+ keyword;
+			var keyword = $("input[name='keyword']").val();
+            var keyword_num = $("input[name='keyword_num']").val();
+			window.location.href = '{:U("Goods/index")}&keyword='+ keyword +'&keyword_num='+keyword_num;
 		});
 	});
 	</script>

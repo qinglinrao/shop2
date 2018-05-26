@@ -7,6 +7,7 @@ class GoodsController extends CommonController {
 	function index(){
 	//列表页
 		$keyword = I('get.keyword');
+		$keyword_num = I('get.keyword_num');
 		$db = M('goods');
 
 		# 管理员数据
@@ -15,6 +16,10 @@ class GoodsController extends CommonController {
 			$where['goods_title'] = array('like','%' . $keyword . '%');
 			$wherestr['a.goods_title'] = array('like','%' . $keyword . '%');
 		}
+        if ($keyword_num) {
+            $where['goods_number'] = array('like','%' . $keyword_num . '%');
+            $wherestr['a.goods_number'] = array('like','%' . $keyword_num . '%');
+        }
 		$count 	= $db->where($where)->count();
 		$page 	= show_page($count,10);
 		$limit 	= $page->firstRow.','.$page->listRows;		
@@ -57,6 +62,7 @@ class GoodsController extends CommonController {
 
 		}
 		$this->assign('keyword',$keyword);
+		$this->assign('keyword_num',$keyword_num);
 		$this->assign('page',$page->show());
 		$this->assign('list',$list);
 		$this->display();
