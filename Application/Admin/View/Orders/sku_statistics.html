@@ -48,7 +48,7 @@
 			<button class="layui-btn" lay-submit lay-filter="search">查找</button>
 		</div>
 	</div>
-<div class="layui-form">
+<!--<div class="layui-form">
 	<table class="layui-table" lay-even lay-skin="line">
 		<thead>
 		<tr>
@@ -67,33 +67,29 @@
 				</tr>
 		</tbody>
 	</table>
-</div>
+</div>-->
 	<div class="layui-form">
 		<table class="layui-table" lay-even lay-skin="line">
 			<thead>
 				<tr>
-					<th>订单ID</th>
-					<th>用户ID</th>
 					<th>商品ID</th>
-					<th>购买数量</th>
+					<th>商品编号</th>
 					<th>颜色</th>
 					<th>款式</th>
 					<th>重量</th>
-					<th>下单时间</th>
+					<th>购买数量</th>
 				</tr>
 			</thead>
 			<tbody>
 				<notempty name="list">
 				<foreach name="list" item="vo">
 					<tr>
-						<td>{$vo.order_id}</td>
-						<td>{$vo.user_id}</td>
 						<td>{$vo.good_id}</td>
-						<td>{$vo.num}</td>
+						<td>{$vo.goods_number}</td>
 						<td>{$vo.color}</td>
 						<td>{$vo.size}</td>
 						<td>{$vo.weight}</td>
-						<td>{$vo.add_time}</td>
+						<td>{$vo.count}</td>
 					</tr>
 				</foreach>
 				<else />

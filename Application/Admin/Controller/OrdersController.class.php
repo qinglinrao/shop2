@@ -130,7 +130,7 @@ class OrdersController extends CommonController {
         $where['statue'] = 1;
         if ($keyword) {
             # 先查询订单id
-            $where['g.goods_number'] = array('like','%' . $keyword . '%');
+            $w['goods_number'] = array('like','%' . $keyword . '%');
             $good_data = M('goods')->field("id")->where($w)->find();
             $where['good_id'] = $good_data['id'];
 
@@ -158,7 +158,25 @@ class OrdersController extends CommonController {
         $limit 	= $page->firstRow.','.$page->listRows;
         $order 	= 'id desc';
         # 查询规格数据。
-        $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
+        # $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
+        $size_data = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->limit($limit)->group('good_id, color,size, weight')->select();
+
+        # 查询订单编号
+        $good_ids = array();
+        foreach ($size_data as $k=>$v){
+            $good_ids[] = $v['good_id'];
+        }
+        $good_ids = array_unique($good_ids);
+        $w2['id'] = array('in',$good_ids);
+        $number_data = M('goods')->field("id, goods_number")->where($w2)->select();
+
+        foreach ($number_data as $key=>$val){
+            foreach ($size_data as $k=>$v){
+                if($val['id'] == $v['good_id']){
+                    $size_data[$k]['goods_number'] = $val['goods_number'];
+                }
+            }
+        }
 
         $this->assign('group_data',$group_data);
         $this->assign('num_count',$num_count);
