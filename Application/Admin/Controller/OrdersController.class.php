@@ -124,6 +124,53 @@ class OrdersController extends CommonController {
 			$this->error('订单修改失败',$r);
 		}
 	}
+    //根据sku的订单统计
+    public function sku_statistics(){
+        $keyword = I('get.keyword');
+        $where['statue'] = 1;
+        if ($keyword) {
+            # 先查询订单id
+            $where['g.goods_number'] = array('like','%' . $keyword . '%');
+            $good_data = M('goods')->field("id")->where($w)->find();
+            $where['good_id'] = $good_data['id'];
+
+        }
+
+        $area = I('get.time_area');
+        if($area){
+            $times = explode('~',$area);
+            $start_at = $times[0];
+            $end_at = $times[1];
+            $where['o.create_at'] = array('between',"{$start_at},{$end_at}");
+        }
+        # 先查询总数
+        $count 	= M('orders_size')->where($where)->count();
+
+        # 商品数量
+        $num_count 	= M('orders_size')->where($where)->sum('num');
+
+        # 统计规格总数
+        $group_data = M('orders_size')->field('sum(num) as count, color, size, weight')->where($where)->group('color,size, weight')->select();
+        # $group_model = new \Think\Model(); // 实例化一个model对象 没有对应任何数据表
+        # $group_data = $group_model->where($where)->query("select * from pt_orders_size");
+
+        $page 	= show_page($count,10);
+        $limit 	= $page->firstRow.','.$page->listRows;
+        $order 	= 'id desc';
+        # 查询规格数据。
+        $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
+
+        $this->assign('group_data',$group_data);
+        $this->assign('num_count',$num_count);
+        $this->assign('count',$count);
+        $this->assign('time_area',$area);
+        $this->assign('statue',$where['statue']);
+        $this->assign('keyword',$keyword);
+        $this->assign('page',$page->show());
+        $this->assign('list',$size_data);
+        $this->display();
+    }
+
 	//最近订单
 	public function last(){
 		$keyword = I('get.keyword');
