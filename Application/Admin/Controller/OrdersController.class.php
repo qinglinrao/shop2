@@ -55,6 +55,7 @@ class OrdersController extends CommonController {
 		$list 	= M()->table($table)->join($join)->where($where)->field($field)->limit($limit)->order($order)->select();
 
 		# 查询投放人名称
+        $order_ids = array();
         $admin_data = M('admin')->field('admin_id, admin_name')->select();
 		foreach($list as $k=>$v){
 			$userInfo = M('member')->field('phone,username,address')->find($v['user_id']);
@@ -67,13 +68,30 @@ class OrdersController extends CommonController {
                     $list[$k]['admin_name'] = $admin_val['admin_name'];
                 }
             }
+
+
 		}
+
+        $list_new = array();
+        foreach($list as $v){
+            //获取订单id
+            $order_ids[] = $v['id'];
+            $list_new[$v['id']] = $v;
+        }
+		# 查询规格信息。
+        $where = array();
+        $where['order_id'] = array('in', $order_ids);
+        $size_data = M('orders_size')->field('order_id, color, size, weight')->where($where)->select();
+        foreach ($size_data as $v){
+            # 合并规格信息
+                $list_new[$v['order_id']]['size_data'] = $v['color'] . '/' . $v['size'] . '/' . $v['weight'];
+        }
 		$this->assign('time_area',$area);
 		$this->assign('statue',$statue);
 		$this->assign('keyword',$keyword);
 		$this->assign('keyword_num',$keyword_num);
 		$this->assign('page',$page->show());
-		$this->assign('list',$list);
+		$this->assign('list',$list_new);
 		$this->display(); 
 	}
 

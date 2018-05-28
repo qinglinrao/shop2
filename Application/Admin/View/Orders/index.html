@@ -73,7 +73,8 @@
 					<th>用户电话</th>
 					<th>用户地址</th>
 					<th>用户留言</th>
-					<th>配送信息</th>
+					<!--<th>配送信息</th>-->
+					<th style="color: red;">规格信息</th>
 					<th>物流信息</th>
 					<th>订单来源</th>
 					<th>订单时间</th>
@@ -93,7 +94,8 @@
 						<td>{$vo.phone}</td>
 						<td>{$vo.address}</td>
 						<td>{$vo.remark}</td>
-						<td>{$vo.pw_info}</td>
+						<!--<td>{$vo.pw_info}</td>-->
+						<td><a style="color: red;">{$vo.size_data}</a></td>
 						<td>{$vo.wl_info}</td>
 						<td>{$vo.from}</td>
 						<td>{$vo.create_at}</td>
