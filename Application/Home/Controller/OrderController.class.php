@@ -152,7 +152,7 @@ class OrderController extends Controller {
         $color = I('post.color');
         $weight = I('post.weight');
         $size = I('post.size');
-        if($color || $weight || $size){
+        /*if($color || $weight || $size){*/
             $sizeData = array();
             $sizeData['color'] = $color;
             $sizeData['weight'] = $weight;
@@ -166,7 +166,7 @@ class OrderController extends Controller {
             $orderSizeModel = M('orders_size');
             $orderSizeModel->create($sizeData);
             $orderSizeModel -> add();
-        }
+        /*}*/
 
         $res = array('code'=>0,'data'=>array("orderId"=>$orderId,'msg'=>$msg3));
         echo json_encode($res);
