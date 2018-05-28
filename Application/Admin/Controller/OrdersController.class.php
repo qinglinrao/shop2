@@ -127,12 +127,21 @@ class OrdersController extends CommonController {
     //根据sku的订单统计
     public function sku_statistics(){
         $keyword = I('get.keyword');
-        $where['statue'] = 1;
+        $where['statue'] = 0;
+        $order_ids = array();
         if ($keyword) {
+            $where['statue'] = 10;
             # 先查询订单id
             $w['goods_number'] = array('like','%' . $keyword . '%');
-            $good_data = M('goods')->field("id")->where($w)->find();
-            $where['good_id'] = $good_data['id'];
+            $good_data = M('goods')->field("id, goods_number")->where($w)->select();
+            if($good_data){
+                foreach ($good_data as $val){
+                    $order_ids[] = $val['id'];
+                    $where['good_id'] = array('in', $order_ids);
+                }
+            }else{
+                print_r("商品编号不存在！");
+            }
 
         }
 
@@ -141,45 +150,50 @@ class OrdersController extends CommonController {
             $times = explode('~',$area);
             $start_at = $times[0];
             $end_at = $times[1];
-            $where['o.create_at'] = array('between',"{$start_at},{$end_at}");
+            $where['add_time'] = array('between',"{$start_at},{$end_at}");
         }
-        # 先查询总数
-        $count 	= M('orders_size')->where($where)->count();
 
-        # 商品数量
-        $num_count 	= M('orders_size')->where($where)->sum('num');
-
-        # 统计规格总数
-        $group_data = M('orders_size')->field('sum(num) as count, color, size, weight')->where($where)->group('color,size, weight')->select();
-        # $group_model = new \Think\Model(); // 实例化一个model对象 没有对应任何数据表
-        # $group_data = $group_model->where($where)->query("select * from pt_orders_size");
-
-        $page 	= show_page($count,10);
-        $limit 	= $page->firstRow.','.$page->listRows;
-        $order 	= 'id desc';
-        # 查询规格数据。
-        # $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
-        $size_data = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->limit($limit)->group('good_id, color,size, weight')->select();
-
-        # 查询订单编号
-        $good_ids = array();
-        foreach ($size_data as $k=>$v){
-            $good_ids[] = $v['good_id'];
+        if ($keyword) {
+            # 先查询总数
+            $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id, color,size, weight')->count();
+            $page = show_page($count, 10);
+            $limit = $page->firstRow . ',' . $page->listRows;
+            $order = 'id desc';
+            # 查询规格数据。
+            # $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
+            $size_data = M('orders_size')->field('good_id, sum(num) as sum,count(id) as count,color, size, weight')->where($where)->limit($limit)->group('good_id, color,size, weight')->select();
+            $type = 1;
+        }else{
+            # 先查询总数
+            $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id')->count();
+            $page = show_page($count, 10);
+            $limit = $page->firstRow . ',' . $page->listRows;
+            $order = 'id desc';
+            # 查询规格数据。
+            # $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
+            $size_data = M('orders_size')->field('good_id, sum(num) as sum, count(id) as count,color, size, weight')->where($where)->limit($limit)->group('good_id')->select();
+            $type = 2;
         }
-        $good_ids = array_unique($good_ids);
-        $w2['id'] = array('in',$good_ids);
-        $number_data = M('goods')->field("id, goods_number")->where($w2)->select();
-
-        foreach ($number_data as $key=>$val){
+        if($count){
+            # 查询订单编号
+            $good_ids = array();
             foreach ($size_data as $k=>$v){
-                if($val['id'] == $v['good_id']){
-                    $size_data[$k]['goods_number'] = $val['goods_number'];
+                $good_ids[] = $v['good_id'];
+            }
+            $good_ids = array_unique($good_ids);
+            $w2['id'] = array('in',$good_ids);
+            $number_data = M('goods')->field("id, goods_number")->where($w2)->select();
+
+            foreach ($number_data as $key=>$val){
+                foreach ($size_data as $k=>$v){
+                    if($val['id'] == $v['good_id']){
+                        $size_data[$k]['goods_number'] = $val['goods_number'];
+                    }
                 }
             }
         }
 
-        $this->assign('group_data',$group_data);
-        $this->assign('num_count',$num_count);
+        $this->assign('type',$type);
         $this->assign('count',$count);
         $this->assign('time_area',$area);
         $this->assign('statue',$where['statue']);
