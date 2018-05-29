@@ -78,7 +78,7 @@ class IndexController extends CommonController {
 				$this->size = $size;
 			}
 		}else{
-            Header("HTTP/1.1 404 Not Found");exit;
+            print_r('404');exit;
         }
 		//$where['sid'] = array('in', $size_ids);
 		//$where['stype'] = 0;
