@@ -47,7 +47,8 @@
 			<input type="text" class="layui-input" name="time_area" id="time_area" placeholder="选择时间区间" lay-key="6" required="required" value="{$time_area}">
 		</div>
 		<div class="layui-inline" >
-			<button class="layui-btn" lay-submit lay-filter="search">查找</button>
+			<button class="layui-btn search" lay-submit lay-filter="search">查找</button>
+			<button class="layui-btn empty" lay-submit lay-filter="empty" style="color: red;">清空</button>
 		</div>
 	</div>
 <!--<div class="layui-form">
@@ -122,23 +123,34 @@
 	layui.use(['form','jquery'], function() {
 		var form = layui.form();
 		$ = layui.jquery;
+		function layui_submit(){
+            var keyword = $("input[name='keyword']").val();
+            var statue = $("select[name='statue']").val();
+            var time_area = $("input[name='time_area']").val();
+            var url = '{:U("Orders/sku_statistics")}';
+            if(statue != 0){
+                url += '&statue='+ statue;
+            }
+            if(keyword){
+                url += '&keyword='+ keyword;
+            }
+            if(time_area){
+                url += '&time_area='+ time_area;
+            }
+            window.location.href = url;
+        }
 		form.on('submit(search)', function() {
-			var keyword = $("input[name='keyword']").val();
-			var statue = $("select[name='statue']").val();
-			var time_area = $("input[name='time_area']").val();
-			var url = '{:U("Orders/sku_statistics")}';
-			if(statue != 0){
-				url += '&statue='+ statue;
-			}
-			if(keyword){
-				url += '&keyword='+ keyword;
-			}
-			if(time_area){
-				url += '&time_area='+ time_area;
-			}
-			window.location.href = url;
+            layui_submit();
 		});
+
+        $(".empty").click(function () {
+            $("input[name='keyword']").val('');
+            $("select[name='statue']").val('');
+            $("input[name='time_area']").val('');
+            layui_submit();
+        });
 	});
+
 	</script>
 </body>
 </html>
