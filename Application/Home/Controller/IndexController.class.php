@@ -77,7 +77,9 @@ class IndexController extends CommonController {
 				}
 				$this->size = $size;
 			}
-		}
+		}else{
+            Header("HTTP/1.1 404 Not Found");exit;
+        }
 		//$where['sid'] = array('in', $size_ids);
 		//$where['stype'] = 0;
 		# 全部规格。
