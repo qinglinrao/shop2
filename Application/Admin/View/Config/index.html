@@ -7,8 +7,6 @@
     <link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="__LAYUI__/css/layui.css" />
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/style.css" />
-    <script src="__EDITOR__/kindeditor-min.js"></script>
-    <script src="__EDITOR__/lang/zh_CN.js"></script>
     <!--
     <script>
       KindEditor.ready(function(K) {
@@ -42,14 +40,14 @@
 <ul class="layui-tab-title mt-page mb-form">
     <li class="layui-this"><a href="javascript:void(0);">修改网站配置</a></li>
 </ul>
-<form method="post" autocomplete="off" action="{:U('Config/update_config',array('goodId'=>$goodId))}" class="layui-form">
+<!--<form method="post" autocomplete="off" action="{:U('Config/update_config',array('goodId'=>$goodId))}" class="layui-form">-->
     <input type="hidden" value="{$goodId}" name = 'good_id'>
     <div class="layui-form-item">
         <label class="layui-form-label">评论开关</label>
         <div class="layui-input-inline">
-            <select name="statue">
-                <option value="1" <if condition="$statue eq 1">selected</if>>关闭</option>
-                <option value="0" <if condition="$statue eq 0">selected</if>>打开</option>
+            <select name="comment_isopen">
+                <option value="0" <if condition="$siteinfo.comment_isopen eq 0">selected</if>>关闭</option>
+                <option value="1" <if condition="$siteinfo.comment_isopen eq 1">selected</if>>打开</option>
             </select>
         </div>
         <div class="layui-form-mid layui-word-aux">控制商品详情页的评论页面开关</div>
@@ -57,9 +55,9 @@
     <div class="layui-form-item">
         <label class="layui-form-label">验证码开关</label>
         <div class="layui-input-inline">
-            <select name="statue">
-                <option value="1" <if condition="$statue eq 1">selected</if>>关闭</option>
-                <option value="0" <if condition="$statue eq 0">selected</if>>打开</option>
+            <select name="verification_code_isopen">
+                <option value="0" <if condition="$siteinfo.verification_code_isopen eq 0">selected</if>>关闭</option>
+                <option value="1" <if condition="$siteinfo.verification_code_isopen eq 1">selected</if>>打开</option>
             </select>
         </div>
         <div class="layui-form-mid layui-word-aux">控制下单时，是否显示验证码</div>
@@ -68,15 +66,29 @@
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn layui-btn-danger" lay-submit lay-filter="Submit">立即提交</button>
+            <button class="layui-btn layui-btn-danger search" lay-submit lay-filter="Submit">立即提交</button>
         </div>
     </div>
-</form>
+<!--</form>-->
 <script src="__LAYUI__/jquery-1.8.3.js"></script>
 <script src="__LAYUI__/layui.js"></script>
 <script src="__AJS__ajaxfileupload.js"></script>
 <script type="text/javascript">
-
+    layui.use(['form','jquery'], function() {
+        var form = layui.form();
+        $ = layui.jquery;
+        function layui_submit(){
+            var comment_isopen = $("select[name='comment_isopen']").val();
+            var verification_code_isopen = $("select[name='verification_code_isopen']").val();
+            var url = '{:U("Config/update_config")}';
+            url += '&comment_isopen='+ comment_isopen;
+            url += '&verification_code_isopen='+ verification_code_isopen;
+            window.location.href = url;
+        }
+        form.on('submit(Submit)', function() {
+            layui_submit();
+        });
+    });
 </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
-<?php
-return array (
-  'good_id' => '',
-  'statue' => '0',
+<?php return
+array (
+  'comment_isopen' => '0',
+  'verification_code_isopen' => '0',
 );

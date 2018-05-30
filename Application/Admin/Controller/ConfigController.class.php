@@ -3,9 +3,16 @@ namespace Admin\Controller;
 use Think\Controller;
 
 class ConfigController extends Controller {
+    function __construct()
+    {
+        parent::__construct();
+        if($_SESSION['admin_name'] != 'admim'){
 
+            print_r('没有权限');exit;
+        }
+    }
     public function index(){
-        $siteinfo_file = 'Config/siteinfo.config.php';
+        $siteinfo_file = include('Config/siteinfo.config.php');
         $siteinfo_file = $siteinfo_file ? $siteinfo_file : array();
         $this -> assign('siteinfo', $siteinfo_file);
         $this->display();
@@ -14,16 +21,22 @@ class ConfigController extends Controller {
     public function update_config(){
         $siteinfo_file = 'Config/siteinfo.config.php';
         if(file_exists($siteinfo_file)){
-            if(IS_POST){
-                // 写入文件，这里是关键
-                // I() 方法获取提交的数据
-                // var_export() 处理数组
-                $result = file_put_contents($siteinfo_file, "<?php\nreturn " . var_export(I('post.'), true).';');
+            if(IS_GET){
+                $comment_isopen = I('get.comment_isopen');
+                $verification_code_isopen = I('get.verification_code_isopen');
+                $arr = array('comment_isopen'=>$comment_isopen, 'verification_code_isopen'=>$verification_code_isopen);
+
+                $str = '<?php return'.PHP_EOL;
+                $str .= var_export($arr, true);
+                $str .= ';';
+
+                $result = file_put_contents($siteinfo_file, $str);
                 if($result){
                     $this -> success('保存成功');
                 }else{
-                    $this -> error('保存失败');
+                    $this -> success('保存失败');
                 }
+
             }else{
                 $this -> error('非法操作');
             }
