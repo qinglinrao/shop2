@@ -724,7 +724,9 @@ var idstr=''
                 fileSingleSizeLimit: 500 * 1024 * 1024,    // 500 M
                 // 允许重复上传
                 duplicate: true,
-                threads:1//上传并发数。允许同时最大上传进程数,为了保证文件上传顺序
+                threads:1,//上传并发数。允许同时最大上传进程数,为了保证文件上传顺序
+                // 不压缩。
+                compress:false,
             });
 
             // 拖拽时不接受 js, txt 文件。
@@ -1307,7 +1309,9 @@ var idstr=''
 
 				// 允许重复上传
                 duplicate: true,
-                threads:1//上传并发数。允许同时最大上传进程数,为了保证文件上传顺序
+                threads:1,//上传并发数。允许同时最大上传进程数,为了保证文件上传顺序
+				// 不压缩。
+				compress:false,
             });
 
             // 拖拽时不接受 js, txt 文件。
