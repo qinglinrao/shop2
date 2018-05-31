@@ -21,5 +21,10 @@ return array(
 			'__GIMG__' => __ROOT__ .'/Public/Goods/img/',
 			'__GJS__' => __ROOT__ .'/Public/Goods/js/',
 			'__GCSS__' => __ROOT__ .'/Public/Goods/css/',
+
+            //新的首页
+            '__NEW-IMG__' => __ROOT__ .'/Public/Goods/index-new/img/',
+            '__NEW-JS__' => __ROOT__ .'/Public/Goods/index-new/js/',
+            '__NEW-CSS__' => __ROOT__ .'/Public/Goods/index-new/css/',
 	),
 );
