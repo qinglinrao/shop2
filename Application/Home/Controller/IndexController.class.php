@@ -91,7 +91,9 @@ class IndexController extends CommonController {
 		if($goodInfo['goods_country'] == 'CN'){
 			$html = 'index';
 		}else{
-			$html = 'index-en';
+			# $html = 'index-en';
+            # 换成新的商品页。
+			$html = 'index-new';
 		}
 		$this->model = $goodInfo['goods_country'];
 		$province = M('province')->where("father = 0")->select();
