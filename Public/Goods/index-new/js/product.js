@@ -291,6 +291,9 @@
             return false;
         }
         /*这里可以动态更新商品金额*/
+        var trprice = Number($('.trprice').val());alert(trprice);
+        $('#j_total').text(this.value * trprice + '.00');
+
         /*$.post('/product/checkout?id=' + $('[name=id]').val(), data, function(resp) {
             $('#j_total').text(resp.data.totalFeeFormat);
         }, 'json');*/
