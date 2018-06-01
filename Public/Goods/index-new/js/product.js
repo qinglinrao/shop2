@@ -43,9 +43,9 @@
     $('img[data-original]').lazyload({
         threshold: 500
     });
-    window.addEventListener('DOMContentLoaded', function() {
+    /*window.addEventListener('DOMContentLoaded', function() {
         new SmartPhoto(".js-smartPhoto");
-    });
+    });*/
     var mySwiper1 = new Swiper('.swiper-container1', {
         slidesPerView: 1,
         loop: true,
@@ -173,6 +173,7 @@
     $('.sku-list-wrap .items a').on('click', function() {
         if ($(this).hasClass('disabled')) return false;
         $(this).toggleClass('checked').siblings('a').removeClass('checked');
+        $(this).toggleClass('sel').siblings('a').removeClass('sel');
 
         var id = $('.product_id').val();
         var url = '/index/getImg/id/'+id;
@@ -182,7 +183,6 @@
         }
         $.get(url+'.html', function(result) {
             var data = JSON.parse(result);
-            console.log(data.count);
             if(data.img && colorColIndex){
                 $('.j-summary-img').attr('src',data.img);
             }
@@ -296,7 +296,11 @@
         }, 'json');*/
     });
     $('.widgets-cover-sku .sku-buy').on('click', function() {
-        if (!$('[name=variant_id]').val()) {
+        // 判断是否选中全部的规格。
+        var size_num = $('.size_num').val();
+        var sel_num = document.getElementsByClassName('sel');
+        /*if (!$('[name=variant_id]').val()) {*/
+        if(parseInt(size_num) != parseInt(sel_num.length)){
             showMessage(translate("Please select the product's attributes."));
             return false;
         }
@@ -308,9 +312,9 @@
         var sizeId = $('#ggid').val();
 
         //判断规格是否选择
-        var _colorIndex=$('.color .sel').index();
+        /*var _colorIndex=$('.color .sel').index();
         var _weightIndex=$('.weight .sel').index();
-        var _sizeIndex=$('.size .sel').index();
+        var _sizeIndex=$('.size .sel').index();*/
         /*if(_colorIndex <0 || _weightIndex <0 || _sizeIndex <0){*/
 
         var goodId = $('.product_id').val();
@@ -429,7 +433,7 @@
         var payType = $('.pay-box .on').attr('type');
 
 
-        var color_sel=$('.items_color .checked').text();alert(color_sel);return false;
+        var color_sel=$('.items_color .checked').text();
         var weight_sel=$('.items_weight .checked').text();
         var size_sel=$('.items_size .checked').text();
 

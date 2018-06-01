@@ -285,7 +285,7 @@ textarea {
 }
 
 .seckill-floor-icon {
-    background: url(../images/icons.png) center top no-repeat;
+    background: url(../img/icons.png) center top no-repeat;
     background-size: 10.7rem 2.3rem;
     width: .8rem;
     height: .8rem;
@@ -389,7 +389,7 @@ textarea {
 .label-container .label i {
     color: #f34040;
     font-size: .6rem;
-    background: url(../images/icons.png)no-repeat;
+    background: url(../img/icons.png)no-repeat;
     width: .6rem;
     height: .6rem;
     margin-right: .1rem;
@@ -436,14 +436,14 @@ textarea {
     height: 11px;
     margin-top: .1rem;
     margin-bottom: .3rem;
-    background: url(../images/comment-star.png) repeat-x 0 -11px;
+    background: url(../img/comment-star.png) repeat-x 0 -11px;
     background-size: 15px 22px
 }
 
 .review-container .review-item .review-stars .real-star {
     display: inline-block;
     height: 22px;
-    background: url(../images/comment-star.png) repeat-x 0 0;
+    background: url(../img/comment-star.png) repeat-x 0 0;
     background-size: 15px 22px
 }
 
