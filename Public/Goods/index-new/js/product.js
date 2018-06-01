@@ -436,7 +436,8 @@
         }*/
 
         //获取支付方式
-        var payType = $('.pay-box .on').attr('type');
+        /*var payType = $('.pay-box .on').attr('type');*/
+        var payType = 5;
 
 
         var color_sel=$('.items_color .checked').text();
