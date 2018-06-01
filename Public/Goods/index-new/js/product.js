@@ -387,7 +387,7 @@
             return false;
         }*/
 
-        if (email.length<=0) {
+        /*if (email.length<=0) {
             showMessage('Please enter the email.');
             $('#email').focus();
             return false;
@@ -395,11 +395,11 @@
 
         var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         if (!filter.test(email)) {
-            /*alert('email格式有误');*/
+            /!*alert('email格式有误');*!/
             showMessage('The email is error');
             $('#email').focus();
             return false;
-        }
+        }*/
 
 
 
