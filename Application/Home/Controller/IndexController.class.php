@@ -288,14 +288,16 @@ class IndexController extends CommonController {
 		//$ordersList = M('orders as o')->join('left join pt_goods as g on o.good_id=g.id')->field($fields)->where('o.user_id=%d',$userInfo['id'])->select();
 		#改成直接查电话号码，因为用户信息可能存在多个电话号码，但是不同id。
         $ordersList = M('orders as o')->order('o.id desc')->join('left join pt_goods as g on o.good_id=g.id')->field($fields)->where($where)->select();
-
+        $list_new = array();
+        $order_ids = array();
 		if($ordersList){
 			foreach($ordersList as $k=>$v){
-				$sizeInfo = array();
+
+				/*$sizeInfo = array();
 				$sizeInfo = M('goods_size')->field('color,size,weight')->where('id=%d',$v['size_id'])->find();
 				$ordersList[$k]['color'] = $sizeInfo['color'];
 				$ordersList[$k]['size'] = $sizeInfo['size'];
-				$ordersList[$k]['weight'] = $sizeInfo['weight'];
+				$ordersList[$k]['weight'] = $sizeInfo['weight'];*/
 
 				if($v['statue'] == 1){
                     $ordersList[$k]['statue'] = 'Unpaid';
@@ -328,9 +330,29 @@ class IndexController extends CommonController {
                 }
 
 			}
+
+            foreach($ordersList as $k=>$v){
+                //获取订单id
+                $order_ids[] = $v['id'];
+                $list_new[$v['id']] = $v;
+			}
+
         }else{
 		    # 没有订单数据。--todo？
         }
+
+        # 查询规格信息。
+        $where = array();
+        $where['order_id'] = array('in', $order_ids);
+        $size_data = M('orders_size')->field('order_id, color, size, weight')->where($where)->select();
+
+        foreach ($size_data as $v){
+            # 合并规格信息
+            $list_new[$v['order_id']]['color'] = $v['color'];
+            $list_new[$v['order_id']]['size'] = $v['size'];
+            $list_new[$v['order_id']]['weight'] = $v['weight'];
+        }
+
         /*if($model == 'CN'){
             $html = 'search';
         }else{
@@ -341,8 +363,8 @@ class IndexController extends CommonController {
         $this->display($html);*/
 
         $ordersListNew = array();
-        foreach($ordersList as $k=>$v){
-            $ordersListNew[] = $v;
+        foreach($list_new as $k=>$v){
+            $ordersListNew[$k] = $v;
             $ordersListNew[$k]['user_data'] = $userInfoNew[$v['user_id']];
         }
         $res = array('code'=>0,'data'=>$ordersListNew, 'msg'=>'search success', 'model'=>$model);
