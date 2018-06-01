@@ -232,6 +232,7 @@
                     <input type="hidden" name="variant_id" value="9898">
                     <input type="hidden" class="size_num" value="{$size_num}"/>
                     <input type="hidden" class="trprice" value="{$info.goods_trprice}"/>
+                    <input type="hidden" class="product_id" value="{$info[id]}"/>
                     <ul class="sku-list-wrap">
                         <if condition="isset($size[weight])">
                             <li>
@@ -245,7 +246,6 @@
                             </li>
                         </if>
                         <if condition="isset($size[color])">
-                            <input type="hidden" class="product_id" value="{$info[id]}"/>
                             <li>
                                 <h2 id="prop_title_2">Color</h2>
                                 <div class="items items_color" role="radiogroup">
