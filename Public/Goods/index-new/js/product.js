@@ -443,7 +443,7 @@
         var color_sel=$('.items_color .checked').text();
         var weight_sel=$('.items_weight .checked').text();
         var size_sel=$('.items_size .checked').text();
-
+        $('.order-buy').hide();
         //判断goodId，和sizeId
         var param = {"color":color_sel,"weight":weight_sel,"size":size_sel,"userName":name,"goodId":goodId, "sizeId":sizeId, "address":address,"phone":phone,"email":email,"code":code,"remark":remark,"goodCount":num,"payType":payType};
         //ajax提交数据
