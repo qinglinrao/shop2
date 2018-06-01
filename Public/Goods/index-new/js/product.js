@@ -151,7 +151,10 @@
     });
     $('.sku-close').on('click', function() {
         var $cover = $(this).closest('.widgets-cover');
-        if ($cover.hasClass('widgets-cover-order') && $('.sku-list-wrap').length > 0) {
+        // 判断关闭订单页面时候，是否展示规格页面。
+        var size_num = $('.size_num').val();
+        /*if ($cover.hasClass('widgets-cover-order') && $('.sku-list-wrap').length > 0) {*/
+        if ($cover.hasClass('widgets-cover-order') && size_num > 0) {
             $cover.removeClass('widgets-cover-order').addClass('widgets-cover-sku');
         } else {
             $cover.removeClass('show');
@@ -291,7 +294,7 @@
             return false;
         }
         /*这里可以动态更新商品金额*/
-        var trprice = Number($('.trprice').val());alert(trprice);
+        var trprice = Number($('.trprice').val());
         $('#j_total').text(this.value * trprice + '.00');
 
         /*$.post('/product/checkout?id=' + $('[name=id]').val(), data, function(resp) {
