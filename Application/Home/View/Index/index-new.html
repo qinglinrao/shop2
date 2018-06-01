@@ -9,7 +9,7 @@
     <meta content="yes" name="apple-touch-fullscreen">
     <meta name="robots" content="noindex">
     <meta name="googlebot" content="noindex">
-    <title>新的商品頁面</title>
+    <title>{$info.goods_title2}</title>
     <link rel="stylesheet" href="__GCSS__swiper.min.css">
     <!--<link href="./static/animate.min.css" rel="stylesheet">-->
     <link href="__NEW-CSS__smartphoto.min.css" rel="stylesheet">
@@ -221,7 +221,10 @@
                     </div>
                     <div class="main">
                         <div class="price">RM {$info.goods_trprice}</div>
-                        <div class="sku-info">Selected：<span class="selected-container"><span>White</span><span>2XL</span></span></div>                    </div>
+                        <if condition='($size_num) gt 0'>
+                        <div class="sku-info">Selected：<span class="selected-container"><span>White</span><span>2XL</span></span></div>
+                        </if>
+                    </div>
                     <a class="sku-close"></a>
                 </div>
                 <div class="body">
