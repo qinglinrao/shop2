@@ -154,9 +154,10 @@ class OrdersController extends CommonController {
         }
 
         if ($keyword) {
-            # 先查询总数
-            $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id, color,size, weight')->count();
-            $page = show_page($count, 10);
+            # 先查询总数(一个大坑，使用group再使用count()方法是不准确的。)
+            $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id, color,size, weight')->select();
+            $count = count($count);
+            $page = show_page($count, 20);
             $limit = $page->firstRow . ',' . $page->listRows;
             $order = 'id desc';
             # 查询规格数据。
@@ -164,9 +165,10 @@ class OrdersController extends CommonController {
             $size_data = M('orders_size')->field('good_id, sum(num) as sum,count(id) as count,color, size, weight')->where($where)->limit($limit)->group('good_id, color,size, weight')->select();
             $type = 1;
         }else{
-            # 先查询总数
-            $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id')->count();
-            $page = show_page($count, 10);
+            # 先查询总数(一个大坑，使用group再使用count()方法是不准确的。)
+            $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id')->select();
+            $count = count($count);
+            $page = show_page($count, 20);
             $limit = $page->firstRow . ',' . $page->listRows;
             $order = 'id desc';
             # 查询规格数据。
