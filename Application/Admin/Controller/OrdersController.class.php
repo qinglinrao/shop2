@@ -50,7 +50,7 @@ class OrdersController extends CommonController {
 		$limit 	= $page->firstRow.','.$page->listRows;		
 		$table 	= 'pt_orders o';
 		$join 	= array('LEFT JOIN pt_goods g on o.good_id=g.id');
-		$field 	= 'o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
+		$field 	= 'o.good_count,o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
 		$order 	= 'o.id desc';
 		$list 	= M()->table($table)->join($join)->where($where)->field($field)->limit($limit)->order($order)->select();
 
