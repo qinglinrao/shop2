@@ -100,12 +100,13 @@ class OrdersController extends CommonController {
 		$id = I('get.id');
 		$r = I('get.r');
 		$info = M('orders')->find($id);
-		$userInfo = M('member')->where('id=%d',$info['user_id'])->field('username,phone,address')->find();
+		$userInfo = M('member')->where('id=%d',$info['user_id'])->field('username,phone,address,code')->find();
 		$goodsInfo = M('goods')->where('id=%d',$info['good_id'])->field('goods_title')->find();
 		$info['username'] = $userInfo['username'];
 		$info['phone'] = $userInfo['phone'];
 		$info['address'] = $userInfo['address'];
 		$info['goods_title'] = $goodsInfo['goods_title'];
+		$info['code'] = $userInfo['code'];
 		$this->r = $r;
 		$this->info = $info;
 		$this->display();
