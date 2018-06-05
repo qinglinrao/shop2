@@ -51,7 +51,7 @@ class OrdersController extends CommonController {
 		$limit 	= $page->firstRow.','.$page->listRows;		
 		$table 	= 'pt_orders o';
 		$join 	= array('LEFT JOIN pt_goods g on o.good_id=g.id');
-		$field 	= 'o.good_count,o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
+		$field 	= 'o.order_id,o.good_count,o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
 		$order 	= 'o.id desc';
 		$list 	= M()->table($table)->join($join)->where($where)->field($field)->limit($limit)->order($order)->select();
 
@@ -178,7 +178,7 @@ class OrdersController extends CommonController {
             $type = 2;
         }
         if($count){
-            # 查询订单编号
+            # 查询商品编号
             $good_ids = array();
             foreach ($size_data as $k=>$v){
                 $good_ids[] = $v['good_id'];
@@ -194,6 +194,18 @@ class OrdersController extends CommonController {
                     }
                 }
             }
+
+            # 查询订单编号
+            /*$w3['good_id'] = array('in',$good_ids);
+            $order_data = M('orders')->field("id, good_id, order_id")->where($w3)->select();
+
+            foreach ($order_data as $key=>$val){
+                foreach ($size_data as $k=>$v){
+                    if($val['good_id'] == $v['good_id']){
+                        $size_data[$k]['order_id'] = $val['order_id'];
+                    }
+                }
+            }*/
         }
 
         $this->assign('type',$type);
