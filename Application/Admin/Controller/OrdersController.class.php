@@ -557,8 +557,26 @@ class OrdersController extends CommonController {
 	public function del(){
 	//编辑订单状态
 		$id = I('get.id');
+		$user_id = I('get.user_id');
 		$r = I('r');
-		$res = M('orders')->delete($id);
+
+		# 查询订单数据。
+        $model = new \Think\Model();
+        // 启动事务
+        $res = 0;
+        $model->startTrans();
+        try{
+            $res = M('orders')->delete($id);
+            $res = M('member')->delete($user_id);
+            $res = M('orders_size')->where('order_id=%d and user_id=%d',array($id, $user_id))->delete();
+            // 提交事务
+            $model->commit();
+            $res = 1;
+        } catch (\Exception $e) {
+            // 回滚事务
+            $model->rollback();
+        }
+
 		if($res){
 			$this->success('订单删除成功',$r);
 		}else{

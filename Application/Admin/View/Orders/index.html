@@ -123,7 +123,7 @@
 						</td>
 						<td>
 							<a class="layui-btn layui-btn-mini" href="{:U('Orders/edit',array('id'=>$vo['id'],'r'=>$_SERVER['REQUEST_URI']))}">编辑</a>
-							<a class="layui-btn layui-btn-mini layui-btn-danger" href="{:U('Orders/del',array('id'=>$vo['id'],'r'=>$_SERVER['REQUEST_URI']))}">删除</a>
+							<a class="layui-btn layui-btn-mini layui-btn-danger" onclick="javascript:if(confirm('确定要删除订单吗！慎重！慎重！')){del_action('{$vo.id}','{$vo.user_id}');return true;}return false;">删除</a>
 						</td>
 					</tr>
 				</foreach>
@@ -170,6 +170,11 @@
 			window.location.href = url;
 		});
 	});
+
+    function del_action(id, user_id){
+        //href="{:U('Orders/del',array('id'=>$vo['id'],'r'=>$_SERVER['REQUEST_URI']))}"
+        window.location.href = "/admin.php?m=admin&c=Orders&a=del"+"&id="+id+"&user_id="+user_id;
+    }
 	</script>
 </body>
 </html>
