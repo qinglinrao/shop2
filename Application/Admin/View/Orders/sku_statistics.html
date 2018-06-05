@@ -48,6 +48,7 @@
 		</div>
 		<div class="layui-inline" >
 			<button class="layui-btn search" lay-submit lay-filter="search">查找</button>
+			<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('确定要导出Excel表格吗？')){export_action();return true;}return false;">导出</button>
 			<if condition="$type eq 1"><button class="layui-btn empty" lay-submit lay-filter="empty" style="color: red;">返回</button></if>
 		</div>
 	</div>
@@ -119,12 +120,15 @@
 		});
 	</script>
 	<script src="__LAYUI__/layui.js"></script>
+    <script src="__LAYUI__/jquery-1.8.3.js"></script>
 	<script>
+
+
 	layui.use(['form','jquery'], function() {
 		var form = layui.form();
 		$ = layui.jquery;
 		function layui_submit(){
-            var keyword = $("input[name='keyword']").val();
+		    var keyword = $("input[name='keyword']").val();
             var statue = $("select[name='statue']").val();
             var time_area = $("input[name='time_area']").val();
             var url = '{:U("Orders/sku_statistics")}';
@@ -150,6 +154,16 @@
             layui_submit();
         });
 	});
+
+    //检查商品编号的唯一性
+    function export_action(obj) {
+        var keyword = $("input[name='keyword']").val();
+        var statue = $("select[name='statue']").val();
+        var time_area = $("input[name='time_area']").val();
+
+        window.location.href = "/admin.php?m=admin&c=Orders&a=export"+"&keyword="+keyword+"&statue="+statue+"&time_area="+time_area;
+
+    }
 
 	</script>
 </body>
