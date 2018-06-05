@@ -597,29 +597,18 @@ class OrdersController extends CommonController {
             $where['add_time'] = array('between',"{$start_at},{$end_at}");
         }
 
-        if ($keyword) {
-            # 先查询总数(一个大坑，使用group再使用count()方法是不准确的。)
-            $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id, color,size, weight')->select();
-            $count = count($count);
-            $page = show_page($count, 20);
-            $limit = $page->firstRow . ',' . $page->listRows;
-            $order = 'id desc';
-            # 查询规格数据。
-            # $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
-            $size_data = M('orders_size')->field('good_id, sum(num) as sum,count(id) as count,color, size, weight')->where($where)->limit($limit)->group('good_id, color,size, weight')->select();
-            $type = 1;
-        }else{
-            # 先查询总数(一个大坑，使用group再使用count()方法是不准确的。)
-            $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id')->select();
-            $count = count($count);
-            $page = show_page($count, 20);
-            $limit = $page->firstRow . ',' . $page->listRows;
-            $order = 'id desc';
-            # 查询规格数据。
-            # $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
-            $size_data = M('orders_size')->field('good_id, sum(num) as sum, count(id) as count,color, size, weight')->where($where)->limit($limit)->group('good_id')->select();
-            $type = 2;
-        }
+
+        # 先查询总数(一个大坑，使用group再使用count()方法是不准确的。)
+        $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id, color,size, weight')->select();
+        $count = count($count);
+        $page = show_page($count, 20);
+        $limit = $page->firstRow . ',' . $page->listRows;
+        $order = 'id desc';
+        # 查询规格数据。
+        # $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
+        $size_data = M('orders_size')->field('good_id, sum(num) as sum,count(id) as count,color, size, weight')->where($where)->limit($limit)->group('good_id, color,size, weight')->select();
+        $type = 1;
+
         if($count){
             # 查询订单编号
             $good_ids = array();
@@ -628,12 +617,13 @@ class OrdersController extends CommonController {
             }
             $good_ids = array_unique($good_ids);
             $w2['id'] = array('in',$good_ids);
-            $number_data = M('goods')->field("id, goods_number")->where($w2)->select();
+            $number_data = M('goods')->field("id, goods_number, goods_purchase_url")->where($w2)->select();
 
             foreach ($number_data as $key=>$val){
                 foreach ($size_data as $k=>$v){
                     if($val['id'] == $v['good_id']){
                         $size_data[$k]['goods_number'] = $val['goods_number'];
+                        $size_data[$k]['goods_purchase_url'] = $val['goods_purchase_url'];
                     }
                 }
             }
@@ -660,11 +650,18 @@ class OrdersController extends CommonController {
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
 
-        $rows = array(
+        /*$rows = array(
             array('2003','1','-50.5','2010-01-01 23:00:00','2012-12-31 23:00:00'),
             array('2003','=B1', '23.5','2010-01-01 00:00:00','2012-12-31 00:00:00'),
-        );
-
+        );*/
+        $rows = array();
+        $rows[] = array("SKU编号", "采购个数", "颜色", "尺寸", "采购日期", "采购链接");
+        foreach ($size_data as $key=>$val){
+            $val['goods_purchase_url'] = htmlspecialchars_decode(html_entity_decode($val['goods_purchase_url']));
+            # 去掉html标签
+            $val['goods_purchase_url'] = strip_tags($val['goods_purchase_url']);
+            $rows[] = array($val['goods_number'],$val['count'],$val['color'],$val['size'],$area,$val['goods_purchase_url']);
+        }
         $writer->setAuthor('Some Author');
         foreach($rows as $row)
             $writer->writeSheetRow('Sheet1', $row);

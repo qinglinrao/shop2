@@ -48,7 +48,7 @@
 		</div>
 		<div class="layui-inline" >
 			<button class="layui-btn search" lay-submit lay-filter="search">查找</button>
-			<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('确定要导出Excel表格吗？')){export_action();return true;}return false;">导出</button>
+			<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('确定要导出Excel表格吗？')){export_action();return true;}return false;">导出Excel</button>
 			<if condition="$type eq 1"><button class="layui-btn empty" lay-submit lay-filter="empty" style="color: red;">返回</button></if>
 		</div>
 	</div>
@@ -161,6 +161,9 @@
         var statue = $("select[name='statue']").val();
         var time_area = $("input[name='time_area']").val();
 
+        if(!time_area){
+            alert("请先选择日期");return false;
+		}
         window.location.href = "/admin.php?m=admin&c=Orders&a=export"+"&keyword="+keyword+"&statue="+statue+"&time_area="+time_area;
 
     }
