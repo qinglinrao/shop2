@@ -687,4 +687,148 @@ class OrdersController extends CommonController {
             $writer->writeToStdOut();
         exit(0);
     }
+
+    public function export_logistics(){
+        $db = M('orders');
+        $keyword = I('get.keyword') ? I('get.keyword') : '';
+        $keyword_num = I('get.keyword_num') ? I('get.keyword_num') : '';
+        if ($keyword) {
+            $where['g.goods_title'] = array('like','%' . $keyword . '%');
+        }
+
+        # 查询商品编号
+        if ($keyword_num) {
+            $where['g.goods_number'] = array('like','%' . $keyword_num . '%');
+        }
+
+        $tuanTime = date('Y-m-d H:i:s',time()-300);
+        $statue = I('get.statue') ? I('get.statue') : '';
+        if ($statue) {
+            /*if($statue == 10){*/
+            # 可能之前团购的状态是10，现在改成11，因为货到付款是10了。
+            if($statue == 11){
+                $where['o.create_at'] = array('gt',$tuanTime);
+            }else{
+                $where['o.statue'] = $statue;
+            }
+        }
+        $area = I('get.time_area');
+        if($area){
+            $times = explode('~',$area);
+            $start_at = $times[0];
+            $end_at = $times[1];
+            $where['o.create_at'] = array('between',"{$start_at},{$end_at}");
+        }
+
+        $count 	= M('orders o')->join('pt_goods g on o.good_id=g.id')->where($where)->count();
+        $page 	= show_page($count,10);
+        $limit 	= $page->firstRow.','.$page->listRows;
+        $table 	= 'pt_orders o';
+        $join 	= array('LEFT JOIN pt_goods g on o.good_id=g.id');
+        $field 	= 'o.money, o.order_id,o.good_count,o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
+        $order 	= 'o.id desc';
+        $list 	= M()->table($table)->join($join)->where($where)->field($field)->limit($limit)->order($order)->select();
+
+        # 查询投放人名称
+        $order_ids = array();
+        $admin_data = M('admin')->field('admin_id, admin_name')->select();
+        foreach($list as $k=>$v){
+            $userInfo = M('member')->field('phone,username,address,code')->find($v['user_id']);
+            $list[$k]['phone'] = $userInfo['phone'];
+            $list[$k]['username'] = $userInfo['username'];
+            $list[$k]['address'] = $userInfo['address'];
+            $list[$k]['code'] = $userInfo['code'];
+            //合并管理员名称
+            foreach($admin_data as $admin_val){
+                if($v['admin_id'] == $admin_val['admin_id']){
+                    $list[$k]['admin_name'] = $admin_val['admin_name'];
+                }
+            }
+
+
+        }
+
+        $list_new = array();
+        foreach($list as $v){
+            //获取订单id
+            $order_ids[] = $v['id'];
+            $list_new[$v['id']] = $v;
+        }
+        # 查询规格信息。
+        $where = array();
+        $where['order_id'] = array('in', $order_ids);
+        $size_data = M('orders_size')->field('order_id, color, size, weight')->where($where)->select();
+        foreach ($size_data as $v){
+            # 合并规格信息
+            $list_new[$v['order_id']]['size_data'] = $v['color'] . ' ' . $v['size'] . ' ' . $v['weight'];
+        }
+        # 导出操作
+
+        ini_set('display_errors', 0);
+        ini_set('log_errors', 1);
+        error_reporting(E_ALL & ~E_NOTICE);
+
+        $writer = new \Org\Excel\xlsxwriter();
+
+        $filename = "采购".date("Ymd",time())."-".rand(100,999).".xlsx";
+        header('Content-disposition: attachment; filename="'.$writer::sanitize_filename($filename).'"');
+        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        header('Content-Transfer-Encoding: binary');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+
+        /*$rows = array(
+            array('2003','1','-50.5','2010-01-01 23:00:00','2012-12-31 23:00:00'),
+            array('2003','=B1', '23.5','2010-01-01 00:00:00','2012-12-31 00:00:00'),
+        );*/
+        $rows = array();
+        # 设置颜色#ffff00
+        $rowstyle = array();
+        $rows[] = array("S/No", "Consignee", "Cnee Add1", "Cnee Add2", "Cnee Country(马来西亚MY，新加坡SG)", "Cnee Postcode",
+    "Cnee ISO Code","Cnee Contact","Cnee Tel","Pcs", "Weight (gm)", "Description of Goods1 - English", "Size of Good1 - English",
+            "Description of Goods1 - Chinese", "Size of Good1 - Chinese", "Declared Currency","Declared Pcs", "Declared Value",
+            "Shipper - English(留空时为网站客户的对应信息）","Shipper - Chinese(留空时为网站客户的对应信息）", "Shipper Add1(留空时为网站客户的对应信息）",
+            "Shipper Add2(留空时为网站客户的对应信息）", "Shipper City(留空时为网站客户的对应信息）", "Shipper State(留空时为网站客户的对应信息）",
+            "Shipper Postcode(留空时为网站客户的对应信息）", "Shipper Contact(留空时为网站客户的对应信息）", "Shipper Email(留空时为网站客户的对应信息）",
+            "渠道(输入规则：PW for POSLAJU西马;PE for POSLAJU东马;S for SKYNET;A for ABX;G for GDEX;DL for 新加坡dragonlink;NV for 新加坡NINJIA;NM for 西马NINJIA;NM6 for 西马敏感NINJIA;CS for SKYNET-COD;SE for Soonest;CX for GDEX-COD;DHL for DHL)",
+            "COD(到付金额)", "属性（0-普货 1-敏感货)", "客户订单号", "货物分类(A-衣服 B-电子 C-鞋子 D-箱包 E-杂货)","产品编码（SKU）");
+
+        foreach ($list_new as $key=>$val){
+            $val['goods_purchase_url'] = htmlspecialchars_decode(html_entity_decode($val['goods_purchase_url']));
+            # 去掉html标签
+            $val['goods_purchase_url'] = strip_tags($val['goods_purchase_url']);
+            $rows[] = array($val['id'],$val['name'],$val['address'],"","MY",$val['code'],"", "", $val['phone'],
+                "1", "1", $val['goods_title'], $val['size_data'], "", "", "USD", "1", $val['goods_number'],
+                "", "Voling", "", "", "", "", "", "", "", "NM", $val['money'], "0", $val['order_id'],
+                "E", $val['goods_number']);
+           /* if(in_array($i, array(1, 2, 3, 5, 6, 9, 10, 12, 13, 14, 15, 26, 27, 28, 29, 30))){
+                $rowstyle[] = array('fill'=>"#ffff00");
+            }
+            $i ++;*/
+        }
+
+        # 染色--todo
+        /*$i = 1;
+        $j = 1;
+        $arr = array(1, 2, 3, 5, 6, 9, 10, 12, 13, 14, 15, 26, 27, 28, 29, 30);
+        foreach($rows as $row){
+            foreach ($row as $r)
+                if((in_array($j, $arr))){
+                    $rowstyle[] = array('fill'=>"#ffff00");
+                }else{
+                    $rowstyle[] = array('fill'=>"");
+                }
+                $j++;
+
+            $i++;
+        }*/
+        $writer->setAuthor('Some Author');
+        foreach($rows as $key=>$row)
+
+            $writer->writeSheetRow('Sheet1', $row, $rowstyle);
+            $i++;
+        $writer->writeToStdOut();
+        exit(0);
+
+    }
 }
