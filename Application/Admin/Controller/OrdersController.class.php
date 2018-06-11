@@ -620,12 +620,10 @@ class OrdersController extends CommonController {
         # 先查询总数(一个大坑，使用group再使用count()方法是不准确的。)
         $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id, color,size, weight')->select();
         $count = count($count);
-        $page = show_page($count, 20);
-        $limit = $page->firstRow . ',' . $page->listRows;
         $order = 'id desc';
         # 查询规格数据。
         # $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
-        $size_data = M('orders_size')->field('good_id, sum(num) as sum,count(id) as count,color, size, weight')->where($where)->limit($limit)->group('good_id, color,size, weight')->select();
+        $size_data = M('orders_size')->field('good_id, sum(num) as sum,count(id) as count,color, size, weight')->where($where)->group('good_id, color,size, weight')->select();
         $type = 1;
 
         if($count){
@@ -721,13 +719,11 @@ class OrdersController extends CommonController {
         }
 
         $count 	= M('orders o')->join('pt_goods g on o.good_id=g.id')->where($where)->count();
-        $page 	= show_page($count,10);
-        $limit 	= $page->firstRow.','.$page->listRows;
         $table 	= 'pt_orders o';
         $join 	= array('LEFT JOIN pt_goods g on o.good_id=g.id');
         $field 	= 'o.money, o.order_id,o.good_count,o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
         $order 	= 'o.id desc';
-        $list 	= M()->table($table)->join($join)->where($where)->field($field)->limit($limit)->order($order)->select();
+        $list 	= M()->table($table)->join($join)->where($where)->field($field)->order($order)->select();
 
         # 查询投放人名称
         $order_ids = array();
