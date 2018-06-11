@@ -797,7 +797,7 @@ class OrdersController extends CommonController {
             $val['goods_purchase_url'] = htmlspecialchars_decode(html_entity_decode($val['goods_purchase_url']));
             # 去掉html标签
             $val['goods_purchase_url'] = strip_tags($val['goods_purchase_url']);
-            $rows[] = array($val['id'],$val['name'],$val['address'],"","MY",$val['code'],"", "", $val['phone'],
+            $rows[] = array($val['id'],$val['username'],$val['address'],"","MY",$val['code'],"", "", $val['phone'],
                 "1", "1", $val['goods_title'], $val['size_data'], "", "", "USD", "1", $val['goods_number'],
                 "", "Voling", "", "", "", "", "", "", "", "NM", $val['money'], "0", $val['order_id'],
                 "E", $val['goods_number']);
@@ -826,7 +826,6 @@ class OrdersController extends CommonController {
         foreach($rows as $key=>$row)
 
             $writer->writeSheetRow('Sheet1', $row, $rowstyle);
-            $i++;
         $writer->writeToStdOut();
         exit(0);
 
