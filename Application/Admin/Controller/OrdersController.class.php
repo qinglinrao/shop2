@@ -785,7 +785,7 @@ class OrdersController extends CommonController {
             "Description of Goods1 - Chinese", "Size of Good1 - Chinese", "Declared Currency","Declared Pcs", "Declared Value",
             "Shipper - English(留空时为网站客户的对应信息）","Shipper - Chinese(留空时为网站客户的对应信息）", "Shipper Add1(留空时为网站客户的对应信息）",
             "Shipper Add2(留空时为网站客户的对应信息）", "Shipper City(留空时为网站客户的对应信息）", "Shipper State(留空时为网站客户的对应信息）",
-            "Shipper Postcode(留空时为网站客户的对应信息）", "Shipper Contact(留空时为网站客户的对应信息）", "Shipper Email(留空时为网站客户的对应信息）",
+            "Shipper Postcode(留空时为网站客户的对应信息）","Shipper ISO Code(留空时为网站客户的对应信息）",  "Shipper Contact(留空时为网站客户的对应信息）", "Shipper Email(留空时为网站客户的对应信息）",
             "渠道(输入规则：PW for POSLAJU西马;PE for POSLAJU东马;S for SKYNET;A for ABX;G for GDEX;DL for 新加坡dragonlink;NV for 新加坡NINJIA;NM for 西马NINJIA;NM6 for 西马敏感NINJIA;CS for SKYNET-COD;SE for Soonest;CX for GDEX-COD;DHL for DHL)",
             "COD(到付金额)", "属性（0-普货 1-敏感货)", "客户订单号", "货物分类(A-衣服 B-电子 C-鞋子 D-箱包 E-杂货)","产品编码（SKU）");
 
@@ -795,7 +795,7 @@ class OrdersController extends CommonController {
             $val['goods_purchase_url'] = strip_tags($val['goods_purchase_url']);
             $rows[] = array($val['id'],$val['username'],$val['address'],"","MY",$val['code'],"", "", $val['phone'],
                 "1", "1", $val['goods_title'], $val['size_data'], "", "", "USD", "1", $val['goods_number'],
-                "", "Voling", "", "", "", "", "", "", "", "NM", $val['money'], "0", $val['order_id']."\t",
+                "", "Voling", "", "", "", "", "", "","", "", "NM", $val['money'], "0", $val['order_id']."\t",
                 "E", $val['goods_number']);
            /* if(in_array($i, array(1, 2, 3, 5, 6, 9, 10, 12, 13, 14, 15, 26, 27, 28, 29, 30))){
                 $rowstyle[] = array('fill'=>"#ffff00");
