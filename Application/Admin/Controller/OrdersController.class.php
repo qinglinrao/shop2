@@ -795,7 +795,7 @@ class OrdersController extends CommonController {
             $val['goods_purchase_url'] = strip_tags($val['goods_purchase_url']);
             $rows[] = array($val['id'],$val['username'],$val['address'],"","MY",$val['code'],"", "", $val['phone'],
                 "1", "1", $val['goods_title'], $val['size_data'], "", "", "USD", "1", $val['goods_number'],
-                "", "Voling", "", "", "", "", "", "", "", "NM", $val['money'], "0", $val['order_id'],
+                "", "Voling", "", "", "", "", "", "", "", "NM", $val['money'], "0", $val['order_id']."\t",
                 "E", $val['goods_number']);
            /* if(in_array($i, array(1, 2, 3, 5, 6, 9, 10, 12, 13, 14, 15, 26, 27, 28, 29, 30))){
                 $rowstyle[] = array('fill'=>"#ffff00");
