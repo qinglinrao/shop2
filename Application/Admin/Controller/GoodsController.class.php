@@ -301,6 +301,28 @@ class GoodsController extends CommonController {
                         $res = $imgDb -> add();
                     }
                 }*/
+				# 旧商品没有采购额外信息，需要先查询。
+                $property_data = M('goods_property')->where('good_id = %d', $id)->find();
+                $data = array();
+                $where = array();
+                $where['good_id'] = $id;
+                $data['declared_pcs'] = I('declared_pcs');
+                $data['declared_value'] = I('declared_value');
+                $data['description_english'] = I('description_english');
+                $data['is_sensitive'] = I('is_sensitive');
+                $data['category'] = I('category');
+                $db = M('goods_property');
+                if($property_data){
+
+                        $db->create($data);
+                        $db -> where($where) ->save();
+                }else{
+                    $data['good_id'] = $id;
+                    $db->create($data);
+                    $db -> add();
+                }
+
+
                 if ($id > 0) {
                     $data = array();
                     $where = array();
