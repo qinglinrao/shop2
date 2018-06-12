@@ -80,13 +80,19 @@ class OrdersController extends CommonController {
             $list_new[$v['id']] = $v;
         }
 		# 查询规格信息。
-        $where = array();
-        $where['order_id'] = array('in', $order_ids);
-        $size_data = M('orders_size')->field('order_id, color, size, weight')->where($where)->select();
-        foreach ($size_data as $v){
-            # 合并规格信息
-                $list_new[$v['order_id']]['size_data'] = $v['color'] . '/' . $v['size'] . '/' . $v['weight'];
+        if($order_ids){
+            $where = array();
+            $where['order_id'] = array('in', $order_ids);
+            $size_data = M('orders_size')->field('order_id, color, size, weight')->where($where)->select();
+            if($size_data){
+                foreach ($size_data as $v){
+                    # 合并规格信息
+                    $list_new[$v['order_id']]['size_data'] = $v['color'] . '/' . $v['size'] . '/' . $v['weight'];
+                }
+            }
         }
+
+
 		$this->assign('time_area',$area);
 		$this->assign('statue',$statue);
 		$this->assign('keyword',$keyword);
@@ -721,12 +727,13 @@ class OrdersController extends CommonController {
         $count 	= M('orders o')->join('pt_goods g on o.good_id=g.id')->where($where)->count();
         $table 	= 'pt_orders o';
         $join 	= array('LEFT JOIN pt_goods g on o.good_id=g.id');
-        $field 	= 'o.money, o.order_id,o.good_count,o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
+        $field 	= 'o.good_id,o.money, o.order_id,o.good_count,o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
         $order 	= 'o.id desc';
         $list 	= M()->table($table)->join($join)->where($where)->field($field)->order($order)->select();
 
         # 查询投放人名称
         $order_ids = array();
+        $good_ids = array();
         $admin_data = M('admin')->field('admin_id, admin_name')->select();
         foreach($list as $k=>$v){
             $userInfo = M('member')->field('phone,username,address,code')->find($v['user_id']);
@@ -748,16 +755,41 @@ class OrdersController extends CommonController {
         foreach($list as $v){
             //获取订单id
             $order_ids[] = $v['id'];
+            $good_ids[] = $v['good_id'];
             $list_new[$v['id']] = $v;
         }
         # 查询规格信息。
         $where = array();
         $where['order_id'] = array('in', $order_ids);
         $size_data = M('orders_size')->field('order_id, color, size, weight')->where($where)->select();
-        foreach ($size_data as $v){
-            # 合并规格信息
-            $list_new[$v['order_id']]['size_data'] = $v['color'] . ' ' . $v['size'] . ' ' . $v['weight'];
+        if($size_data){
+            foreach ($size_data as $v){
+                # 合并规格信息
+                $list_new[$v['order_id']]['size_data'] = $v['color'] . ' ' . $v['size'] . ' ' . $v['weight'];
+            }
         }
+
+
+        # 查询采购额外信息。
+        $where = array();
+        $where['good_id'] = array('in', $good_ids);
+        $property_data = M('goods_property')->where($where)->select();
+        if($property_data){
+            foreach ($property_data as $val){
+                foreach ($list_new as $v){
+                    if($val['good_id'] == $v['good_id']){
+                        # 合并规格信息
+                        $list_new[$v['id']]['declared_pcs'] = $val['declared_pcs'];
+                        $list_new[$v['id']]['declared_value'] = $val['declared_value'];
+                        $list_new[$v['id']]['description_english'] = $val['description_english'];
+                        $list_new[$v['id']]['is_sensitive'] = $val['is_sensitive'];
+                        $list_new[$v['id']]['category'] = $val['category'];
+                    }
+
+                }
+            }
+        }
+
         # 导出操作
 
         ini_set('display_errors', 0);
@@ -794,9 +826,9 @@ class OrdersController extends CommonController {
             # 去掉html标签
             $val['goods_purchase_url'] = strip_tags($val['goods_purchase_url']);
             $rows[] = array($val['id'],$val['username'],$val['address'],"","MY",$val['code'],"", "", $val['phone'],
-                "1", "1", $val['goods_title'], $val['size_data'], "", "", "USD", "1", $val['goods_number'],
-                "", "Voling", "", "", "", "", "", "","", "", "NM", $val['money'], "0", $val['order_id']."\t",
-                "E", $val['goods_number']);
+                "1", "1", $val['description_english'], $val['size_data'], "", "", "USD", $val['declared_pcs'], $val['declared_value'],
+                "Voling", "", "", "", "", "", "", "","", "", "NM", $val['money'], $val['is_sensitive'], $val['order_id']."\t",
+                $val['category'], $val['goods_number']);
            /* if(in_array($i, array(1, 2, 3, 5, 6, 9, 10, 12, 13, 14, 15, 26, 27, 28, 29, 30))){
                 $rowstyle[] = array('fill'=>"#ffff00");
             }
