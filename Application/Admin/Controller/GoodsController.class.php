@@ -714,6 +714,8 @@ class GoodsController extends CommonController {
                 M('goods')->where('id=%d',$id)->delete();
                 M('goods_image')->where('good_id=%d',$id)->delete();
                 M('goods_size')->where('good_id=%d',$id)->delete();
+                # 删除商品额外信息
+                M('goods_property')->where('good_id=%d',$id)->delete();
                 // 提交事务
                 $model->commit();
                 $res = 1;
