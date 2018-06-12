@@ -333,8 +333,41 @@
 				<textarea name="article_info" id="editor_id" style="width:700px; height:350px;"></textarea>
 			</div>
 		</div>-->
+		<div class="layui-form-item">
+			<label class="layui-form-label" style="width:200px;color: red;">采购相关额外信息：</label>
+		</div>
 
-		
+		<br class="layui-form-item">
+			<label class="layui-form-label">包裹里面有多少件产品</label></br>
+			<div class="layui-input-inline">
+				<input type="text" name="declared_pcs" maxlength="10" value="1" lay-verify="declared_pcs" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">产品价值</label>
+			<div class="layui-input-inline">
+				<input type="text" name="declared_value" maxlength="10" lay-verify="declared_value" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">英文描述</label>
+			<div class="layui-input-inline">
+				<input type="text" name="description_english" maxlength="300" lay-verify="description_english" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">属性（0-普货 1-敏感货)</label>
+			<div class="layui-input-inline">
+				<input type="text" name="is_sensitive" maxlength="10" value="0" lay-verify="is_sensitive" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">货物分类(A-衣服 B-电子 C-鞋子 D-箱包 E-杂货)</label>
+			<div class="layui-input-inline">
+				<input type="text" name="category" maxlength="10" lay-verify="category" class="layui-input">
+			</div>
+		</div>
+
 		<div class="layui-form-item">
 			<div class="layui-input-block" onclick="javascript:if($('.uploader_check').val() != 1){alert('必须上传详情图！记得点击开始上传按钮！');return false;}if($('.uploader2_check').val() != 1){alert('必须上传轮播图！记得点击开始上传按钮！');return false;}else{return true;}return false;">
 				<button class="layui-btn layui-btn-danger" lay-submit lay-filter="Submit">立即提交</button>

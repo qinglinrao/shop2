@@ -185,6 +185,21 @@ class GoodsController extends CommonController {
                 }
             }
 
+            # 添加采购额外信息。
+
+            if ($goodId > 0) {
+                $data = array();
+                $data['good_id'] = $goodId;
+                $data['declared_pcs'] = I('declared_pcs');
+                $data['declared_value'] = I('declared_value');
+                $data['description_english'] = I('description_english');
+                $data['is_sensitive'] = I('is_sensitive');
+                $data['category'] = I('category');
+                $db = M('goods_property');
+                $db->create($data);
+                $db -> add();
+            }
+
 
             $this->success('信息添加成功',U('Goods/index'));
 
