@@ -122,10 +122,12 @@
 
 							</if>
 						</td>
+						<if condition="$is_edit eq 1">
 						<td>
 							<a class="layui-btn layui-btn-mini" href="{:U('Orders/edit',array('id'=>$vo['id'],'r'=>$_SERVER['REQUEST_URI']))}">编辑</a>
 							<a class="layui-btn layui-btn-mini layui-btn-danger" onclick="javascript:if(confirm('确定要删除订单吗！慎重！慎重！')){del_action('{$vo.id}','{$vo.user_id}');return true;}return false;">删除</a>
 						</td>
+						</if>
 					</tr>
 				</foreach>
 				<else />

@@ -4,6 +4,15 @@ use Think\Controller;
 //评论管理
 class EvaluateController extends CommonController {
 
+    function __construct()
+    {
+        parent::__construct();
+        if($_SESSION['admin_name'] == 'Wuliu'){
+
+            print_r('没有权限');exit;
+        }
+    }
+
 	// 评论列表
 	public function index() {
 		$db = M('orders');

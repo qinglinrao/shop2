@@ -4,6 +4,14 @@ use Think\Controller;
 
 class GoodsController extends CommonController {
 //商品管理
+    function __construct()
+    {
+        parent::__construct();
+        if($_SESSION['admin_name'] == 'Wuliu'){
+
+            print_r('没有权限');exit;
+        }
+    }
 	function index(){
 	//列表页
 		$keyword = I('get.keyword');

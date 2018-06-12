@@ -92,7 +92,11 @@ class OrdersController extends CommonController {
             }
         }
 
-
+        $is_edit = 1;
+        if($_SESSION['admin_name'] == 'Wuliu'){
+            $is_edit = 0;
+        }
+		$this->assign('is_edit',$is_edit);
 		$this->assign('time_area',$area);
 		$this->assign('statue',$statue);
 		$this->assign('keyword',$keyword);
