@@ -279,6 +279,39 @@
 		</div>
 	</div>-->
 
+	<div class="layui-form-item">
+		<label class="layui-form-label" style="width:200px;color: red;">采购相关额外信息：</label>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">包裹里面有多少件产品</label>
+		<div class="layui-input-inline">
+			<input type="text" name="declared_pcs" value="{$propertyList.declared_pcs}" maxlength="10" lay-verify="goods_psprice" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">产品价值</label>
+		<div class="layui-input-inline">
+			<input type="text" name="declared_value" value="{$propertyList.declared_value}" maxlength="10" lay-verify="goods_psprice" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">英文描述</label>
+		<div class="layui-input-inline">
+			<input type="text" name="description_english" value="{$propertyList.description_english}" maxlength="300" lay-verify="goods_psprice" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">属性（0-普货 1-敏感货)</label>
+		<div class="layui-input-inline">
+			<input type="text" name="is_sensitive" value="{$propertyList.is_sensitive}" maxlength="10" lay-verify="goods_psprice" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">货物分类(A-衣服 B-电子 C-鞋子 D-箱包 E-杂货)</label>
+		<div class="layui-input-inline">
+			<input type="text" name="category" value="{$propertyList.category}" maxlength="10" lay-verify="goods_psprice" class="layui-input">
+		</div>
+	</div>
 
 	<div class="layui-form-item">
 		<div class="layui-input-block">

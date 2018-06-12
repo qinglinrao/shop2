@@ -234,10 +234,16 @@ class GoodsController extends CommonController {
             $no = $k+1;
             $this->assign('imgList'.$no,$v['image']);//商品信息
         }
+
+        //额外采购信息
+        $propertyDb = M('goods_property');
+        $propertyList = $propertyDb->where('good_id=%d',$id)->find();
+
 		$country = M('country')->select();
 		$this->assign('country',$country);
 		$this->assign('list',$list);//分类信息
 		$this->assign('info',$info);//商品信息
+		$this->assign('propertyList',$propertyList);//额外采购信息
 		$this->display();
 	}
 
@@ -287,6 +293,19 @@ class GoodsController extends CommonController {
                         $res = $imgDb -> add();
                     }
                 }*/
+                if ($id > 0) {
+                    $data = array();
+                    $where = array();
+                    $where['good_id'] = $id;
+                    $data['declared_pcs'] = I('declared_pcs');
+                    $data['declared_value'] = I('declared_value');
+                    $data['description_english'] = I('description_english');
+                    $data['is_sensitive'] = I('is_sensitive');
+                    $data['category'] = I('category');
+                    $db = M('goods_property');
+                    $db->create($data);
+                    $db -> where($where) ->save();
+                }
 				$this->success('信息更新成功',U('Goods/index'));
 			}else{
 				$this->error('请求参数错误',U('Goods/index'));
