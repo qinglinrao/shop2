@@ -786,6 +786,7 @@ class OrdersController extends CommonController {
                         $list_new[$v['id']]['declared_pcs'] = $val['declared_pcs'];
                         $list_new[$v['id']]['declared_value'] = $val['declared_value'];
                         $list_new[$v['id']]['description_english'] = $val['description_english'];
+                        $list_new[$v['id']]['description_chinese'] = $val['description_chinese'];
                         $list_new[$v['id']]['is_sensitive'] = $val['is_sensitive'];
                         $list_new[$v['id']]['category'] = $val['category'];
                     }
@@ -830,7 +831,7 @@ class OrdersController extends CommonController {
             # 去掉html标签
             $val['goods_purchase_url'] = strip_tags($val['goods_purchase_url']);
             $rows[] = array($val['id'],$val['username'],$val['address'],"","MY",$val['code'],"", "", $val['phone'],
-                "1", "0", $val['description_english'], $val['size_data'], "", "", "USD", $val['declared_pcs'], $val['declared_value'],
+                "1", "0", $val['description_english'], $val['size_data'], $val['description_chinese'], "", "USD", $val['declared_pcs'], $val['declared_value'],
                 "Voling", "", "", "", "", "", "", "","", "", "NM", $val['money'], $val['is_sensitive'], $val['order_id']."\t",
                 $val['category'], $val['goods_number']);
            /* if(in_array($i, array(1, 2, 3, 5, 6, 9, 10, 12, 13, 14, 15, 26, 27, 28, 29, 30))){

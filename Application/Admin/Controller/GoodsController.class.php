@@ -201,6 +201,7 @@ class GoodsController extends CommonController {
                 $data['declared_pcs'] = I('declared_pcs');
                 $data['declared_value'] = I('declared_value');
                 $data['description_english'] = I('description_english');
+                $data['description_chinese'] = I('description_chinese');
                 $data['is_sensitive'] = I('is_sensitive');
                 $data['category'] = I('category');
                 $db = M('goods_property');
@@ -309,6 +310,7 @@ class GoodsController extends CommonController {
                 $data['declared_pcs'] = I('declared_pcs');
                 $data['declared_value'] = I('declared_value');
                 $data['description_english'] = I('description_english');
+                $data['description_chinese'] = I('description_chinese');
                 $data['is_sensitive'] = I('is_sensitive');
                 $data['category'] = I('category');
                 $db = M('goods_property');
@@ -330,6 +332,7 @@ class GoodsController extends CommonController {
                     $data['declared_pcs'] = I('declared_pcs');
                     $data['declared_value'] = I('declared_value');
                     $data['description_english'] = I('description_english');
+                    $data['description_chinese'] = I('description_chinese');
                     $data['is_sensitive'] = I('is_sensitive');
                     $data['category'] = I('category');
                     $db = M('goods_property');
