@@ -59,6 +59,19 @@
 	</div>
 
 	<div class="layui-form-item">
+		<label class="layui-form-label">是否为无效订单</label>
+		<div class="layui-input-inline">
+			<input type="text" name="wl_info" maxlength="10" value="{$info.is_useful}" class="layui-input"  >
+		</div>
+		<div class="layui-form-mid layui-word-aux">1为有效，0为无效</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">无效订单的说明</label>
+		<div class="layui-input-inline">
+			<input type="text" name="wl_info" maxlength="200" value="{$info.is_useful_remark}" class="layui-input"  >
+		</div>
+	</div>
+	<div class="layui-form-item">
 		<label class="layui-form-label">物流信息</label>
 		<div class="layui-input-inline">
 			<input type="text" name="wl_info" maxlength="10" value="{$info.wl_info}" class="layui-input"  >
