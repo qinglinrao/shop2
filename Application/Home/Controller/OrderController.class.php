@@ -39,7 +39,8 @@ class OrderController extends Controller {
             $content = file_get_contents($path);
             $content = mb_convert_encoding ( $content, 'UTF-8','Unicode');
 
-            $array = explode(PHP_EOL, $content);
+            # 这里不能使用PHP_EOL，因为txt文件是windows系统的。
+            $array = explode("\r\n", $content);
             $txt_arr = array();
             for($i=0; $i<count($array); $i++)
             {
@@ -64,7 +65,8 @@ class OrderController extends Controller {
         $content = file_get_contents($path);
         $content = mb_convert_encoding ( $content, 'UTF-8','Unicode');
 
-        $array = explode(PHP_EOL, $content);
+        # 这里不能使用PHP_EOL，因为txt文件是windows系统的。
+        $array = explode("\r\n", $content);
         $txt_arr = array();
         for($i=0; $i<count($array); $i++)
         {
