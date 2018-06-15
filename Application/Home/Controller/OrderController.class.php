@@ -31,8 +31,6 @@ class OrderController extends Controller {
 
         if($data){
             $txt_arr = json_decode($data, true);
-
-            print_r($txt_arr);exit;
         }else{
             # 读取不在范围的邮编。$siteinfo_file = include('Config/siteinfo.config.php');
             $path = 'Config/no_server_code.txt';
@@ -48,8 +46,12 @@ class OrderController extends Controller {
                 $txt_arr[] = $array[$i];
                 //echo $array[$i].'<br />';
             }
+
+            //缓存1天。
+            $redis->set($key, json_encode($txt_arr), 60*60*24);
         }
-        $redis->set($key, json_encode($txt_arr), 20);
+        return $txt_arr;
+
     }
 
     public function createOrder()
@@ -177,6 +179,16 @@ class OrderController extends Controller {
             'remark' => $remark,
             'pay_type' => $payType,
         );
+
+
+        # 判断邮编是否合法
+        if($code){
+            if(in_array($code, $this->no_server_code(), true)){
+                $orderData['is_useful'] = 0;
+                $orderData['is_useful_remark'] = '邮编不在配送服务范围';
+            }
+        }
+
 
         //添加订单
         $orderModel = M('orders');
