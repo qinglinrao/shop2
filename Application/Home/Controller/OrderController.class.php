@@ -16,6 +16,34 @@ class OrderController extends Controller {
 //		}
     }
 
+    # 不在服务范围的邮编。
+    public function no_server_code(){
+        # 读取不在范围的邮编。$siteinfo_file = include('Config/siteinfo.config.php');
+        $path = 'Config/no_server_code.txt';
+        # $file = fopen($path, 'r');
+
+        $content = file_get_contents($path);
+        $content = mb_convert_encoding ( $content, 'UTF-8','Unicode');
+
+        $array = explode(PHP_EOL, $content);
+        $txt_arr = array();
+        for($i=0; $i<count($array); $i++)
+        {
+            $txt_arr[] = $array[$i];
+            //echo $array[$i].'<br />';
+        }
+
+        //实例化redis
+        $redis = new Redis();
+        //连接
+        $redis->connect('127.0.0.1', 6379);
+        //检测是否连接成功
+        echo "Server is running: " . $redis->ping();
+        // 输出结果 Server is running: +PONG
+
+        print_r($txt_arr);exit;
+    }
+
     public function createOrder()
     {
         //
