@@ -18,30 +18,38 @@ class OrderController extends Controller {
 
     # 不在服务范围的邮编。
     public function no_server_code(){
-        # 读取不在范围的邮编。$siteinfo_file = include('Config/siteinfo.config.php');
-        $path = 'Config/no_server_code.txt';
-        # $file = fopen($path, 'r');
-
-        $content = file_get_contents($path);
-        $content = mb_convert_encoding ( $content, 'UTF-8','Unicode');
-
-        $array = explode(PHP_EOL, $content);
-        $txt_arr = array();
-        for($i=0; $i<count($array); $i++)
-        {
-            $txt_arr[] = $array[$i];
-            //echo $array[$i].'<br />';
-        }
-
         //实例化redis
-        $redis = new Redis();
+        $redis = new \Redis();
         //连接
         $redis->connect('127.0.0.1', 6379);
         //检测是否连接成功
-        echo "Server is running: " . $redis->ping();
-        // 输出结果 Server is running: +PONG
+        //echo "Server is running: " . $redis->ping();
 
-        print_r($txt_arr);exit;
+        # 这个项目的redis前缀固定是shop2_
+        $key = 'shop2_no_server_code';
+        $data = $redis->get($key);
+
+        if($data){
+            $txt_arr = json_decode($data, true);
+
+            print_r($txt_arr);exit;
+        }else{
+            # 读取不在范围的邮编。$siteinfo_file = include('Config/siteinfo.config.php');
+            $path = 'Config/no_server_code.txt';
+            # $file = fopen($path, 'r');
+
+            $content = file_get_contents($path);
+            $content = mb_convert_encoding ( $content, 'UTF-8','Unicode');
+
+            $array = explode(PHP_EOL, $content);
+            $txt_arr = array();
+            for($i=0; $i<count($array); $i++)
+            {
+                $txt_arr[] = $array[$i];
+                //echo $array[$i].'<br />';
+            }
+        }
+        $redis->set($key, json_encode($txt_arr), 20);
     }
 
     public function createOrder()
