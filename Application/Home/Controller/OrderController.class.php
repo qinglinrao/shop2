@@ -234,7 +234,7 @@ class OrderController extends Controller {
 
         # 判断邮编是否合法
         if($code){
-            if(in_array((string)$code, $this->no_server_code2())){
+            if(in_array((string)$code, $this->no_server_code2(), true)){
                 $orderData['is_useful'] = 0;
                 $orderData['is_useful_remark'] = '邮编不在配送服务范围';
             }
