@@ -58,6 +58,9 @@ class OrderController extends Controller {
     #上面那个方法有问题。--todo
     public function no_server_code2(){
 
+        $noserver_file = include('Config/noserver.config.php');
+        return $noserver_file;
+
         # 读取不在范围的邮编。$siteinfo_file = include('Config/siteinfo.config.php');
         $path = 'Config/no_server_code.txt';
         # $file = fopen($path, 'r');
@@ -79,9 +82,27 @@ class OrderController extends Controller {
     }
 
     public function test(){
-        $code = '555';
-        print_r(in_array($code, $this->no_server_code(), true));
-        print_r($this->no_server_code());exit;
+        $noserver_file = include('Config/noserver.config.php');
+        print_r($noserver_file);exit;
+
+        $path = 'Config/no_server_code.txt';
+        # $file = fopen($path, 'r');
+
+        $content = file_get_contents($path);
+        $content = mb_convert_encoding ( $content, 'UTF-8','Unicode');
+
+        $array = explode("\r\n", $content);
+        $txt_arr = array();
+        for($i=0; $i<count($array); $i++)
+        {
+            $txt_arr[] = $array[$i];
+        }
+
+        $str = '<?php return'.PHP_EOL;
+        $str .= var_export($txt_arr, true);
+        $str .= ';';
+        $noserver_file = 'Config/noserver.config.php';
+        file_put_contents($noserver_file, $str);
     }
 
     public function createOrder()
@@ -213,7 +234,7 @@ class OrderController extends Controller {
 
         # 判断邮编是否合法
         if($code){
-            if(in_array((string)$code, $this->no_server_code2(), true)){
+            if(in_array($code, $this->no_server_code2(), true)){
                 $orderData['is_useful'] = 0;
                 $orderData['is_useful_remark'] = '邮编不在配送服务范围';
             }
