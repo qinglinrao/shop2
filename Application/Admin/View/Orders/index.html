@@ -67,7 +67,8 @@
 			<thead>
 				<tr>
 					<th>ID</th>
-					<th>投放人</th>
+					<th>商品归属</th>
+					<th style="color: red;">订单归属</th>
 					<th>商品编号</th>
 					<th>订单编号</th>
 					<th>商品名称<br/>(###表示换行)</th>
@@ -91,6 +92,7 @@
 					<tr>
 						<td>{$vo.id}</td>
 						<td>{$vo.admin_name}</td>
+						<td><a style="color: red;">{$vo.admin_belong_name}</a></td>
 						<td>{$vo.goods_number}</td>
 						<td>{$vo.order_id}</td>
 						<td>{$vo.goods_title}</td>

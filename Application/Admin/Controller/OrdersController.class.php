@@ -51,7 +51,7 @@ class OrdersController extends CommonController {
 		$limit 	= $page->firstRow.','.$page->listRows;		
 		$table 	= 'pt_orders o';
 		$join 	= array('LEFT JOIN pt_goods g on o.good_id=g.id');
-		$field 	= 'o.order_id,o.good_count,o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
+		$field 	= 'o.admin_id as admin_belong,o.order_id,o.good_count,o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
 		$order 	= 'o.id desc';
 		$list 	= M()->table($table)->join($join)->where($where)->field($field)->limit($limit)->order($order)->select();
 
@@ -67,6 +67,9 @@ class OrdersController extends CommonController {
             foreach($admin_data as $admin_val){
                 if($v['admin_id'] == $admin_val['admin_id']){
                     $list[$k]['admin_name'] = $admin_val['admin_name'];
+                }
+                if($v['admin_belong'] == $admin_val['admin_id']){
+                    $list[$k]['admin_belong_name'] = $admin_val['admin_name'];
                 }
             }
 
@@ -91,7 +94,7 @@ class OrdersController extends CommonController {
                 }
             }
         }
-
+        //print_r($list_new);exit;
         $is_edit = 1;
         if($_SESSION['admin_name'] == 'Wuliu'){
             $is_edit = 0;
