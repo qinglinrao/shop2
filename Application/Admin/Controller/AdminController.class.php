@@ -50,6 +50,8 @@ class AdminController extends CommonController {
             if($res){
                 $this->error('管理员已存在，不能多次注册');
             }
+            $data['admin_alias'] = I('admin_alias');
+            $data['admin_introduction'] = I('admin_introduction');
             $data['admin_pass'] = md5(I('admin_pass'));
             # 生成订单识别码
             $data['admin_code'] = uniqid();
@@ -59,7 +61,7 @@ class AdminController extends CommonController {
             $data['login_time'] = NowTime();
             $ress = M('admin')->add($data);
             if($ress){
-                $this->success('管理员添加成功',U('Admin/admin_add'));
+                $this->success('管理员添加成功',U('Admin/admin_list'));
             }else{
                 $this->error('管理员添加失败',U('Admin/admin_add'));
             }
@@ -97,6 +99,8 @@ class AdminController extends CommonController {
                 }
                 $data['admin_pass'] = md5(I('admin_pass'));
                 $data['update_at'] = NowTime();
+                $data['admin_alias'] = I('admin_alias');
+                $data['admin_introduction'] = I('admin_introduction');
                 $ress = M('admin')->where('admin_id=%d',$id)->save($data);
                 if($ress){
                     $this->success('编辑管理员成功',U('admin/admin_list'));

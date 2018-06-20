@@ -24,9 +24,23 @@
 		<div class="layui-form-item">
 			<label class="layui-form-label">姓名</label>
 			<div class="layui-input-inline">
-				<input type="text" name="admin_name" maxlength="20" value="{$list.admin_name}" lay-verify="required" class="layui-input">
+				<input type="text" name="admin_name" maxlength="50" value="{$list.admin_name}" lay-verify="required" class="layui-input">
 			</div>
-			<div class="layui-form-mid layui-word-aux">管理员姓名，必须填写</div>
+			<div class="layui-form-mid layui-word-aux">用于登录的，最好别改</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">别称</label>
+			<div class="layui-input-inline">
+				<input type="text" name="admin_alias" maxlength="50" value="{$list.admin_alias}" lay-verify="required" class="layui-input">
+			</div>
+			<div class="layui-form-mid layui-word-aux">可以不填</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">账号说明</label>
+			<div class="layui-input-inline">
+				<input type="text" name="admin_introduction" maxlength="200" value="{$list.admin_introduction}" lay-verify="required" class="layui-input">
+			</div>
+			<div class="layui-form-mid layui-word-aux">可以不填</div>
 		</div>
 		<div class="layui-form-item">
 			<label class="layui-form-label">原密码</label>
