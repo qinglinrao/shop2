@@ -142,6 +142,7 @@ class OrdersController extends CommonController {
 		$data['pw_info'] = I('pw_info');
 		$data['wl_info'] = I('wl_info');
 		$data['statue'] = I('statue');
+		# 修改订单，添加到货率，实收金额等信息--todo
 		$r = I('r');
 		$res = $db->where('id=%d',$id)->save($data);
 		if($res){

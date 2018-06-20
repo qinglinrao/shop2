@@ -53,7 +53,7 @@
 	<div class="layui-form-item">
 		<label class="layui-form-label">配送信息</label>
 		<div class="layui-input-inline">
-			<input type="text" name="pw_info" maxlength="10" required="required" value="{$info.pw_info}" class="layui-input"  >
+			<input type="text" name="pw_info" maxlength="10" value="{$info.pw_info}" class="layui-input"  >
 		</div>
 		<div class="layui-form-mid layui-word-aux">必填，配送信息</div>
 	</div>
@@ -88,6 +88,7 @@
 	<div class="layui-form-item">
 		<label class="layui-form-label">订单状态</label>
 		<div class="layui-input-block">
+			<input type="radio" name="statue" value="10" title="代发货" <if condition="$info[statue] eq 10">checked</if>>
 			<input type="radio" name="statue" value="1" title="未付款" <if condition="$info['statue'] eq 1">checked</if>>
 			<input type="radio" name="statue" value="2" title="已付款" <if condition="$info[statue] eq 2">checked</if>>
 			<input type="radio" name="statue" value="3" title="配送中" <if condition="$info[statue] eq 3">checked</if>>
