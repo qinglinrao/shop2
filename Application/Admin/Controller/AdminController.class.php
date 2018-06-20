@@ -51,6 +51,8 @@ class AdminController extends CommonController {
                 $this->error('管理员已存在，不能多次注册');
             }
             $data['admin_pass'] = md5(I('admin_pass'));
+            # 生成订单识别码
+            $data['admin_code'] = uniqid();
             $data['create_at'] = NowTime();
             $data['update_at'] = NowTime();
             $data['login_ip'] = '0';
