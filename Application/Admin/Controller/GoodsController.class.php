@@ -19,7 +19,7 @@ class GoodsController extends CommonController {
 		$db = M('goods');
 
 		# 管理员数据
-        $admin_data = M('admin')->field('admin_id, admin_name')->select();
+        $admin_data = M('admin')->field('admin_id, admin_name, admin_code')->select();
 		if ($keyword) {
 			$where['goods_title'] = array('like','%' . $keyword . '%');
 			$wherestr['a.goods_title'] = array('like','%' . $keyword . '%');
@@ -65,6 +65,7 @@ class GoodsController extends CommonController {
             foreach($admin_data as $admin_val){
                 if($v['admin_id'] == $admin_val['admin_id']){
                     $list[$k]['admin_name'] = $admin_val['admin_name'];
+                    $list[$k]['admin_code'] = $admin_val['admin_code'];
                 }
             }
 
