@@ -45,7 +45,10 @@ class OrdersController extends CommonController {
 			$end_at = $times[1];
 			$where['o.create_at'] = array('between',"{$start_at},{$end_at}");
 		}
-
+        $admin_id = I('get.admin_id') ? I('get.admin_id') : '';
+		if($admin_id){
+            $where['o.admin_id'] = $admin_id;
+        }
 		$count 	= M('orders o')->join('pt_goods g on o.good_id=g.id')->where($where)->count();
 		$page 	= show_page($count,10);
 		$limit 	= $page->firstRow.','.$page->listRows;		
@@ -99,6 +102,12 @@ class OrdersController extends CommonController {
         if($_SESSION['admin_name'] == 'Wuliu'){
             $is_edit = 0;
         }
+
+        # 推广人员(admin_type=2的)
+        $where = array();
+        $where['admin_type'] = 2;
+        $admin_list = M('admin')->field('admin_id, admin_name')->where($where)->select();
+
 		$this->assign('is_edit',$is_edit);
 		$this->assign('time_area',$area);
 		$this->assign('statue',$statue);
@@ -106,7 +115,9 @@ class OrdersController extends CommonController {
 		$this->assign('keyword_num',$keyword_num);
 		$this->assign('page',$page->show());
 		$this->assign('list',$list_new);
-		$this->display(); 
+		$this->assign('admin_list',$admin_list);
+		$this->assign('admin_list_id',$admin_id);
+		$this->display();
 	}
 
 	public function edit(){
