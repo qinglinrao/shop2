@@ -32,6 +32,7 @@
 					<th>别称</th>
 					<th>订单识别码</th>
 					<th>账号说明</th>
+					<th>账号类型</th>
 					<th>创建时间</th>
 					<th>修改时间</th>
 					<th>操作</th>
@@ -46,6 +47,11 @@
 					<td>{$vo.admin_alias}</td>
 					<td>{$vo.admin_code}</td>
 					<td>{$vo.admin_introduction}</td>
+					<td>
+						<if condition="$vo.admin_type eq 1">管理员</if>
+						<if condition="$vo.admin_type eq 2">推广</if>
+						<if condition="$vo.admin_type eq 3">其他</if>
+					</td>
 					<td>{$vo.create_at}</td>
 					<td>{$vo.update_at}</td>
 					<td>
