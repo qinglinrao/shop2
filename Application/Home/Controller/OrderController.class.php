@@ -272,6 +272,8 @@ class OrderController extends Controller {
             $sizeData['user_id'] = $userId;
             $sizeData['good_id'] = $goodId;
             $sizeData['order_id'] = $orderId;
+            # 订单归属于哪个推广人员的id
+            $sizeData['admin_id'] = $admin_id;
             $sizeData['num'] = $goodsCountAmount;
             $sizeData['add_time'] = date('Y-m-d H:i:s');
 
