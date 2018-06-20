@@ -651,8 +651,11 @@ class OrdersController extends CommonController {
             $end_at = $times[1];
             $where['add_time'] = array('between',"{$start_at},{$end_at}");
         }
+        $admin_id = I('get.admin_id');
+        if ($admin_id) {
+            $where['admin_id'] = $admin_id;
 
-
+        }
         # 先查询总数(一个大坑，使用group再使用count()方法是不准确的。)
         $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id, color,size, weight')->select();
         $count = count($count);
