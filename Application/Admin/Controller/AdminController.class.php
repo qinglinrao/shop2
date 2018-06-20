@@ -22,7 +22,7 @@ class AdminController extends CommonController {
 	function admin_list(){
 		$keyword = I('get.keyword');
 		$db = M('admin');
-		$where = [];
+		$where = array();
 		if ($keyword) {
 			$where['admin_name'] = array('like','%' . $keyword . '%');
 		}
