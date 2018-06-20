@@ -127,6 +127,18 @@ class OrderController extends Controller {
         //验证数据
         $check = 123;
 
+        //订单识别码
+        $o_code = I('post.o_code');
+        $admin_id = 0;
+        if($o_code){
+            $o_where = array();
+            $o_where['admin_code'] = $o_code;
+            $admin_data = M('admin')->where($o_where)->field('admin_id')->find();
+            if($admin_data){
+                $admin_id = $admin_data['admin_id'];
+            }
+        }
+
         //将地址信息写入用户表
         $userModel = M('member');
         $userData = array(
@@ -229,6 +241,7 @@ class OrderController extends Controller {
             'content' => $strDesc,
             'remark' => $remark,
             'pay_type' => $payType,
+            'admin_id' => $admin_id,
         );
 
 

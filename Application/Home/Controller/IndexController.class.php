@@ -8,6 +8,8 @@ class IndexController extends CommonController {
 	public function index(){
         header("Content-type: text/html; charset=utf-8");
         $id = I('get.id');
+        # 订单识别码
+        $code = I('get.code');
 		if($id){
 			$goodInfo = M('goods')->find($id);
 			if (empty($goodInfo) || $goodInfo['goods_stats'] != 1) {
@@ -101,6 +103,7 @@ class IndexController extends CommonController {
         $this->assign('comment_switch',False);
         $this->assign('lately_order_switch',False);
 		$this->assign('province',$province);
+		$this->assign('o_code',$code);
 		$this->display($html);
 	}
 	//更改订单状态接口 get参数 id：订单id;  statue：付款状态（1：未付款，2：已付款）
