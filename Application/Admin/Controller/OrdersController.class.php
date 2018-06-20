@@ -171,6 +171,12 @@ class OrdersController extends CommonController {
 
         }
 
+        $admin_id = I('get.admin_id');
+        if ($admin_id) {
+            $where['admin_id'] = $admin_id;
+
+        }
+
         $area = I('get.time_area');
         if($area){
             $times = explode('~',$area);
@@ -232,6 +238,10 @@ class OrdersController extends CommonController {
                 }
             }*/
         }
+        # 推广人员(admin_type=2的)
+        $where = array();
+        $where['admin_type'] = 2;
+        $admin_list = M('admin')->field('admin_id, admin_name')->where($where)->select();
 
         $this->assign('type',$type);
         $this->assign('count',$count);
@@ -240,6 +250,8 @@ class OrdersController extends CommonController {
         $this->assign('keyword',$keyword);
         $this->assign('page',$page->show());
         $this->assign('list',$size_data);
+        $this->assign('admin_list',$admin_list);
+        $this->assign('admin_list_id',$admin_id);
         $this->display();
     }
 

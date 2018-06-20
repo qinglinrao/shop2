@@ -46,6 +46,26 @@
 		<div class="layui-input-inline" style="width:310px;">
 			<input type="text" class="layui-input" name="time_area" id="time_area" placeholder="选择时间区间" lay-key="6" required="required" value="{$time_area}">
 		</div>
+		<div class="layui-input-inline">
+			<select name="admin_id">
+				<option value="0" >全部推广人员</option>
+				<foreach name="admin_list" item="vo">
+					<option value="{$vo.admin_id}" <if condition="$admin_list_id eq $vo[admin_id]">selected</if>>{$vo.admin_name}</option>
+				</foreach>
+			</select>
+			<div class="layui-unselect layui-form-select">
+				<div class="layui-select-title">
+					<input type="text" placeholder="全部推广人员" value="" readonly="" class="layui-input layui-unselect">
+					<i class="layui-edge"></i>
+				</div>
+				<dl class="layui-anim layui-anim-upbit">
+					<foreach name="admin_list" item="vo">
+						<dd lay-value="{$vo.admin_id}" class="">{$vo.admin_name}</dd>
+					</foreach>
+				</dl>
+			</div>
+		</div>
+
 		<div class="layui-inline" >
 			<button class="layui-btn search" lay-submit lay-filter="search">查找</button>
 			<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('确定要导出Excel表格吗？')){export_action();return true;}return false;">导出Excel</button>
@@ -131,6 +151,7 @@
 		    var keyword = $("input[name='keyword']").val();
             var statue = $("select[name='statue']").val();
             var time_area = $("input[name='time_area']").val();
+            var admin_id = $("select[name='admin_id']").val();
             var url = '{:U("Orders/sku_statistics")}';
             if(statue != 0){
                 url += '&statue='+ statue;
@@ -140,6 +161,9 @@
             }
             if(time_area){
                 url += '&time_area='+ time_area;
+            }
+            if(admin_id){
+                url += '&admin_id='+ admin_id;
             }
             window.location.href = url;
         }
@@ -160,11 +184,12 @@
         var keyword = $("input[name='keyword']").val();
         var statue = $("select[name='statue']").val();
         var time_area = $("input[name='time_area']").val();
+        var admin_id = $("select[name='admin_id']").val();
 
         if(!time_area){
             alert("请先选择日期");return false;
 		}
-        window.location.href = "/admin.php?m=admin&c=Orders&a=export"+"&keyword="+keyword+"&statue="+statue+"&time_area="+time_area;
+        window.location.href = "/admin.php?m=admin&c=Orders&a=export"+"&keyword="+keyword+"&statue="+statue+"&time_area="+time_area+"&admin_id="+admin_id;
 
     }
 
