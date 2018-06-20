@@ -741,6 +741,10 @@ class OrdersController extends CommonController {
             $end_at = $times[1];
             $where['o.create_at'] = array('between',"{$start_at},{$end_at}");
         }
+        $admin_id = I('get.admin_id');
+        if($admin_id){
+            $where['o.admin_id'] = $admin_id;
+        }
 
         $count 	= M('orders o')->join('pt_goods g on o.good_id=g.id')->where($where)->count();
         $table 	= 'pt_orders o';

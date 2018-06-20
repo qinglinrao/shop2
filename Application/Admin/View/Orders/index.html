@@ -210,11 +210,12 @@
         var keyword_num = $("input[name='keyword_num']").val();
         var statue = $("select[name='statue']").val();
         var time_area = $("input[name='time_area']").val();
+        var admin_id = $("select[name='admin_id']").val();
 
         if(!time_area){
             alert("请先选择日期");return false;
         }
-        window.location.href = "/admin.php?m=admin&c=Orders&a=export_logistics"+"&keyword="+keyword+"&statue="+statue+"&time_area="+time_area+"&keyword_num="+keyword_num;
+        window.location.href = "/admin.php?m=admin&c=Orders&a=export_logistics"+"&keyword="+keyword+"&statue="+statue+"&time_area="+time_area+"&keyword_num="+keyword_num+"&admin_id="+admin_id;
 
     }
 	</script>
