@@ -60,7 +60,14 @@ class GoodsController extends CommonController {
 				$itemTuanInfo = M('promotion')->find($v['goods_promotion']);
 				$list[$k]['pro_name'] = $itemTuanInfo['pro_name'];
 			}
-
+            //添加订单识别码
+            $code = 'default';
+            if($_SESSION['admin_id']){
+                $code = M('admin')->field('admin_code')->where('admin_id = %d',$_SESSION['admin_id'])->find();
+            }else{
+			    # 跳转到登录页
+                exit;
+            }
 			//合并管理员名称
             foreach($admin_data as $admin_val){
                 if($v['admin_id'] == $admin_val['admin_id']){
@@ -74,6 +81,7 @@ class GoodsController extends CommonController {
 		$this->assign('keyword_num',$keyword_num);
 		$this->assign('page',$page->show());
 		$this->assign('list',$list);
+		$this->assign('code',$code['admin_code']);
 		$this->display();
 	}
 		
