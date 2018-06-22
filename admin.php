@@ -12,4 +12,5 @@ define('BIND_MODULE','Admin');
 // 应用运行时目录
 define('RUNTIME_PATH','./Runtime/');
 // 引入ThinkPHP入口文件
+require './vendor/autoload.php';
 require './ThinkPHP/ThinkPHP.php';

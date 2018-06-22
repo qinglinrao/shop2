@@ -2,6 +2,9 @@
 namespace Admin\Controller;
 use Think\Controller;
 use Org\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+# import("PhpOffice.PhpSpreadsheet.IOFactory");
+#vendor('PhpOffice.PhpSpreadsheet.IOFactory');
 //订单管理
 class OrdersController extends CommonController {
     function __construct()
@@ -916,9 +919,26 @@ class OrdersController extends CommonController {
         # ./Uploads/Orders_Excel/5b2cb0dace147.xls
         $url = I('post.url');
 
-        $content = file_get_contents($url);
-        $content = mb_convert_encoding ( $content, 'UTF-8','Unicode');
+        # $content = file_get_contents($url);
+        # $content = mb_convert_encoding ( $content, 'UTF-8','Unicode');
 
+        $spreadsheet = IOFactory::load($url);
+        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+
+        $db = M('orders');
+        foreach ($sheetData as $key=>$val){
+            if($key > 1){
+                $data = array();
+                # 处理订单状态
+                $data['statue'] = 9; //默认9是已完成
+                if((int)($val['A']) == 1){
+                    $data['statue'] = 11; // 11是拒签。
+                }
+                $where = array();
+                $where['order_id'] = $val['B'];
+                $db->where($where)->save($data);
+            }
+        }
         if(file_exists($url)){
             unlink($url);
         }
