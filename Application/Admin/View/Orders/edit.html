@@ -89,6 +89,8 @@
 		<label class="layui-form-label">订单状态</label>
 		<div class="layui-input-block">
 			<input type="radio" name="statue" value="10" title="代发货" <if condition="$info[statue] eq 10">checked</if>>
+			<input type="radio" name="statue" value="9" title="已完成" <if condition="$info[statue] eq 9">checked</if>>
+			<input type="radio" name="statue" value="11" title="拒签" <if condition="$info[statue] eq 11">checked</if>>
 			<input type="radio" name="statue" value="1" title="未付款" <if condition="$info['statue'] eq 1">checked</if>>
 			<input type="radio" name="statue" value="2" title="已付款" <if condition="$info[statue] eq 2">checked</if>>
 			<input type="radio" name="statue" value="3" title="配送中" <if condition="$info[statue] eq 3">checked</if>>
@@ -97,7 +99,6 @@
 			<input type="radio" name="statue" value="6" title="已评价" <if condition="$info[statue] eq 6">checked</if>>
 			<input type="radio" name="statue" value="7" title="待退货" <if condition="$info[statue] eq 7">checked</if>>
 			<input type="radio" name="statue" value="8" title="已退货" <if condition="$info[statue] eq 8">checked</if>>
-			<input type="radio" name="statue" value="9" title="已完成" <if condition="$info[statue] eq 9">checked</if>>
 		</div>
 		<div class="layui-form-mid layui-word-aux">可更改，订单状态</div>
 	</div>

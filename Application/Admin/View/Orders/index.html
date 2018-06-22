@@ -17,6 +17,7 @@
 			<select name="statue">
 				<option value="0" <if condition="$statue eq 0">selected</if>>订单状态</option>
 				<option value="10" <if condition="$statue eq 10">selected</if> style="color: red;">代发货</option>
+				<option value="11" <if condition="$statue eq 11">selected</if>>拒签</option>
 				<option value="1" <if condition="$statue eq 1">selected</if>>未付款</option>
 				<option value="2" <if condition="$statue eq 2">selected</if>>已付款</option>
 				<option value="3" <if condition="$statue eq 3">selected</if>>配送中</option>
@@ -35,6 +36,7 @@
 				</div>
 				<dl class="layui-anim layui-anim-upbit">
 					<dd lay-value="10" class=""><span style="color: red;">代发货</span></dd>
+					<dd lay-value="11" class="">拒签</dd>
 					<dd lay-value="1" class="">未付款</dd>
 					<dd lay-value="2" class="">已付款</dd>
 					<dd lay-value="3" class="">配送中</dd>
@@ -144,6 +146,7 @@
 							<eq name="vo.statue" value='8'>已退货</eq>
 							<eq name="vo.statue" value='9'>已完成</eq>
 							<eq name="vo.statue" value='10'><span style="color: red;">代发货</span></eq>
+							<eq name="vo.statue" value='11'>拒签</eq>
 
 							</if>
 						</td>
