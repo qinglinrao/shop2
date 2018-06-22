@@ -80,6 +80,9 @@
 		<div class="layui-inline" >
 			<button class="layui-btn" lay-submit lay-filter="search">查找</button>
 			<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('确定要导出Excel表格吗？')){export_action();return true;}return false;">导出Excel</button>
+			<!--<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('导入Excel，批量修改订单状态！')){import_action();return true;}return false;">导入Excel</button>-->
+			<input type="file" id="upimg0" class="layui-upload-file upload0" name='upimg0' onchange="fileChange(this,'upimg0')" >
+			<input name="goodsFile" sx='upimg0' type="hidden" value="" />
 		</div>
 	</div>
 	<div class="layui-form">
@@ -170,6 +173,7 @@
 		});
 	</script>
 	<script src="__LAYUI__/layui.js"></script>
+	<script src="__LAYUI__/jquery-1.8.3.js"></script>
 	<script>
 	layui.use(['form','jquery'], function() {
 		var form = layui.form();
@@ -218,6 +222,47 @@
         window.location.href = "/admin.php?m=admin&c=Orders&a=export_logistics"+"&keyword="+keyword+"&statue="+statue+"&time_area="+time_area+"&keyword_num="+keyword_num+"&admin_id="+admin_id;
 
     }
+
+	/*function import_action(obj) {
+		$('#upload0').click();
+    }*/
+
+    var idstr=''
+    function fileChange(obj,str){
+        var f = obj.files[0];
+//        var src = window.URL.createObjectURL(f)//预览图片url
+//        $('.'+str).attr('src',src);
+        $("#evaName").empty().html(f.name);
+        idstr = str;
+    }
+
+    layui.use(['upload'], function() {
+        layui.upload({
+            title: '选择Excel文件　',
+            elem: '.upload0',
+            url: "{:U('Orders/upload_excel')}",
+            type: 'file',
+            success: function(res) {
+                if (res.status == 'error') {
+                    layer.msg(res.msg, {icon: 2, shift:6});
+                } else {
+                    //alert(res.msg);
+                    $("input[sx='"+idstr+"']").val(res.url);
+                    $.ajax({
+                        type:"post",
+                        url:"admin.php?m=admin&c=orders&a=upload_excel_do",
+                        data:{'url':res.url},
+                        success:function(e){
+                            if(e.code=='ok'){
+                                alert(e.msg);
+                            }
+
+                        }
+                    })
+                }
+            }
+        });
+    });
 	</script>
 </body>
 </html>

@@ -897,4 +897,35 @@ class OrdersController extends CommonController {
         exit(0);
 
     }
+
+    # 上传修改订单的excel数据
+    public function upload_excel() {
+        $type = 'file';
+        $folder = 'Orders_Excel';
+        $item = 'upimg0';
+        $name = "";
+        $width = 900;
+        $height = 900;
+        $this->_ajaxupload($type,$folder,$item,$name,$width,$height);
+    }
+
+    # 处理订单excel
+    public function upload_excel_do() {
+        header('Content-Type:application/json; charset=utf-8');
+
+        # ./Uploads/Orders_Excel/5b2cb0dace147.xls
+        $url = I('post.url');
+
+        $content = file_get_contents($url);
+        $content = mb_convert_encoding ( $content, 'UTF-8','Unicode');
+
+        if(file_exists($url)){
+            unlink($url);
+        }
+
+
+        $res = array('code'=>'ok','msg'=>'修改成功');
+        echo json_encode($res);
+    }
+
 }
