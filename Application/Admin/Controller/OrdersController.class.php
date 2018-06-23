@@ -869,7 +869,7 @@ class OrdersController extends CommonController {
             # 去掉html标签
             $val['goods_purchase_url'] = strip_tags($val['goods_purchase_url']);
             # 件数根据用户购买数量来决定
-            $num = $val['declared_pcs'] ? ($val['declared_pcs']*$val['good_count']) : 1;
+            $num = $val['declared_pcs'] ? ($val['declared_pcs']*$val['good_count']) : $val['good_count'];
             $rows[] = array($val['id'],$val['username'],$val['address'],"","MY",$val['code'],"", "", $val['phone'],
                 "1", "0", $val['description_english'], $val['size_data'], $val['description_chinese'], "", "USD", $num, $val['declared_value'],
                 "Voling", "", "", "", "", "", "", "","", "", "NM", $val['money'], $val['is_sensitive'], $val['order_id']."\t",
@@ -1070,7 +1070,7 @@ class OrdersController extends CommonController {
 
         $type = $val['is_sensitive'] && $val['is_sensitive'] == 1 ? 'ECOM-GMS-DM' : 'ECOM-GMS-P';
         # 件数根据用户购买数量来决定
-        $num = $val['declared_pcs'] ? ($val['declared_pcs']*$val['good_count']) : 1;
+        $num = $val['declared_pcs'] ? ($val['declared_pcs']*$val['good_count']) : $val['good_count'];
         $rows[] = array("","",$val['order_id']."\t","包裹","1",$type,"1.00",$val['username'],$val['username'],$val['phone'],
             $val['address'],"","","","",$val['code'],"West Malaysia",$val['money'],"MYR","","","10*10*10*2","",
             $val['description_chinese'],$val['description_english'],$num,$val['declared_value'],
