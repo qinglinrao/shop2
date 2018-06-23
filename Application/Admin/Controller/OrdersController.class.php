@@ -868,8 +868,10 @@ class OrdersController extends CommonController {
             $val['goods_purchase_url'] = htmlspecialchars_decode(html_entity_decode($val['goods_purchase_url']));
             # 去掉html标签
             $val['goods_purchase_url'] = strip_tags($val['goods_purchase_url']);
+            # 件数根据用户购买数量来决定
+            $num = $val['declared_pcs'] ? ($val['declared_pcs']*$val['good_count']) : 1;
             $rows[] = array($val['id'],$val['username'],$val['address'],"","MY",$val['code'],"", "", $val['phone'],
-                "1", "0", $val['description_english'], $val['size_data'], $val['description_chinese'], "", "USD", $val['declared_pcs'], $val['declared_value'],
+                "1", "0", $val['description_english'], $val['size_data'], $val['description_chinese'], "", "USD", $num, $val['declared_value'],
                 "Voling", "", "", "", "", "", "", "","", "", "NM", $val['money'], $val['is_sensitive'], $val['order_id']."\t",
                 $val['category'], $val['goods_number']);
            /* if(in_array($i, array(1, 2, 3, 5, 6, 9, 10, 12, 13, 14, 15, 26, 27, 28, 29, 30))){
@@ -1067,10 +1069,11 @@ class OrdersController extends CommonController {
         # 敏感货物出货渠道不一样。#如果填0，就输出ECOM-GMS-P 如果填1，就输出ECOM-GMS-DM
 
         $type = $val['is_sensitive'] && $val['is_sensitive'] == 1 ? 'ECOM-GMS-DM' : 'ECOM-GMS-P';
-
+        # 件数根据用户购买数量来决定
+        $num = $val['declared_pcs'] ? ($val['declared_pcs']*$val['good_count']) : 1;
         $rows[] = array("","",$val['order_id']."\t","包裹","1",$type,"1.00",$val['username'],$val['username'],$val['phone'],
             $val['address'],"","","","",$val['code'],"West Malaysia",$val['money'],"MYR","","","10*10*10*2","",
-            $val['description_chinese'],$val['description_english'],$val['declared_pcs'],$val['declared_value'],
+            $val['description_chinese'],$val['description_english'],$num,$val['declared_value'],
         "","","","","","","");
 
         }
