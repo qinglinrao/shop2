@@ -729,6 +729,7 @@ class OrdersController extends CommonController {
         exit(0);
     }
 
+    # 物流1
     public function export_logistics(){
         $db = M('orders');
         $keyword = I('get.keyword') ? I('get.keyword') : '';
@@ -840,7 +841,7 @@ class OrdersController extends CommonController {
 
         $writer = new \Org\Excel\xlsxwriter();
 
-        $filename = "采购".date("Ymd",time())."-".rand(100,999).".xlsx";
+        $filename = "采购一".date("Ymd",time())."-".rand(100,999).".xlsx";
         header('Content-disposition: attachment; filename="'.$writer::sanitize_filename($filename).'"');
         header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         header('Content-Transfer-Encoding: binary');
@@ -875,6 +876,203 @@ class OrdersController extends CommonController {
                 $rowstyle[] = array('fill'=>"#ffff00");
             }
             $i ++;*/
+        }
+
+        # 染色--todo
+        /*$i = 1;
+        $j = 1;
+        $arr = array(1, 2, 3, 5, 6, 9, 10, 12, 13, 14, 15, 26, 27, 28, 29, 30);
+        foreach($rows as $row){
+            foreach ($row as $r)
+                if((in_array($j, $arr))){
+                    $rowstyle[] = array('fill'=>"#ffff00");
+                }else{
+                    $rowstyle[] = array('fill'=>"");
+                }
+                $j++;
+
+            $i++;
+        }*/
+        $writer->setAuthor('Some Author');
+        foreach($rows as $key=>$row)
+
+            $writer->writeSheetRow('Sheet1', $row, $rowstyle);
+        $writer->writeToStdOut();
+        exit(0);
+
+    }
+
+    # 物流2
+    public function export_logistics2(){
+        $db = M('orders');
+        $keyword = I('get.keyword') ? I('get.keyword') : '';
+        $keyword_num = I('get.keyword_num') ? I('get.keyword_num') : '';
+        if ($keyword) {
+            $where['g.goods_title'] = array('like','%' . $keyword . '%');
+        }
+
+        # 查询商品编号
+        if ($keyword_num) {
+            $where['g.goods_number'] = array('like','%' . $keyword_num . '%');
+        }
+
+        $tuanTime = date('Y-m-d H:i:s',time()-300);
+        $statue = I('get.statue') ? I('get.statue') : '';
+        if ($statue) {
+            /*if($statue == 10){*/
+            # 可能之前团购的状态是10，现在改成11，因为货到付款是10了。
+            if($statue == 11){
+                $where['o.create_at'] = array('gt',$tuanTime);
+            }else{
+                $where['o.statue'] = $statue;
+            }
+        }
+        $area = I('get.time_area');
+        if($area){
+            $times = explode('~',$area);
+            $start_at = $times[0];
+            $end_at = $times[1];
+            $where['o.create_at'] = array('between',"{$start_at},{$end_at}");
+        }
+        $admin_id = I('get.admin_id');
+        if($admin_id){
+            $where['o.admin_id'] = $admin_id;
+        }
+
+        $count 	= M('orders o')->join('pt_goods g on o.good_id=g.id')->where($where)->count();
+        $table 	= 'pt_orders o';
+        $join 	= array('LEFT JOIN pt_goods g on o.good_id=g.id');
+        $field 	= 'o.good_id,o.money, o.order_id,o.good_count,o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
+        $order 	= 'o.id desc';
+        $list 	= M()->table($table)->join($join)->where($where)->field($field)->order($order)->select();
+
+        # 查询投放人名称
+        $order_ids = array();
+        $good_ids = array();
+        $admin_data = M('admin')->field('admin_id, admin_name')->select();
+        foreach($list as $k=>$v){
+            $userInfo = M('member')->field('phone,username,address,code')->find($v['user_id']);
+            $list[$k]['phone'] = $userInfo['phone'];
+            $list[$k]['username'] = $userInfo['username'];
+            $list[$k]['address'] = $userInfo['address'];
+            $list[$k]['code'] = $userInfo['code'];
+            //合并管理员名称
+            foreach($admin_data as $admin_val){
+                if($v['admin_id'] == $admin_val['admin_id']){
+                    $list[$k]['admin_name'] = $admin_val['admin_name'];
+                }
+            }
+
+
+        }
+
+        $list_new = array();
+        foreach($list as $v){
+            //获取订单id
+            $order_ids[] = $v['id'];
+            $good_ids[] = $v['good_id'];
+            $list_new[$v['id']] = $v;
+        }
+        # 查询规格信息。
+        $where = array();
+        $where['order_id'] = array('in', $order_ids);
+        $size_data = M('orders_size')->field('order_id, color, size, weight')->where($where)->select();
+        if($size_data){
+            foreach ($size_data as $v){
+                # 合并规格信息
+                $list_new[$v['order_id']]['size_data'] = $v['color'] . ' ' . $v['size'] . ' ' . $v['weight'];
+            }
+        }
+
+
+        # 查询采购额外信息。
+        $where = array();
+        $where['good_id'] = array('in', $good_ids);
+        $property_data = M('goods_property')->where($where)->select();
+        if($property_data){
+            foreach ($property_data as $val){
+                foreach ($list_new as $v){
+                    if($val['good_id'] == $v['good_id']){
+                        # 合并规格信息
+                        $list_new[$v['id']]['declared_pcs'] = $val['declared_pcs'];
+                        $list_new[$v['id']]['declared_value'] = $val['declared_value'];
+                        $list_new[$v['id']]['description_english'] = $val['description_english'];
+                        $list_new[$v['id']]['description_chinese'] = $val['description_chinese'];
+                        $list_new[$v['id']]['is_sensitive'] = $val['is_sensitive'];
+                        $list_new[$v['id']]['category'] = $val['category'];
+                    }
+
+                }
+            }
+        }
+
+        # 导出操作
+
+        ini_set('display_errors', 0);
+        ini_set('log_errors', 1);
+        error_reporting(E_ALL & ~E_NOTICE);
+
+        $writer = new \Org\Excel\xlsxwriter();
+
+        $filename = "采购二".date("Ymd",time())."-".rand(100,999).".xlsx";
+        header('Content-disposition: attachment; filename="'.$writer::sanitize_filename($filename).'"');
+        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        header('Content-Transfer-Encoding: binary');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+
+        /*$rows = array(
+            array('2003','1','-50.5','2010-01-01 23:00:00','2012-12-31 23:00:00'),
+            array('2003','=B1', '23.5','2010-01-01 00:00:00','2012-12-31 00:00:00'),
+        );*/
+        $rows = array();
+        # 设置颜色#ffff00
+        $rowstyle = array();
+        /*$rows[] = array("S/No", "Consignee", "Cnee Add1", "Cnee Add2", "Cnee Country(马来西亚MY，新加坡SG)", "Cnee Postcode",
+            "Cnee ISO Code","Cnee Contact","Cnee Tel","Pcs", "Weight (gm)", "Description of Goods1 - English", "Size of Good1 - English",
+            "Description of Goods1 - Chinese", "Size of Good1 - Chinese", "Declared Currency","Declared Pcs", "Declared Value",
+            "Shipper - English(留空时为网站客户的对应信息）","Shipper - Chinese(留空时为网站客户的对应信息）", "Shipper Add1(留空时为网站客户的对应信息）",
+            "Shipper Add2(留空时为网站客户的对应信息）", "Shipper City(留空时为网站客户的对应信息）", "Shipper State(留空时为网站客户的对应信息）",
+            "Shipper Postcode(留空时为网站客户的对应信息）","Shipper ISO Code(留空时为网站客户的对应信息）",  "Shipper Contact(留空时为网站客户的对应信息）", "Shipper Email(留空时为网站客户的对应信息）",
+            "渠道(输入规则：PW for POSLAJU西马;PE for POSLAJU东马;S for SKYNET;A for ABX;G for GDEX;DL for 新加坡dragonlink;NV for 新加坡NINJIA;NM for 西马NINJIA;NM6 for 西马敏感NINJIA;CS for SKYNET-COD;SE for Soonest;CX for GDEX-COD;DHL for DHL)",
+            "COD(到付金额)", "属性（0-普货 1-敏感货)", "客户订单号", "货物分类(A-衣服 B-电子 C-鞋子 D-箱包 E-杂货)","产品编码（SKU）");
+
+        foreach ($list_new as $key=>$val){
+            $val['goods_purchase_url'] = htmlspecialchars_decode(html_entity_decode($val['goods_purchase_url']));
+            # 去掉html标签
+            $val['goods_purchase_url'] = strip_tags($val['goods_purchase_url']);
+            $rows[] = array($val['id'],$val['username'],$val['address'],"","MY",$val['code'],"", "", $val['phone'],
+                "1", "0", $val['description_english'], $val['size_data'], $val['description_chinese'], "", "USD", $val['declared_pcs'], $val['declared_value'],
+                "Voling", "", "", "", "", "", "", "","", "", "NM", $val['money'], $val['is_sensitive'], $val['order_id']."\t",
+                $val['category'], $val['goods_number']);
+            /* if(in_array($i, array(1, 2, 3, 5, 6, 9, 10, 12, 13, 14, 15, 26, 27, 28, 29, 30))){
+                 $rowstyle[] = array('fill'=>"#ffff00");
+             }
+             $i ++;
+        }*/
+
+        $rows[] = array("运单", "转单号", "订单号", "类别", "件数", "出货渠道",
+        "实际重量","收货人/公司","收货人","收货人电话", "收货人地址1", "收货人地址2", "收货人地址3",
+        "收货人城市", "电子邮箱", "邮政编码","目的地", "C.O.D",
+        "货币类型","关税", "备注",
+        "材积1", "材积2", "中文品名1",
+        "英文品名1","数量1",  "申报价值1", "海关编码1",
+        "用途1",
+        "中文品名2", "英文品名2", "申报价值2", "海关编码2","用途2");
+
+        foreach ($list_new as $key=>$val){
+        $val['goods_purchase_url'] = htmlspecialchars_decode(html_entity_decode($val['goods_purchase_url']));
+            # 去掉html标签
+        $val['goods_purchase_url'] = strip_tags($val['goods_purchase_url']);
+        # 敏感货物出货渠道不一样。#如果填0，就输出ECOM-GMS-P 如果填1，就输出ECOM-GMS-DM
+
+        $type = $val['is_sensitive'] && $val['is_sensitive'] == 1 ? 'ECOM-GMS-DM' : 'ECOM-GMS-P';
+
+        $rows[] = array("","",$val['order_id']."\t","包裹","1",$type,"1.00",$val['username'],$val['username'],$val['phone'],
+            $val['address'],"","","","",$val['code'],"West Malaysia",$val['money'],"MYR","","","10*10*10*2","",
+            $val['description_chinese'],$val['description_english'],$val['declared_pcs'],$val['declared_value'],
+        "","","","","","","");
+
         }
 
         # 染色--todo

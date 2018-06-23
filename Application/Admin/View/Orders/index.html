@@ -81,7 +81,8 @@
 
 		<div class="layui-inline" >
 			<button class="layui-btn" lay-submit lay-filter="search">查找</button>
-			<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('确定要导出Excel表格吗？')){export_action();return true;}return false;">导出Excel</button>
+			<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('确定要导出Excel表格吗？')){export_action();return true;}return false;">导出Excel一</button>
+			<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('确定要导出Excel表格吗？')){export_action2();return true;}return false;">导出Excel二</button>
 			<!--<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('导入Excel，批量修改订单状态！')){import_action();return true;}return false;">导入Excel</button>-->
 			<input type="file" id="upimg0" class="layui-upload-file upload0" name='upimg0' onchange="fileChange(this,'upimg0')" >
 			<input name="goodsFile" sx='upimg0' type="hidden" value="" />
@@ -223,6 +224,20 @@
             alert("请先选择日期");return false;
         }
         window.location.href = "/admin.php?m=admin&c=Orders&a=export_logistics"+"&keyword="+keyword+"&statue="+statue+"&time_area="+time_area+"&keyword_num="+keyword_num+"&admin_id="+admin_id;
+
+    }
+
+    function export_action2(obj) {
+        var keyword = $("input[name='keyword']").val();
+        var keyword_num = $("input[name='keyword_num']").val();
+        var statue = $("select[name='statue']").val();
+        var time_area = $("input[name='time_area']").val();
+        var admin_id = $("select[name='admin_id']").val();
+
+        if(!time_area){
+            alert("请先选择日期");return false;
+        }
+        window.location.href = "/admin.php?m=admin&c=Orders&a=export_logistics2"+"&keyword="+keyword+"&statue="+statue+"&time_area="+time_area+"&keyword_num="+keyword_num+"&admin_id="+admin_id;
 
     }
 
