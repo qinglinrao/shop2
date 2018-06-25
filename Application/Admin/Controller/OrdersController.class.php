@@ -266,6 +266,13 @@ class OrdersController extends CommonController {
         $keyword = I('get.keyword');
         $where['statue'] = 0;
         $order_ids = array();
+
+        # 推广人员(admin_type=2的)
+        $where = array();
+        $where['admin_type'] = 2;
+        $admin_list = M('admin')->field('admin_id, admin_name')->where($where)->select();
+
+
         if ($keyword) {
             $where['statue'] = 10;
             # 先查询订单id
@@ -296,28 +303,37 @@ class OrdersController extends CommonController {
             $where['add_time'] = array('between',"{$start_at},{$end_at}");
         }
 
-        if ($keyword) {
-            # 先查询总数(一个大坑，使用group再使用count()方法是不准确的。)
-            $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id, color,size, weight')->select();
-            $count = count($count);
-            $page = show_page($count, 20);
-            $limit = $page->firstRow . ',' . $page->listRows;
-            $order = 'id desc';
-            # 查询规格数据。
-            # $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
-            $size_data = M('orders_size')->field('good_id, sum(num) as sum,count(id) as count,color, size, weight')->where($where)->limit($limit)->group('good_id, color,size, weight')->select();
-            $type = 1;
-        }else{
-            # 先查询总数(一个大坑，使用group再使用count()方法是不准确的。)
-            $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id')->select();
-            $count = count($count);
-            $page = show_page($count, 20);
-            $limit = $page->firstRow . ',' . $page->listRows;
-            $order = 'id desc';
-            # 查询规格数据。
-            # $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
-            $size_data = M('orders_size')->field('good_id, sum(num) as sum, count(id) as count,color, size, weight')->where($where)->limit($limit)->group('good_id')->select();
-            $type = 2;
+        $admin_list_data = array();
+        foreach ($admin_list as $key=>$val){
+            $where['admin_id'] = $val['admin_id'];
+            if ($keyword) {
+                # 先查询总数(一个大坑，使用group再使用count()方法是不准确的。)
+                $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id, color,size, weight')->select();
+                $count = count($count);
+                $page = show_page($count, 20);
+                $limit = $page->firstRow . ',' . $page->listRows;
+                $order = 'id desc';
+                # 查询规格数据。
+                # $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
+                $size_data = M('orders_size')->field('good_id, sum(num) as sum,count(id) as count,color, size, weight')->where($where)->limit($limit)->group('good_id, color,size, weight')->select();
+                $type = 1;
+            }else{
+                # 先查询总数(一个大坑，使用group再使用count()方法是不准确的。)
+                $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id')->select();
+                $count = count($count);
+                $page = show_page($count, 20);
+                $limit = $page->firstRow . ',' . $page->listRows;
+                $order = 'id desc';
+                # 查询规格数据。
+                # $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
+                $size_data = M('orders_size')->field('good_id, sum(num) as sum, count(id) as count,color, size, weight')->where($where)->limit($limit)->group('good_id')->select();
+                $type = 2;
+            }
+            $admin_list_data[$key]['data'] = $size_data;
+            $admin_list_data[$key]['count'] = $size_data[0]['count'] ? $size_data[0]['count'] : 0;
+            $admin_list_data[$key]['sum'] = $size_data[0]['sum'] ? $size_data[0]['sum'] : 0;
+            $admin_list_data[$key]['admin_id'] = $val['admin_id'];
+            $admin_list_data[$key]['admin_name'] = $val['admin_name'];
         }
         if($count){
             # 查询商品编号
@@ -353,7 +369,6 @@ class OrdersController extends CommonController {
         $where = array();
         $where['admin_type'] = 2;
         $admin_list = M('admin')->field('admin_id, admin_name')->where($where)->select();
-
         $this->assign('type',$type);
         $this->assign('count',$count);
         $this->assign('time_area',$area);
@@ -362,6 +377,7 @@ class OrdersController extends CommonController {
         $this->assign('page',$page->show());
         $this->assign('list',$size_data);
         $this->assign('admin_list',$admin_list);
+        $this->assign('admin_list_data',$admin_list_data);
         $this->assign('admin_list_id',$admin_id);
         # 头部栏识别
         $this->assign('mark',2);

@@ -96,8 +96,8 @@
 		<table class="layui-table" lay-even lay-skin="line">
 			<thead>
 				<tr>
-					<th>商品ID</th>
-					<th>商品编号</th>
+					<th>推广ID</th>
+					<th>名称</th>
 					<if condition="$type eq 1">
 						<th>颜色</th>
 						<th>款式</th>
@@ -108,11 +108,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				<notempty name="list">
-				<foreach name="list" item="vo">
+				<notempty name="admin_list_data">
+				<foreach name="admin_list_data" item="vo">
 					<tr>
-						<td>{$vo.good_id}</td>
-						<td><a href="/admin.php?m=admin&c=orders&a=sku_statistics&keyword={$vo.goods_number}&time_area={$time_area}&statue={$statue}&admin_id={$admin_list_id}" style="color: red;">{$vo.goods_number}</a></td>
+						<td>{$vo.admin_id}</td>
+						<td><a href="/admin.php?m=admin&c=orders&a=sale_statistics&keyword={$vo.goods_number}&time_area={$time_area}&statue={$statue}&admin_id={$admin_list_id}" style="color: red;">{$vo.admin_name}</a></td>
 						<if condition="$type eq 1">
 						<td>{$vo.color}</td>
 						<td>{$vo.size}</td>
