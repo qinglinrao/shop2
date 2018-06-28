@@ -101,6 +101,7 @@ class AdminController extends CommonController {
                 $data['admin_pass'] = md5(I('admin_pass'));
                 $data['update_at'] = NowTime();
                 $data['admin_alias'] = I('admin_alias');
+                $data['admin_name'] = I('admin_name');
                 $data['admin_introduction'] = I('admin_introduction');
                 $ress = M('admin')->where('admin_id=%d',$id)->save($data);
                 if($ress){
