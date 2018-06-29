@@ -1299,12 +1299,18 @@ class GoodsController extends CommonController {
 
         $this->assign('id',$id);
         $this->assign('imgList',$imgList);
+        $this->assign('imgList_num',count($imgList));
         $this->assign('detailimgList',$detailimgList);
         $this->display();
     }
 
     function good_images_sort_do(){
-        $return = array('code'=>0);
+        $sort_str = I('post.sort_str');
+        $imgList_num = I('post.imgList_num');
+        if(!$sort_str){
+            echo json_encode(array('code'=>1));exit;
+        }
+        $return = array('code'=>1, 'sort_str'=>$sort_str, 'imgList_num'=>$imgList_num);
         echo json_encode($return);
     }
 }

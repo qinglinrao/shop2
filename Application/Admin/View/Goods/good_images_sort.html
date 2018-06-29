@@ -66,8 +66,9 @@
 			<ul>
 				<volist name="imgList" id="vo">
 				<li>
-					<div class="item">
+					<div class="item img_list">
 						<img src="{:trim($vo[image],'.')}" />
+						<input type="hidden" value="{$vo[id]}">
 					</div>
 				</li>
 				</volist>
@@ -79,6 +80,8 @@
 
 	<div class="layui-form-item">
 		<div class="layui-input-block">
+			<input type="hidden" value="" name="sort_str" class="sort_str">
+			<input type="hidden" value="{$imgList_num}" name="imgList_num">
 			<button class="layui-btn layui-btn-danger" lay-submit lay-filter="Submit">立即提交</button>
 		</div>
 	</div>
@@ -133,6 +136,13 @@
                                 direction = "normal" ;
                             }
                             this.swap(currentItem, direction) ;
+
+                            //返回字段。
+                            var str = '';
+                            $(".img_list").each(function(i) {
+                                str += $(this).attr("index")+'-'+$(this).children("input").val()+'###';
+							});
+                            $('.sort_str').val(str);
                         }
                     }) ;
                 },
@@ -234,9 +244,12 @@
     }) ;
 
     function checkForm(){
+
+        $(".item_content .item").each(function(i) {
+			alert(this.attr("index"));return false;
+		});
        alert('提交');return false;
         //进行下一步
-        return true;
     }
 </script>
 </body>
