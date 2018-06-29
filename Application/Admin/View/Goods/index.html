@@ -62,6 +62,7 @@
 					<td>
 					<a class="layui-btn layui-btn-mini" href="{:U('Goods/edit',array('id'=>$vo['id']))}">编辑</a>
 					<a class="layui-btn layui-btn-mini" href="{:U('Goods/configlist',array('id'=>$vo['id']))}">规格列表</a>
+					<a class="layui-btn layui-btn-mini" href="{:U('Goods/good_images_sort',array('id'=>$vo['id']))}">修改图片顺序</a>
 					<a class="layui-btn layui-btn-mini layui-btn-danger" href="{:U('Goods/del',array('id'=>$vo['id']))}" onclick="javascript:if(confirm('确定要删除此信息商品吗？')){alert('删除成功！');return true;}return false;">删除</a>
 					</td>
 					<td>{$vo.id}</td>

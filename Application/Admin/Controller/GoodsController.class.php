@@ -1286,4 +1286,25 @@ class GoodsController extends CommonController {
         }
         echo json_encode($return);
     }
+
+    #
+    function good_images_sort(){
+        $id = I('get.id');
+
+        # 轮播图
+        $imgList = M('goods_image')->where('good_id=%d and stype=1',$id)->select();
+
+        # 描述长图
+        $detailimgList = M('goods_image')->where('good_id=%d and stype=2',$id)->select();
+
+        $this->assign('id',$id);
+        $this->assign('imgList',$imgList);
+        $this->assign('detailimgList',$detailimgList);
+        $this->display();
+    }
+
+    function good_images_sort_do(){
+        $return = array('code'=>0);
+        echo json_encode($return);
+    }
 }
