@@ -30,6 +30,19 @@ class IndexController extends CommonController {
 				$this->tag = $tag;
 			}
 			$imgList = M('goods_image')->where('good_id=%d and stype=1',$id)->select();
+            $is_sort = 0;
+			# 根据后台的图片排序
+            if($imgList){
+                foreach ($imgList as $key=>$val){
+                    if($val['sort'] > 0 ){
+                        $is_sort = 1;
+                        break;
+                    }
+                }
+            }
+            if($is_sort){
+                $imgList = M('goods_image')->where('good_id=%d and stype=1',$id)->order('sort asc')->select();
+            }
 
 			# goods_title是商品名称，goods_title2这个是去掉###的网站title。
             $goodInfo['goods_title2'] = $goodInfo['goods_title'];
@@ -56,6 +69,21 @@ class IndexController extends CommonController {
 
 			# 描述长图
             $detailimgList = M('goods_image')->where('good_id=%d and stype=2',$id)->select();
+
+            $is_sort = 0;
+            # 根据后台的图片排序
+            if($detailimgList){
+                foreach ($detailimgList as $key=>$val){
+                    if($val['sort'] > 0 ){
+                        $is_sort = 1;
+                        break;
+                    }
+                }
+            }
+            if($is_sort){
+                $detailimgList = M('goods_image')->where('good_id=%d and stype=2',$id)->order('sort asc')->select();
+            }
+
             $this->detailimgList = $detailimgList;
 
 			$sizeList = M('goods_size')->where('good_id=%d',$id)->select();
