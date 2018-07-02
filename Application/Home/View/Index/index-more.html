@@ -234,6 +234,17 @@
                     <input type="hidden" class="trprice" value="{$info.goods_trprice}"/>
                     <input type="hidden" class="product_id" value="{$info[id]}"/>
                     <input type="hidden" id="o_code" name="o_code" value="{$o_code}" >
+                    <div class="number-wrap">
+                        <div class="number-line">
+                            <label for="number">Quantity</label>
+                            <span class="J_limitTxt limit-txt"></span>
+                            <div class="number">
+                                <button class="decrease" id="quantity_minus">-</button>
+                                <input id="quantity" name="quantity" type="number" value="1">
+                                <button class="increase disabled" id="quantity_add">+</button>
+                            </div>
+                        </div>
+                    </div>
                     <ul class="sku-list-wrap">
                         <if condition="isset($size[weight])">
                             <li>
@@ -269,17 +280,7 @@
                             </li>
                         </if>
                 </ul>
-                    <div class="number-wrap">
-                        <div class="number-line">
-                            <label for="number">Quantity</label>
-                            <span class="J_limitTxt limit-txt"></span>
-                            <div class="number">
-                                <button class="decrease" id="quantity_minus">-</button>
-                                <input id="quantity" name="quantity" type="number" value="1">
-                                <button class="increase disabled" id="quantity_add">+</button>
-                            </div>
-                        </div>
-                    </div>
+
                     <div class="bdbox">
                         <label class="bdxx" for="contact_name"><em>*</em>Contact Name</label>
                         <div class="textbox">
@@ -354,7 +355,7 @@
 <script src="__GJS__jquery.lazyload.js"></script>
 <script src="__GJS__swiper.min.js"></script>
 <!--<script src="__GJS__smartphoto.min.js"></script>-->
-<script src="__NEW-JS__product.js?a=44312"></script><script type="text/javascript" id="">(function(d,a,b,f,e){d[e]=d[e]||[];d[e].push({projectId:"10000",properties:{pixelId:"10030811"}});var c=a.createElement(b);c.src=f;c.async=!0;c.onload=c.onreadystatechange=function(){var a=this.readyState,c=d[e];if(!a||"complete"==a||"loaded"==a)try{var b=YAHOO.ywa.I13N.fireBeacon;d[e]=[];d[e].push=function(a){b([a])};b(c)}catch(g){}};a=a.getElementsByTagName(b)[0];b=a.parentNode;b.insertBefore(c,a)})(window,document,"script","https://s.yimg.com/wi/ytc.js","dotq");</script><!-- Begin of Chaport Live Chat code -->
+<script src="__NEW-JS__product-more.js?a=44312"></script><script type="text/javascript" id="">(function(d,a,b,f,e){d[e]=d[e]||[];d[e].push({projectId:"10000",properties:{pixelId:"10030811"}});var c=a.createElement(b);c.src=f;c.async=!0;c.onload=c.onreadystatechange=function(){var a=this.readyState,c=d[e];if(!a||"complete"==a||"loaded"==a)try{var b=YAHOO.ywa.I13N.fireBeacon;d[e]=[];d[e].push=function(a){b([a])};b(c)}catch(g){}};a=a.getElementsByTagName(b)[0];b=a.parentNode;b.insertBefore(c,a)})(window,document,"script","https://s.yimg.com/wi/ytc.js","dotq");</script><!-- Begin of Chaport Live Chat code -->
 <style>
     .chaport-container{z-index: 100!important;}
     .chaport-container .chaport-launcher{z-index: 100!important;}
