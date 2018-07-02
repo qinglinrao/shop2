@@ -1290,17 +1290,46 @@ class GoodsController extends CommonController {
     #
     function good_images_sort(){
         $id = I('get.id');
+        $type = I('get.type');
 
-        # 轮播图
-        $imgList = M('goods_image')->where('good_id=%d and stype=1',$id)->select();
+        # is_sort是兼容以前没排序的商品。
+        $is_sort = 0;
+        if($type == 1){
+            # 轮播图
+            $imgList = M('goods_image')->where('good_id=%d and stype=1',$id)->select();
 
-        # 描述长图
-        $detailimgList = M('goods_image')->where('good_id=%d and stype=2',$id)->select();
+            if($imgList){
+                foreach ($imgList as $key=>$val){
+                    if($val['sort'] > 0 ){
+                        $is_sort = 1;
+                        break;
+                    }
+                }
+            }
+            if($is_sort){
+                $imgList = M('goods_image')->where('good_id=%d and stype=1',$id)->order('sort asc')->select();
+            }
+
+        }elseif($type == 2){
+            # 描述长图
+            $imgList = M('goods_image')->where('good_id=%d and stype=2',$id)->select();
+
+            if($imgList){
+                foreach ($imgList as $key=>$val){
+                    if($val['sort'] > 0 ){
+                        $is_sort = 1;
+                        break;
+                    }
+                }
+            }
+            if($is_sort){
+                $imgList = M('goods_image')->where('good_id=%d and stype=2',$id)->order('sort asc')->select();
+            }
+        }
 
         $this->assign('id',$id);
         $this->assign('imgList',$imgList);
         $this->assign('imgList_num',count($imgList));
-        $this->assign('detailimgList',$detailimgList);
         $this->display();
     }
 
@@ -1308,9 +1337,28 @@ class GoodsController extends CommonController {
         $sort_str = I('post.sort_str');
         $imgList_num = I('post.imgList_num');
         if(!$sort_str){
-            echo json_encode(array('code'=>1));exit;
+            $this->error('请拖动图片顺序',U('Goods/index'));
         }
-        $return = array('code'=>1, 'sort_str'=>$sort_str, 'imgList_num'=>$imgList_num);
-        echo json_encode($return);
+
+        # 0-417###1-418###2-419###3-420###6-421###4-422###8-423###7-424###9-425###5-426###
+        if(preg_match('/\#\#\#/', $sort_str, $matches)){
+            # Array ( [0] => 0-417 [1] => 3-418 [2] => 4-419 [3] => 5-420 [4] => 6-421 [5] => 2-422 [6] => 7-423 [7] => 1-424 [8] => 8-425 [9] => 9-426 [10] => )
+            $arr1 = explode('###', $sort_str);
+            $imgDb = M('goods_image');
+            $data = array();
+            $where = array();
+            foreach ($arr1 as $key=>$val){
+                if($val){
+                    $arr2 = explode('-', $val);
+                    $data['sort'] = $arr2[0];
+                    $where['id'] = $arr2[1];
+                    $imgDb -> where($where) ->save($data);
+                }
+
+            }
+        }
+        # $return = array('code'=>1, 'sort_str'=>$sort_str, 'imgList_num'=>$imgList_num);
+        # echo json_encode($return);
+        $this->success('修改图片顺序成功',U('Goods/index'));
     }
 }
