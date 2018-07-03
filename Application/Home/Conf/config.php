@@ -26,5 +26,8 @@ return array(
             '__NEW-IMG__' => __ROOT__ .'/Public/Goods/index-new/img/',
             '__NEW-JS__' => __ROOT__ .'/Public/Goods/index-new/js/',
             '__NEW-CSS__' => __ROOT__ .'/Public/Goods/index-new/css/',
+
+            //新的首页2-20180703
+            '__MORE-JS__' => __ROOT__ .'/Public/Goods/index-more/js/',
 	),
 );

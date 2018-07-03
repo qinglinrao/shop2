@@ -272,7 +272,7 @@
     $quantityAdd.click(function() {
 
         //复制规格列表，.sku-wrap .body这个也要相应增加--todo
-        $('.sku-list-wrap').before($('.sku-list-wrap').clone());
+        //$('.sku-list-wrap').before($('.sku-list-wrap').clone());
         var a = 1 * $quantity.val() + 1;
         1 > a && (a = 1);
         if (a >= productData.purchaseLimit) {
@@ -373,12 +373,12 @@
             return false;
         }*/
 
-        if (address.length <= 0) {
-            /*alert('收件地址不能为空');*/
+        /*if (address.length <= 0) {
+            /!*alert('收件地址不能为空');*!/
             showMessage('Please enter the shipping address.');
             $('#custom_address').focus();
             return false;
-        }
+        }*/
 
 
 
