@@ -357,7 +357,7 @@
             return false;
         }
 
-        var re=/^[a-zA-Z0-9_-]+$/;
+        var re=/^[a-zA-Z][a-zA-Z0-9_-]+$/;
         if(!re.test(name)){
             showMessage('Please enter the correct name');
             $("input[name='contact']").focus();
