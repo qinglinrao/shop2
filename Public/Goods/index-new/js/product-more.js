@@ -416,7 +416,7 @@
         }
 
         //拼接地址
-        var address_all = $('#location_c').val() +" "+$('#location_a').val() +" "+ $('#location_d').val() + " " + $('#addresstwo').val() +" "+address;
+        var address_all = address+", "+$('#addresstwo').val()+", "+ $('#location_d').val()+", "+ $('#location_a').val()+", "+ $('#location_c').val() ;
 
 
        if (code.length<=0) {
