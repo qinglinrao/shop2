@@ -376,15 +376,17 @@
         //判断地址
         //State
        if($("#location_c").find('option:selected').text() == 'please select'){
-           showMessage('Please select the State.');
+           // $("#location_c").css({ border: "1px solid red"});
            $('#location_c').focus();
+           showMessage('Please select the State.');
            return false;
        }
 
         //City
         if($("#location_a").find('option:selected').text() == 'please select'){
-            showMessage('Please select the City.');
+            // $("#location_a").css({ border: "1px solid red"});
             $('#location_a').focus();
+            showMessage('Please select the City.');
             return false;
         }
 
