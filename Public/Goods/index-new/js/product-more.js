@@ -353,7 +353,7 @@
         if (name.length<=0) {
             /*alert('收件人名称不能为空');*/
             showMessage('Please enter the contact name.');
-            $('#custom_name').focus();
+            $("input[name='contact']").focus();
             return false;
         }
 
@@ -361,7 +361,7 @@
 
         if (phone.length<=0) {
             showMessage('Please enter the phone number.');
-            $('#custom_mobile').focus();
+            $("input[name='mobile']").focus();
             return false;
         }
 
@@ -373,16 +373,46 @@
             return false;
         }*/
 
-        /*if (address.length <= 0) {
-            /!*alert('收件地址不能为空');*!/
-            showMessage('Please enter the shipping address.');
-            $('#custom_address').focus();
+        //判断地址
+        //State
+       if($("#location_c").find('option:selected').text() == 'please select'){
+           showMessage('Please select the State.');
+           $('#location_c').focus();
+           return false;
+       }
+
+        //City
+        if($("#location_a").find('option:selected').text() == 'please select'){
+            showMessage('Please select the City.');
+            $('#location_a').focus();
             return false;
-        }*/
+        }
+
+        //District
+        if($("#location_d").find('option:selected').text() == 'please select'){
+            showMessage('Please select the District.');
+            $('#location_d').focus();
+            return false;
+        }
+
+        //Street
+        if($("#addresstwo").find('option:selected').text() == 'please select'){
+            showMessage('Please select the Street 1.');
+            $('#addresstwo').focus();
+            return false;
+        }
+
+        if (address.length <= 0) {
+            showMessage('Please enter the Street &Building.');
+            $('#address').focus();
+            return false;
+        }
+
+        //拼接地址
+        var address_all = $('#location_c').val() +" "+$('#location_a').val() +" "+ $('#location_d').val() + " " + $('#addresstwo').val() +" "+address;
 
 
-
-        if (code.length<=0) {
+       if (code.length<=0) {
             showMessage('Please enter the post/zip code.');
             $('#postcode').focus();
             return false;
@@ -451,7 +481,7 @@
         var o_code = $('#o_code').val();
 
         //判断goodId，和sizeId
-        var param = {"o_code":o_code,"color":color_sel,"weight":weight_sel,"size":size_sel,"userName":name,"goodId":goodId, "sizeId":sizeId, "address":address,"phone":phone,"email":email,"code":code,"remark":remark,"goodCount":num,"payType":payType};
+        var param = {"o_code":o_code,"color":color_sel,"weight":weight_sel,"size":size_sel,"userName":name,"goodId":goodId, "sizeId":sizeId, "address":address_all,"phone":phone,"email":email,"code":code,"remark":remark,"goodCount":num,"payType":payType};
         //ajax提交数据
         $.ajax({
             type: "post",
@@ -544,6 +574,36 @@
         }
         $('.tw-area').html(html);
     }).trigger('change');
+
+    var levelone,leveltwo,levelthree,levelfour;
+    $("#location_c").append(renderAddress());
+    $("#location_c").change(function(event){
+        levelone = event.target.value;
+        $("#location_a").empty();
+        $("#location_d").empty();
+        $("#addresstwo").empty();
+        $("#postcode").val("");
+        $("#location_a").append(renderTwoLevel(levelone));
+        $("#location_a").change(function(e){
+            leveltwo = e.target.value;
+            $("#location_d").empty();
+            $("#addresstwo").empty();
+            $("#postcode").val("");
+            $("#location_d").append(renderThreeLevel(levelone,leveltwo));
+            $("#location_d").change(function(eve){
+                levelthree = eve.target.value;
+                $("#addresstwo").empty();
+                $("#postcode").val("");
+                $("#addresstwo").append(renderForuLevel(levelone,leveltwo,levelthree));
+                $("#addresstwo").change(function(even){
+                    levelfour = even.target.value;
+                    $("#postcode").val(renderCode(levelone,leveltwo,levelthree,levelfour));
+                })
+            });
+        });
+    });
+
+
 })();
 
 function showMessage(message) {

@@ -124,6 +124,10 @@ class IndexController extends CommonController {
 			# $html = 'index-en';
             # 换成新的商品页。
 			$html = 'index-new';
+            # 测试多规格页面。
+            if($id == 374){
+                $html = 'index-more';
+            }
 		}
 		$this->model = $goodInfo['goods_country'];
 		$province = M('province')->where("father = 0")->select();
