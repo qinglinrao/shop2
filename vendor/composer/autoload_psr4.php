@@ -7,5 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Psr\\SimpleCache\\' => array($vendorDir . '/psr/simple-cache/src'),
+    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'PhpOffice\\PhpSpreadsheet\\' => array($vendorDir . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet'),
 );

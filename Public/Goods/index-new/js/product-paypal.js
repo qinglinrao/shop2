@@ -489,11 +489,8 @@
 
         var pay_type = $("#pay_type").find('option:selected').text();
         if(pay_type == 'Paypay'){
-            alert('Paypay支付');
-        }else{
-            alert('普通支付');
+            payType = 4;
         }
-        return false;
 
         //判断goodId，和sizeId
         var param = {"o_code":o_code,"color":color_sel,"weight":weight_sel,"size":size_sel,"userName":name,"goodId":goodId, "sizeId":sizeId, "address":address_all,"phone":phone,"email":email,"code":code,"remark":remark,"goodCount":num,"payType":payType};
