@@ -1,7 +1,17 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
-
+use PayPal\Api\Amount;
+use PayPal\Api\Details;
+use PayPal\Api\Item;
+use PayPal\Api\ItemList;
+use PayPal\Api\Payer;
+use PayPal\Api\Payment;
+use PayPal\Api\RedirectUrls;
+use PayPal\Api\Transaction;
+use PayPal\Rest\ApiContext;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Api\PaymentExecution;
 class OrderController extends Controller {
 
     // 检测管理员登录
@@ -282,10 +292,177 @@ class OrderController extends Controller {
             $orderSizeModel -> add();
         /*}*/
 
-        $res = array('code'=>0,'data'=>array("orderId"=>$orderId,'msg'=>$msg3));
+        //创建Paypal订单和生成连接。
+        $approvalUrl = '';
+        if($payType == 4){
+            $payment = $this->createPayPalOrder($goodsInfo, $priceAmount);
+
+             # PayPal的订单id
+            $paypalId = $payment->getId();
+            # PayPal的订单创建时间。
+            $paypalTime = $payment->getCreateTime();
+            # 转换时间戳
+            $paypalTime = strtotime($paypalTime);
+            # 跳转url
+            $approvalUrl = $payment->getApprovalLink();
+
+        }
+
+        $res = array('code'=>0,'data'=>array("orderId"=>$orderId,'msg'=>$msg3, 'url'=>$approvalUrl));
         echo json_encode($res);
     }
 
+    # 创建paypal订单
+    public function createPayPalOrder($goodsInfo, $priceAmount) {
+
+        $payer = new Payer();
+        $payer->setPaymentMethod("paypal");
+
+        // 获取商品信息。
+        $item1 = new Item();
+        $item1->setName($goodsInfo['title'])
+            ->setCurrency('USD')
+            ->setQuantity(1)
+            ->setSku($goodsInfo['goods_number']) // Similar to `item_number` in Classic API
+            ->setPrice($priceAmount);
+
+
+        $itemList = new ItemList();
+        $itemList->setItems(array($item1));
+
+        // ### Additional payment details
+        // Use this optional field to set additional
+        // payment information such as tax, shipping
+        // charges etc.
+        $details = new Details();
+        /*$details->setShipping(1.2)
+            ->setTax(1.3)
+            ->setSubtotal(17.50);*/
+        $details->setSubtotal($priceAmount);
+
+        // ### Amount
+        // Lets you specify a payment amount.
+        // You can also specify additional details
+        // such as shipping, tax.
+        $amount = new Amount();
+        $amount->setCurrency("USD")
+            ->setTotal($priceAmount)
+            ->setDetails($details);
+
+        // ### Transaction
+        // A transaction defines the contract of a
+        // payment - what is the payment for and who
+        // is fulfilling it.
+        $transaction = new Transaction();
+        $transaction->setAmount($amount)
+            ->setItemList($itemList)
+            ->setDescription($goodsInfo['goods_introduce'])
+            ->setInvoiceNumber(uniqid());
+
+        // ### Redirect urls
+        // Set the urls that the buyer must be redirected to after
+        // payment approval/ cancellation.
+        $redirectUrls = new RedirectUrls();
+        $redirectUrls->setReturnUrl('http://'.$_SERVER['HTTP_HOST'].'/home/order/paypalCallback/success/true')
+            ->setCancelUrl('http://'.$_SERVER['HTTP_HOST'].'/home/order/paypalCallback/success/false');
+
+        // ### Payment
+        // A Payment Resource; create one using
+        // the above types and intent set to 'sale'
+        $payment = new Payment();
+        $payment->setIntent("sale")
+            ->setPayer($payer)
+            ->setRedirectUrls($redirectUrls)
+            ->setTransactions(array($transaction));
+
+
+        // For Sample Purposes Only.
+        $request = clone $payment;
+
+        // ### Create Payment
+        // Create a payment by calling the 'create' method
+        // passing it a valid apiContext.
+        // (See bootstrap.php for more on `ApiContext`)
+        // The return object contains the state and the
+        // url to which the buyer must be redirected to
+        // for payment approval
+        #paypal的配置信息
+        $apiContext = $this->getApiContext('AZgn_deHN3i9-ZuXk9q1aR8hBiuMrfUcmi4nMIdBtO51qn7adZpV2AJJukTvh0NNGOD29U8PG4bmfCNk', 'ELfc76frIqLeVhkLKv-T_D5i6v5OezPkAGn1WWQ5pL-pfpZtkD3NccuU-qflQGptFBX3yWLCqheB6SmC');
+
+        try {
+            $payment->create($apiContext);
+        } catch (Exception $ex) {
+            print_r('create error');
+            exit(1);
+        }
+        return $payment;
+    }
+
+    # paypal支付的回调
+    public function paypalCallback(){
+        $success = I('get.success');
+        if($success == 'true'){
+
+            echo 'PayPal payment success';
+        }else{
+            echo 'PayPal payment false';
+
+        }
+    }
+    # 获取PayPal配置。
+    public function getApiContext($clientId, $clientSecret)
+    {
+
+        // #### SDK configuration
+        // Register the sdk_config.ini file in current directory
+        // as the configuration source.
+        /*
+        if(!defined("PP_CONFIG_PATH")) {
+            define("PP_CONFIG_PATH", __DIR__);
+        }
+        */
+
+
+        // ### Api context
+        // Use an ApiContext object to authenticate
+        // API calls. The clientId and clientSecret for the
+        // OAuthTokenCredential class can be retrieved from
+        // developer.paypal.com
+
+        $apiContext = new ApiContext(
+            new OAuthTokenCredential(
+                $clientId,
+                $clientSecret
+            )
+
+        );
+
+        // Comment this line out and uncomment the PP_CONFIG_PATH
+        // 'define' block if you want to use static file
+        // based configuration
+
+        $apiContext->setConfig(
+            array(
+                'mode' => 'sandbox', //沙盒环境:sandbox  线上环境：live
+                'log.LogEnabled' => true,
+                'log.FileName' => '../../logs/paypal.log',
+                #测试环境。
+                #'log.FileName' => '../../paypal.log',
+                'log.LogLevel' => 'INFO', // PLEASE USE `INFO` LEVEL FOR LOGGING IN LIVE ENVIRONMENTS
+                'cache.enabled' => true,
+                // 'http.CURLOPT_CONNECTTIMEOUT' => 30
+                // 'http.headers.PayPal-Partner-Attribution-Id' => '123123123'
+                //'log.AdapterFactory' => '\PayPal\Log\DefaultLogFactory' // Factory class implementing \PayPal\Log\PayPalLogFactory
+            )
+        );
+
+        // Partner Attribution Id
+        // Use this header if you are a PayPal partner. Specify a unique BN Code to receive revenue attribution.
+        // To learn more or to request a BN Code, contact your Partner Manager or visit the PayPal Partner Portal
+        // $apiContext->addRequestHeader('PayPal-Partner-Attribution-Id', '123123123');
+
+        return $apiContext;
+    }
 
     /**
      * 订单详情页

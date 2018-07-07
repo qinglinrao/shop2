@@ -125,8 +125,13 @@ class IndexController extends CommonController {
             # 换成新的商品页。
 			$html = 'index-new';
             # 测试多规格页面。
+            //if($id == 64){
             if($id == 374){
                 $html = 'index-more';
+            }
+            //if($id == 65){
+            if($id == 390){
+                $html = 'index-paypal';
             }
 		}
 		$this->model = $goodInfo['goods_country'];

@@ -503,7 +503,11 @@
             success: function(data){
                 console.log(data);
                 if (data.code == 0) {
-                    window.location.href='/index/buysuccess/id/'+data.data.orderId;
+                    if(pay_type == 'Paypay'){
+                        window.location.href=data.data.url;return false;
+                    }else{
+                        window.location.href='/index/buysuccess/id/'+data.data.orderId;return false;
+                    }
                 } else {
                     /*alert(data.data.msg);*/
                     showMessage(data.data.msg);
