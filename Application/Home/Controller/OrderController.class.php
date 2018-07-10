@@ -295,7 +295,7 @@ class OrderController extends Controller {
         //创建Paypal订单和生成连接。
         $approvalUrl = '';
         if($payType == 4){
-            $payment = $this->createPayPalOrder($goodsInfo, $priceAmount);
+            $payment = $this->createPayPalOrder($goodsInfo, $priceAmount, $goodsCountAmount, $orderId, $userId);
 
              # PayPal的订单id
             $paypalId = $payment->getId();
@@ -313,16 +313,16 @@ class OrderController extends Controller {
     }
 
     # 创建paypal订单
-    public function createPayPalOrder($goodsInfo, $priceAmount) {
+    public function createPayPalOrder($goodsInfo, $priceAmount, $goodsCountAmount, $orderId, $userId) {
 
         $payer = new Payer();
         $payer->setPaymentMethod("paypal");
 
         // 获取商品信息。
         $item1 = new Item();
-        $item1->setName($goodsInfo['title'])
+        $item1->setName($goodsInfo['title'])  //商品名称
             ->setCurrency('USD')
-            ->setQuantity(1)
+            ->setQuantity($goodsCountAmount) //数量
             ->setSku($goodsInfo['goods_number']) // Similar to `item_number` in Classic API
             ->setPrice($priceAmount);
 
@@ -330,10 +330,7 @@ class OrderController extends Controller {
         $itemList = new ItemList();
         $itemList->setItems(array($item1));
 
-        // ### Additional payment details
-        // Use this optional field to set additional
-        // payment information such as tax, shipping
-        // charges etc.
+        # 不需要运费和税
         $details = new Details();
         /*$details->setShipping(1.2)
             ->setTax(1.3)
@@ -379,13 +376,9 @@ class OrderController extends Controller {
         // For Sample Purposes Only.
         $request = clone $payment;
 
-        // ### Create Payment
-        // Create a payment by calling the 'create' method
-        // passing it a valid apiContext.
-        // (See bootstrap.php for more on `ApiContext`)
-        // The return object contains the state and the
-        // url to which the buyer must be redirected to
-        // for payment approval
+        //设置时区？
+        date_default_timezone_set(@date_default_timezone_get());
+
         #paypal的配置信息
         $apiContext = $this->getApiContext('AZgn_deHN3i9-ZuXk9q1aR8hBiuMrfUcmi4nMIdBtO51qn7adZpV2AJJukTvh0NNGOD29U8PG4bmfCNk', 'ELfc76frIqLeVhkLKv-T_D5i6v5OezPkAGn1WWQ5pL-pfpZtkD3NccuU-qflQGptFBX3yWLCqheB6SmC');
 
@@ -395,17 +388,155 @@ class OrderController extends Controller {
             print_r('create error');
             exit(1);
         }
+
+        # PayPal的订单id
+        $paypalId = $payment->getId();
+        # PayPal的订单创建时间。
+        $paypalTime = $payment->getCreateTime();
+        # 转换时间戳
+        $paypalTime = strtotime($paypalTime);
+        $approvalUrl = $payment->getApprovalLink();
+
+        # 生成pt_paypal_orders订单。
+        $orderData['father_id'] = $orderId;
+        $orderData['good_id'] = $goodsInfo['id'];
+        $orderData['user_id'] = $userId;
+        $orderData['paypal_id'] = $paypalId;
+        $orderData['money'] = $priceAmount;
+        $orderData['ip'] = $this->getClientIP();
+        $orderData['pay_url'] = $approvalUrl;
+        $orderData['num'] = $goodsCountAmount;
+        $orderData['create_at'] = $paypalTime;
+
+        $paypalordersModel = M('paypal_orders');
+        $paypalordersModel->create($orderData);
+        $paypalordersModel -> add();
+
+
         return $payment;
     }
 
     # paypal支付的回调
     public function paypalCallback(){
         $success = I('get.success');
-        if($success == 'true'){
 
-            echo 'PayPal payment success';
+        if($success && $success == 'true'){
+            $paymentId = I('get.paymentId');
+            $data['paypal_id'] = $paymentId;
+            $orderPaypalInfo = M('paypal_orders')->where($data)->find();
+            if(!$orderPaypalInfo){
+                echo 'PayPal payment false';exit;
+            }
+
+            # 验证
+            $PayerID = I('get.PayerID');
+            #paypal的配置信息
+            $apiContext = $this->getApiContext('AZgn_deHN3i9-ZuXk9q1aR8hBiuMrfUcmi4nMIdBtO51qn7adZpV2AJJukTvh0NNGOD29U8PG4bmfCNk', 'ELfc76frIqLeVhkLKv-T_D5i6v5OezPkAGn1WWQ5pL-pfpZtkD3NccuU-qflQGptFBX3yWLCqheB6SmC');
+
+            $payment = Payment::get($paymentId, $apiContext);
+
+            #这里再判断一次paypal的订单状态。
+            if($payment->getState() != 'created'){
+                echo 'PayPal payment false';exit;
+            }
+
+            #发票
+            $card = $payment->getTransactions();
+            $invoice_number = $card[0]->invoice_number;
+
+            # 下单人的信息
+            $payerData = $payment->getPayer();
+
+            $data = array();
+            $data['status'] = 2;
+            $data['payer_id'] = $PayerID;
+            $data['invoice_number'] = $invoice_number;
+            $data['email'] = $payerData->payer_info->email;
+            $data['first_name'] = $payerData->payer_info->first_name;
+            $data['last_name'] = $payerData->payer_info->last_name;
+            $data['update_at'] = date('Y-m-d H:i:s');
+
+            $db = M('paypal_orders');
+            # 修改pt_paypal_orders订单
+            $res1 = $db->where('id=%d',$orderPaypalInfo['id'])->save($data);
+
+
+            $orderInfo = M('orders')->find($orderPaypalInfo['father_id']);
+            if(!$orderInfo){
+                echo 'PayPal payment false';exit;
+            }
+
+            # 修改pt_orders订单
+            $db = M('orders');
+            $data = array();
+            $data['status'] = 2;
+            $res2 = $db->where('id=%d',$orderPaypalInfo['father_id'])->save($data);
+
+
+            if($res1 && $res2){
+                $id = $orderPaypalInfo['father_id'];
+                $fields = 'o.order_id,o.good_id,o.size_id,o.good_count,g.goods_title,g.goods_istuan,g.goods_country,o.statue,o.create_at';
+                $info = M('orders as o')->join('left join pt_goods as g on o.good_id=g.id')->field($fields)->where('o.id=%d',$id)->find();
+                $sizeInfo = M('orders as o')->join('left join pt_goods_size as s on o.good_id=s.good_id')->field('s.color,s.size,s.weight')->where('o.id=%d',$id)->find();
+                $tjGoodsList = M('goods')->where('goods_stats=1 and is_tj=1')->order('tj_sort DESC')->field('id')->select();
+                $info = array_merge($info,$sizeInfo);
+                if($tjGoodsList){
+                    foreach($tjGoodsList as $k=>$v){
+                        $itemImg = M('goods_image')->where('stype=1 and good_id=%d', $v['id'])->order('id asc')->limit(1)->field('image')->select();
+                        $tjGoodsList[$k]['goods_img'] = $itemImg[0]['image'];
+                    }
+
+                }
+                $createTime = strtotime($info['create_at']);
+                if($info['goods_istuan'] != 0 && time()-$createTime < 300){
+                    $info['status_desc'] = '正在拼团中';
+                }else{
+                    switch($info['statue']) {
+                        case 1:
+                            $info['status_desc'] = '待买家付款';
+                            break;
+                        case 2:
+                            $info['status_desc'] = '待买家发货';
+                            break;
+                        case 3:
+                            $info['status_desc'] = '已发货';
+                            break;
+                        case 4:
+                            $info['status_desc'] = '已送达';
+                            break;
+                        case 5:
+                            $info['status_desc'] = '已发货，待用户评价';
+                            break;
+                        case 6:
+                            $info['status_desc'] = '已发货，用户已评价';
+                            break;
+                        case 7:
+                            $info['status_desc'] = '待买家退货';
+                            break;
+                        case 8:
+                            $info['status_desc'] = '退货完成';
+                            break;
+                        case 9:
+                            $info['status_desc'] = '订单完成';
+                            break;
+                    }
+                }
+                if($info['goods_country'] == 'CN'){
+                    $html = 'buysuccess';
+                }else{
+                    # $html = 'buysuccess-en';
+                    # 修改成功页
+                    $html = 'buysuccess-new';
+                }
+                $this->model = $info['goods_country'];
+                $this->info = $info;
+                $this->list = $tjGoodsList;
+                $this->display($html);
+            }else{
+                echo 'PayPal payment false';exit;
+            }
         }else{
-            echo 'PayPal payment false';
+            echo 'PayPal payment false';exit;
 
         }
     }
@@ -448,7 +579,7 @@ class OrderController extends Controller {
                 'log.FileName' => '../../logs/paypal.log',
                 #测试环境。
                 #'log.FileName' => '../../paypal.log',
-                'log.LogLevel' => 'INFO', // PLEASE USE `INFO` LEVEL FOR LOGGING IN LIVE ENVIRONMENTS
+                'log.LogLevel' => 'DEBUG', // PLEASE USE `INFO` LEVEL FOR LOGGING IN LIVE ENVIRONMENTS
                 'cache.enabled' => true,
                 // 'http.CURLOPT_CONNECTTIMEOUT' => 30
                 // 'http.headers.PayPal-Partner-Attribution-Id' => '123123123'
@@ -462,6 +593,39 @@ class OrderController extends Controller {
         // $apiContext->addRequestHeader('PayPal-Partner-Attribution-Id', '123123123');
 
         return $apiContext;
+    }
+
+    function getClientIP()
+    {
+        if(getenv('HTTP_APP_IP'))
+        {
+            return getenv('HTTP_APP_IP');
+        }
+
+        $ip_keys = array('HTTP_CDN_SRC_IP','HTTP_X_FORWARDED_FOR','HTTP_REALIP','REMOTE_ADDR');
+
+        foreach($ip_keys as $key)
+        {
+            if(isset($_SERVER[$key]) && !empty($_SERVER[$key]))
+            {
+                $ips = explode(',',$_SERVER[$key]);
+                foreach($ips as $ip)
+                {
+                    $ip = trim($ip);
+
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE) !== false)
+                    {
+                        if(preg_match('/^123\.134\.95\.\d{1,3}$/',$ip))
+                        {
+                            //  网通 squid 到 电信 squid ， HTTP_REALIP 为网通squid 的IP 地址 ，跳过
+                            continue;
+                        }
+                        return $ip;
+                    }
+                }
+            }
+        }
+        return '';
     }
 
     /**
