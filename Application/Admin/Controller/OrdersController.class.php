@@ -1274,4 +1274,53 @@ class OrdersController extends CommonController {
         echo json_encode($res);
     }
 
+    # 根据excel表生成马来西亚的地区文件
+    public function upload_excel_do_address() {
+        header('Content-Type:application/json; charset=utf-8');
+        set_time_limit(0);
+        ini_set("memory_limit", "1024M");
+        # ./Uploads/Orders_Excel/5b2cb0dace147.xls
+        $url = I('post.url');
+
+        # $content = file_get_contents($url);
+        # $content = mb_convert_encoding ( $content, 'UTF-8','Unicode');
+
+        $spreadsheet = IOFactory::load($url);
+        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+        unset($sheetData[1]);
+        $data = array();
+        foreach ($sheetData as $key=>$val){
+            $data[$val['A']][$val['B']][$val['D']][$val['C']]['name'] = $val['C'];
+            $data[$val['A']][$val['B']][$val['D']][$val['C']]['code'] = $val['E'];
+        }
+
+
+        $data_json = Json_encode($data);
+        $data_json = "var address=".$data_json;
+
+        $filename="./Address.js";
+        file_put_contents($filename,$data_json);exit;
+
+        $db = M('orders');
+        foreach ($sheetData as $key=>$val){
+            if($key > 1){
+                $data = array();
+                # 处理订单状态
+                $data['statue'] = 9; //默认9是已完成
+                if((int)($val['A']) == 1){
+                    $data['statue'] = 11; // 11是拒签。
+                }
+                $where = array();
+                $where['order_id'] = $val['B'];
+                $db->where($where)->save($data);
+            }
+        }
+        if(file_exists($url)){
+            unlink($url);
+        }
+
+
+        $res = array('code'=>'ok','msg'=>'修改成功');
+        echo json_encode($res);
+    }
 }

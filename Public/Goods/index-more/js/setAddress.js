@@ -27,5 +27,5 @@ function renderForuLevel(m,n,p){
     return y;
 }
 function renderCode(m,n,p,q){
-    return address[m][n][p][q]["code"].length==5?address[m][n][p][q]["code"]:("0"+address[m][n][p][q]["code"]);
+    return address[m][n][p][q]["code"].toString().length==5?address[m][n][p][q]["code"]:("0"+address[m][n][p][q]["code"]);
 }
