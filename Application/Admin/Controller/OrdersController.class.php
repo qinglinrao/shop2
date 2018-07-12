@@ -1313,6 +1313,18 @@ class OrdersController extends CommonController {
         foreach ($sheetData as $key=>$val){
             $data = array();
             $data['wl_info'] = $val['C'];
+
+            $data['statue'] = 10; //默认代发货
+            if((int)($val['B']) == 0){
+                $data['statue'] = 2;
+            }elseif((int)($val['B']) == 1){
+                $data['statue'] = 11; // 11是拒签退货到仓库。
+            }elseif((int)($val['B']) == 2){
+                $data['statue'] = 3; // 3是配送中。
+            }elseif((int)($val['B']) == 3){
+                $data['statue'] = 10; // 11代发货。
+            }
+
             $where = array();
             $where['id'] = $val['A'];
             $db->where($where)->save($data);
