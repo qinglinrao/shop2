@@ -1269,7 +1269,7 @@ class OrdersController extends CommonController {
         foreach ($sheetData as $key=>$val){
             $data = array();
             # 处理订单状态
-            # 10代发货、9已完成、11拒签、3配送中、2已付款
+            # 10代发货、9已完成、11拒签、3配送中、2已付款、12已重发
             # Excel表中POD状态（0为已付款,1为拒签退货到仓库，2为配送中,3为代发货,所有新订单默认为3代发货）
             $data['statue'] = 10; //默认代发货
             if((int)($val['A']) == 0){
@@ -1280,6 +1280,8 @@ class OrdersController extends CommonController {
                 $data['statue'] = 3; // 3是配送中。
             }elseif((int)($val['A']) == 3){
                 $data['statue'] = 10; // 11代发货。
+            }elseif((int)($val['B']) == 4){
+                $data['statue'] = 12; // 12已重发。
             }
             $where = array();
             $where['wl_info'] = $val['B'];
@@ -1323,6 +1325,8 @@ class OrdersController extends CommonController {
                 $data['statue'] = 3; // 3是配送中。
             }elseif((int)($val['B']) == 3){
                 $data['statue'] = 10; // 11代发货。
+            }elseif((int)($val['B']) == 4){
+                $data['statue'] = 12; // 12已重发。
             }
 
             $where = array();
