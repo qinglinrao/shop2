@@ -1368,7 +1368,7 @@ class OrdersController extends CommonController {
             # 件数根据用户购买数量来决定
             $num = $val['declared_pcs'] ? ($val['declared_pcs']*$val['good_count']) : $val['good_count'];
             $rows[] = array($val['id'],"",$val['username'],$val['address'],$val['code'],$val['phone'],$val['money'],
-                $val['is_sensitive'],$val['order_id']."\t",$val['remark']);
+                3,$val['order_id']."\t",$val['goods_number']);
 
         }
 
