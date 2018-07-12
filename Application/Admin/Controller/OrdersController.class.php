@@ -1228,9 +1228,10 @@ class OrdersController extends CommonController {
     }
 
     # 上传修改订单的excel数据
-    public function upload_excel() {
+    public function upload_excel_EditStatus() {
         $type = 'file';
-        $folder = 'Orders_Excel';
+        //保存文件目录名称
+        $folder = 'EditStatus_Excel';
         $item = 'upimg0';
         $name = "";
         $width = 900;
@@ -1238,8 +1239,20 @@ class OrdersController extends CommonController {
         $this->_ajaxupload($type,$folder,$item,$name,$width,$height);
     }
 
-    # 处理订单excel
-    public function upload_excel_do() {
+    # 上传修改订单的excel数据
+    public function upload_excel_AddWaybill() {
+        $type = 'file';
+        //保存文件目录名称
+        $folder = 'AddWaybill_Excel';
+        $item = 'upimg1';
+        $name = "";
+        $width = 900;
+        $height = 900;
+        $this->_ajaxupload($type,$folder,$item,$name,$width,$height);
+    }
+
+    # 处理订单excel（修改订单状态）
+    public function upload_excel_EditStatus_do() {
         header('Content-Type:application/json; charset=utf-8');
 
         # ./Uploads/Orders_Excel/5b2cb0dace147.xls
@@ -1252,25 +1265,64 @@ class OrdersController extends CommonController {
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
 
         $db = M('orders');
+        unset($sheetData[1]);
         foreach ($sheetData as $key=>$val){
-            if($key > 1){
-                $data = array();
-                # 处理订单状态
-                $data['statue'] = 9; //默认9是已完成
-                if((int)($val['A']) == 1){
-                    $data['statue'] = 11; // 11是拒签。
-                }
-                $where = array();
-                $where['order_id'] = $val['B'];
-                $db->where($where)->save($data);
+            $data = array();
+            # 处理订单状态
+            # 10代发货、9已完成、11拒签、3配送中、2已付款
+            # Excel表中POD状态（0为已付款,1为拒签退货到仓库，2为配送中,3为代发货,所有新订单默认为3代发货）
+            $data['statue'] = 10; //默认代发货
+            if((int)($val['A']) == 0){
+                $data['statue'] = 2;
+            }elseif((int)($val['A']) == 1){
+                $data['statue'] = 11; // 11是拒签退货到仓库。
+            }elseif((int)($val['A']) == 2){
+                $data['statue'] = 3; // 3是配送中。
+            }elseif((int)($val['A']) == 3){
+                $data['statue'] = 10; // 11代发货。
             }
+            $where = array();
+            $where['wl_info'] = $val['B'];
+            $db->where($where)->save($data);
+        }
+
+        if(file_exists($url)){
+            unlink($url);
+        }
+
+
+        $res = array('code'=>'ok','msg'=>'订单状态修改成功');
+        echo json_encode($res);
+    }
+
+    # 处理订单excel（添加物流运单）
+    public function upload_excel_AddWaybill_do() {
+        header('Content-Type:application/json; charset=utf-8');
+
+        # ./Uploads/Orders_Excel/5b2cb0dace147.xls
+        $url = I('post.url');
+
+        # $content = file_get_contents($url);
+        # $content = mb_convert_encoding ( $content, 'UTF-8','Unicode');
+
+        $spreadsheet = IOFactory::load($url);
+        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+
+        $db = M('orders');
+        unset($sheetData[1]);
+        foreach ($sheetData as $key=>$val){
+            $data = array();
+            $data['wl_info'] = $val['C'];
+            $where = array();
+            $where['id'] = $val['A'];
+            $db->where($where)->save($data);
         }
         if(file_exists($url)){
             unlink($url);
         }
 
 
-        $res = array('code'=>'ok','msg'=>'修改成功');
+        $res = array('code'=>'ok','msg'=>'物流运单添加成功');
         echo json_encode($res);
     }
 

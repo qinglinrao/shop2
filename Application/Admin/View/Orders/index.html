@@ -81,17 +81,22 @@
 
 		<div class="layui-inline" >
 			<button class="layui-btn" lay-submit lay-filter="search">查找</button>
-			<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('确定要导出Excel表格吗？')){export_action();return true;}return false;">导出Excel一</button>
-			<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('确定要导出Excel表格吗？')){export_action2();return true;}return false;">导出Excel二</button>
+			<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('确定要导出Excel表格吗？')){export_action();return true;}return false;">导出物流DPE表格</button>
+			<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('确定要导出Excel表格吗？')){export_action2();return true;}return false;">导出物流DPE重发订单表格</button>
 			<!--<button class="layui-btn export" lay-submit lay-filter="export" onclick="javascript:if(confirm('导入Excel，批量修改订单状态！')){import_action();return true;}return false;">导入Excel</button>-->
+
+
 			<input type="file" id="upimg0" class="layui-upload-file upload0" name='upimg0' onchange="fileChange(this,'upimg0')" >
+			<input type="file" id="upimg1" class="layui-upload-file upload1" name='upimg1' onchange="fileChange(this,'upimg1')" >
 			<input name="goodsFile" sx='upimg0' type="hidden" value="" />
+			<input name="goodsFile" sx='upimg1' type="hidden" value="" />
 		</div>
 	</div>
 	<div class="layui-form">
 		<table class="layui-table" lay-even lay-skin="line">
 			<thead>
 				<tr>
+					<th>操作</th>
 					<th>ID</th>
 					<th>商品归属</th>
 					<th style="color: red;">订单归属</th>
@@ -109,13 +114,18 @@
 					<th>订单来源</th>
 					<th>订单时间</th>
 					<th>状态</th>
-					<th>操作</th>
 				</tr>
 			</thead>
 			<tbody>
 				<notempty name="list">
 				<foreach name="list" item="vo">
 					<tr>
+						<if condition="$is_edit eq 1">
+							<td>
+								<a class="layui-btn layui-btn-mini" href="{:U('Orders/edit',array('id'=>$vo['id'],'r'=>$_SERVER['REQUEST_URI']))}">编辑</a>
+								<a class="layui-btn layui-btn-mini layui-btn-danger" onclick="javascript:if(confirm('确定要删除订单吗！慎重！慎重！')){del_action('{$vo.id}','{$vo.user_id}');return true;}return false;">删除</a>
+							</td>
+						</if>
 						<td>{$vo.id}</td>
 						<td>{$vo.admin_name}</td>
 						<td><a style="color: red;">{$vo.admin_belong_name}</a></td>
@@ -151,12 +161,7 @@
 
 							</if>
 						</td>
-						<if condition="$is_edit eq 1">
-						<td>
-							<a class="layui-btn layui-btn-mini" href="{:U('Orders/edit',array('id'=>$vo['id'],'r'=>$_SERVER['REQUEST_URI']))}">编辑</a>
-							<a class="layui-btn layui-btn-mini layui-btn-danger" onclick="javascript:if(confirm('确定要删除订单吗！慎重！慎重！')){del_action('{$vo.id}','{$vo.user_id}');return true;}return false;">删除</a>
-						</td>
-						</if>
+
 					</tr>
 				</foreach>
 				<else />
@@ -241,10 +246,6 @@
 
     }
 
-	/*function import_action(obj) {
-		$('#upload0').click();
-    }*/
-
     var idstr=''
     function fileChange(obj,str){
         var f = obj.files[0];
@@ -256,9 +257,9 @@
 
     layui.use(['upload'], function() {
         layui.upload({
-            title: '选择Excel文件　',
-            elem: '.upload0',
-            url: "{:U('Orders/upload_excel')}",
+            title: '导入添加物流信息　',
+            elem: '.upload1',
+            url: "{:U('Orders/upload_excel_AddWaybill')}",
             type: 'file',
             success: function(res) {
                 if (res.status == 'error') {
@@ -268,7 +269,35 @@
                     $("input[sx='"+idstr+"']").val(res.url);
                     $.ajax({
                         type:"post",
-                        url:"admin.php?m=admin&c=orders&a=upload_excel_do",
+                        url:"admin.php?m=admin&c=orders&a=upload_excel_AddWaybill_do",
+                        data:{'url':res.url},
+                        success:function(e){
+                            if(e.code=='ok'){
+                                alert(e.msg);
+                            }
+
+                        }
+                    })
+                }
+            }
+        });
+    });
+
+    layui.use(['upload'], function() {
+        layui.upload({
+            title: '导入修改订单状态　',
+            elem: '.upload0',
+            url: "{:U('Orders/upload_excel_EditStatus')}",
+            type: 'file',
+            success: function(res) {
+                if (res.status == 'error') {
+                    layer.msg(res.msg, {icon: 2, shift:6});
+                } else {
+                    //alert(res.msg);
+                    $("input[sx='"+idstr+"']").val(res.url);
+                    $.ajax({
+                        type:"post",
+                        url:"admin.php?m=admin&c=orders&a=upload_excel_EditStatus_do",
                         data:{'url':res.url},
                         success:function(e){
                             if(e.code=='ok'){
