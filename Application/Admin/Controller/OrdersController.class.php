@@ -1280,7 +1280,7 @@ class OrdersController extends CommonController {
                 $data['statue'] = 3; // 3是配送中。
             }elseif((int)($val['A']) == 3){
                 $data['statue'] = 10; // 11代发货。
-            }elseif((int)($val['B']) == 4){
+            }elseif((int)($val['A']) == 4){
                 $data['statue'] = 12; // 12已重发。
             }
             $where = array();
