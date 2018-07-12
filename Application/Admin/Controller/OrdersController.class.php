@@ -1527,8 +1527,8 @@ class OrdersController extends CommonController {
         unset($sheetData[1]);
         $data = array();
         foreach ($sheetData as $key=>$val){
-            $data[$val['A']][$val['B']][$val['D']][$val['C']]['name'] = $val['C'];
-            $data[$val['A']][$val['B']][$val['D']][$val['C']]['code'] = $val['E'];
+            $data[$val['A']][strtolower(trim($val['B']))][strtolower(trim($val['D']))][$val['C']]['name'] = $val['C'];
+            $data[$val['A']][strtolower(trim($val['B']))][strtolower(trim($val['D']))][$val['C']]['code'] = $val['E'];
         }
 
 
