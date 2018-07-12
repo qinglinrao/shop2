@@ -243,7 +243,8 @@
         if(!time_area){
             alert("请先选择日期");return false;
         }
-        window.location.href = "/admin.php?m=admin&c=Orders&a=export_logistics2"+"&keyword="+keyword+"&statue="+statue+"&time_area="+time_area+"&keyword_num="+keyword_num+"&admin_id="+admin_id;
+        // 原来这里是导出物流订单信息的，改成导出重发的订单（20180712）
+        window.location.href = "/admin.php?m=admin&c=Orders&a=export_logistics3"+"&keyword="+keyword+"&statue="+statue+"&time_area="+time_area+"&keyword_num="+keyword_num+"&admin_id="+admin_id;
 
     }
 
