@@ -425,7 +425,7 @@ class OrderController extends Controller {
             $data['paypal_id'] = $paymentId;
             $orderPaypalInfo = M('paypal_orders')->where($data)->find();
             if(!$orderPaypalInfo){
-                echo 'PayPal payment false1';exit;
+                echo 'PayPal payment false';exit;
             }
 
             # 验证
@@ -438,7 +438,7 @@ class OrderController extends Controller {
 
             #这里再判断一次paypal的订单状态。
             if($payment->getState() != 'created'){
-                echo 'PayPal payment false2';exit;
+                echo 'PayPal payment false';exit;
             }
 
             #发票
@@ -464,7 +464,7 @@ class OrderController extends Controller {
 
             $orderInfo = M('orders')->find($orderPaypalInfo['father_id']);
             if(!$orderInfo){
-                echo 'PayPal payment false3';exit;
+                echo 'PayPal payment false';exit;
             }
 
             # 修改pt_orders订单
@@ -473,8 +473,6 @@ class OrderController extends Controller {
             # 你没看错！这里是statue，不是status【注意】
             $data['statue'] = 2;
             $res2 = $db->where('id=%d',$orderPaypalInfo['father_id'])->save($data);
-            print_r($res1);echo '&&&';
-            print_r($res2);exit;
 
             if($res1 && $res2){
                 $id = $orderPaypalInfo['father_id'];
@@ -536,10 +534,10 @@ class OrderController extends Controller {
                 $this->list = $tjGoodsList;
                 $this->display($html);
             }else{
-                echo 'PayPal payment false4'.$orderPaypalInfo['father_id'];exit;
+                echo 'PayPal payment false'.$orderPaypalInfo['father_id'];exit;
             }
         }else{
-            echo 'PayPal payment false5';exit;
+            echo 'PayPal payment false';exit;
 
         }
     }
