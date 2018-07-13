@@ -473,7 +473,8 @@ class OrderController extends Controller {
             # 你没看错！这里是statue，不是status【注意】
             $data['statue'] = 2;
             $res2 = $db->where('id=%d',$orderPaypalInfo['father_id'])->save($data);
-
+            print_r($res1);echo '&&&';
+            print_r($res2);exit;
 
             if($res1 && $res2){
                 $id = $orderPaypalInfo['father_id'];
