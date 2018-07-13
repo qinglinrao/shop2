@@ -470,7 +470,8 @@ class OrderController extends Controller {
             # 修改pt_orders订单
             $db = M('orders');
             $data = array();
-            $data['status'] = 2;
+            # 你没看错！这里是statue，不是status【注意】
+            $data['statue'] = 2;
             $res2 = $db->where('id=%d',$orderPaypalInfo['father_id'])->save($data);
 
 
