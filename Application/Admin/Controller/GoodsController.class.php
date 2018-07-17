@@ -606,6 +606,11 @@ class GoodsController extends CommonController {
                 if(I('size')){
                     $data['unique_sku'] .= 'T'.I('size');
                 }
+
+                # 如果有填写唯一sku和唯一sku说明
+                if(I('unique_sku')) $data['unique_sku'] = I('goods_number').I('unique_sku');
+                if(I('unique_sku_notice')) $data['unique_sku_notice'] = I('unique_sku_notice');
+
                 $data['weight'] = I('weight');
                 //开启令牌验证需要手动提交token，坑逼！！！--todo
                 //$data['token'] = I('token');
