@@ -35,7 +35,8 @@ class OrdersController extends CommonController {
 		if ($statue) {
 			/*if($statue == 10){*/
             # 可能之前团购的状态是10，现在改成11，因为货到付款是10了。
-			if($statue == 11){
+            # 改成100吧，11是拒签。
+			if($statue == 100){
 				$where['o.create_at'] = array('gt',$tuanTime);
 			}else{
 				$where['o.statue'] = $statue;
