@@ -44,8 +44,9 @@
     <li><a href="{:U('Goods/configlist',array('id'=>$goodId))}">商品规格列表</a></li>
     <li class="layui-this"><a href="javascript:void(0);">添加商品规格</a></li>
 </ul>
-<form method="post" autocomplete="off" action="{:U('Goods/doaddconfig',array('goodId'=>$goodId))}" class="layui-form">
+<form method="post" autocomplete="off" action="{:U('Goods/doaddconfig',array('goodId'=>$goodId,'goods_number'=>$goods_number))}" class="layui-form">
     <input type="hidden" value="{$goodId}" name = 'good_id'>
+    <input type="hidden" value="{$goods_number}" name = 'goods_number'>
     <div class="layui-form-item"><p style="color: red;">注意：名称不能有&或者\的符号。</p></div>
     <div class="layui-form-item">
         <label class="layui-form-label">颜色</label>
