@@ -875,7 +875,8 @@ class OrdersController extends CommonController {
             /*if($statue == 10){*/
             # 可能之前团购的状态是10，现在改成11，因为货到付款是10了。
             if($statue == 11){
-                $where['o.create_at'] = array('gt',$tuanTime);
+                $where['o.statue'] = $statue;
+                # $where['o.create_at'] = array('gt',$tuanTime);
             }else{
                 $where['o.statue'] = $statue;
             }
@@ -1050,7 +1051,8 @@ class OrdersController extends CommonController {
             /*if($statue == 10){*/
             # 可能之前团购的状态是10，现在改成11，因为货到付款是10了。
             if($statue == 11){
-                $where['o.create_at'] = array('gt',$tuanTime);
+                # $where['o.create_at'] = array('gt',$tuanTime);
+                $where['o.statue'] = $statue;
             }else{
                 $where['o.statue'] = $statue;
             }
@@ -1248,7 +1250,8 @@ class OrdersController extends CommonController {
             /*if($statue == 10){*/
             # 可能之前团购的状态是10，现在改成11，因为货到付款是10了。
             if($statue == 11){
-                $where['o.create_at'] = array('gt',$tuanTime);
+                # $where['o.create_at'] = array('gt',$tuanTime);
+                $where['o.statue'] = $statue;
             }else{
                 $where['o.statue'] = $statue;
             }
