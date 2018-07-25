@@ -130,9 +130,11 @@ class IndexController extends CommonController {
                 $html = 'index-more';
             }
             //if($id == 65){
-            if($id == 390){
+            /*if($id == 390){
                 $html = 'index-paypal';
-            }
+            }*/
+            # 页面换成省市区的。
+            $html = 'index-more';
 		}
 		$this->model = $goodInfo['goods_country'];
 		$province = M('province')->where("father = 0")->select();

@@ -343,10 +343,10 @@
             return false;
         }
 
-        if (parseInt(num) > 2) {
-            /*限购两个*/
-            showMessage('Purchase limit 2 items.');
-            $('.pc-num').html(2);
+        if (parseInt(num) > 3) {
+            /*限购3个*/
+            showMessage('Purchase limit 3 items.');
+            $('.pc-num').html(3);
             edit_price();
             return false;
         }
