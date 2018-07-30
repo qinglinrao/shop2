@@ -220,16 +220,26 @@ class OrdersController extends CommonController {
                 $good_ids[] = $v['good_id'];
             }
             $good_ids = array_unique($good_ids);
+            # 这里改成查询goods_size表的唯一sku
             $w2['id'] = array('in',$good_ids);
             $number_data = M('goods')->field("id, goods_number")->where($w2)->select();
-
+            $w3['good_id'] = array('in',$good_ids);
+            $number_data3 = M('goods_size')->field("id, good_id, unique_sku")->where($w3)->select();
             foreach ($number_data as $key=>$val){
-                foreach ($size_data as $k=>$v){
-                    if($val['id'] == $v['good_id']){
-                        $size_data[$k]['goods_number'] = $val['goods_number'];
+                    foreach ($size_data as $k=>$v) {
+                        if ($val['id'] == $v['good_id']) {
+                            $size_data[$k]['goods_number'] = $val['goods_number'];
+                        }
+                    }
+            }
+            foreach ($number_data3 as $key3=>$val3){
+                foreach ($size_data as $k=>$v) {
+                    if ($val3['good_id'] == $v['good_id']) {
+                        # 如果存在唯一sku
+                        if($val3['unique_sku']) $size_data[$k]['goods_number'] = $val3['unique_sku'];
                     }
                 }
-            }
+             }
 
             # 查询订单编号
             /*$w3['good_id'] = array('in',$good_ids);
@@ -938,7 +948,20 @@ class OrdersController extends CommonController {
             }
         }
 
-
+        # 查询唯一sku
+        $where = array();
+        $where['good_id'] = array('in', $good_ids);
+        $number_data = M('goods_size')->field("id, good_id, unique_sku")->where($where)->select();
+        if($number_data){
+            foreach ($number_data as $val){
+                foreach ($list_new as $v){
+                    if($val['good_id'] == $v['good_id']){
+                        # 如果存在唯一sku
+                        if($val['unique_sku']) $list_new[$v['id']]['goods_number'] = $val['unique_sku'];
+                    }
+                }
+            }
+        }
         # 查询采购额外信息。
         $where = array();
         $where['good_id'] = array('in', $good_ids);
@@ -1113,7 +1136,6 @@ class OrdersController extends CommonController {
                 $list_new[$v['order_id']]['size_data'] = $v['color'] . ' ' . $v['size'] . ' ' . $v['weight'];
             }
         }
-
 
         # 查询采购额外信息。
         $where = array();
@@ -1313,6 +1335,20 @@ class OrdersController extends CommonController {
             }
         }
 
+        # 查询唯一sku
+        $where = array();
+        $where['good_id'] = array('in', $good_ids);
+        $number_data = M('goods_size')->field("id, good_id, unique_sku")->where($where)->select();
+        if($number_data){
+            foreach ($number_data as $val){
+                foreach ($list_new as $v){
+                    if($val['good_id'] == $v['good_id']){
+                        # 如果存在唯一sku
+                        if($val['unique_sku']) $list_new[$v['id']]['goods_number'] = $val['unique_sku'];
+                    }
+                }
+            }
+        }
 
         # 查询采购额外信息。
         $where = array();
