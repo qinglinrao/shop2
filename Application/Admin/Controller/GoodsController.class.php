@@ -652,6 +652,15 @@ class GoodsController extends CommonController {
             $no = $k+1;
             $this->assign('imgList'.$no,$v['image']);//商品信息
         }
+
+        # 查询商品id
+        $good_data = M('goods_size')->field('good_id')->find($sid);
+        $good_id = $good_data['good_id'];
+        # 查询商品的sku。
+        $good_data = M('goods')->field('goods_number')->find($good_id);
+        $this->assign('goodId',$good_id);
+        $this->assign('goods_number',$good_data['goods_number']);
+
         $this->assign('info',$info);//商品信息
         $this->display();
 
@@ -667,7 +676,23 @@ class GoodsController extends CommonController {
 
                 $data['good_id'] = I('good_id');
                 $data['color'] = I('color');
+                # 匹配唯一sku【颜色】
+                $color_file = include('Config/color.config.php');
+                $color_file = $color_file ? $color_file : array();
+                $data['unique_sku']=I('goods_number');
+                if($color_file[$data['color']]){
+                    $data['unique_sku'] .= $color_file[$data['color']];
+                }
                 $data['size'] = I('size');
+                # 匹配唯一sku【尺寸】
+                if(I('size')){
+                    $data['unique_sku'] .= 'T'.I('size');
+                }
+
+                # 如果有填写唯一sku和唯一sku说明
+                if(I('unique_sku')) $data['unique_sku'] = I('goods_number').I('unique_sku');
+                if(I('unique_sku_notice')) $data['unique_sku_notice'] = I('unique_sku_notice');
+
                 $data['weight'] = I('weight');
                 $data['add_time'] = time();
                 $db = M('goods_size');
