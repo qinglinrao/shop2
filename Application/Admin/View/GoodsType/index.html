@@ -46,16 +46,31 @@
 				</tr>
 					<foreach name='vo.slist' item='v'>
 						<tr class="dlrtr dlr{$vo.id}" style="display:none">
-							<td>{$v.id}</td>
-							<td class="align-left">　|--- {$v.type_name}</td>
+							<td>{$v.id}<if condition="!empty($v[tlist])"><button class="layui-btn layui-btn-mini layui-btn-danger showdlr" rule="dlr{$vo.id}_{$v.id}"> + </button></if>
+							</td>
+							<td class="align-left">　|---- {$v.type_name}</td>
 							<td>{$v.type_sort}</td>
 							<td>{$v.addtime|date='Y-m-d',###}</td>
 							<td>{$v.edittime|date='Y-m-d',###}</td>
 							<td>
+								<a class="layui-btn layui-btn-mini" href="{:U('GoodsType/addchild',array('id'=>$v['id']))}">添加子类</a>
 								<a class="layui-btn layui-btn-mini" href="{:U('GoodsType/edit',array('id'=>$v['id'],'pid'=>$v['pid']))}">编辑</a> 
 								<a class="layui-btn layui-btn-mini layui-btn-danger" href="{:U('GoodsType/del',array('id'=>$v['id'],'pid'=>$v['pid']))}">删除</a>	
 							</td>
 						</tr>
+						<foreach name='v.tlist' item='v2'>
+							<tr class="dlrtr dlr{$vo.id}_{$v.id}" style="display:none">
+								<td>{$v2.id}</td>
+								<td class="align-left">　|----|---- {$v2.type_name}</td>
+								<td>{$v2.type_sort}</td>
+								<td>{$v2.addtime|date='Y-m-d',###}</td>
+								<td>{$v2.edittime|date='Y-m-d',###}</td>
+								<td>
+									<a class="layui-btn layui-btn-mini" href="{:U('GoodsType/edit',array('id'=>$v2['id'],'pid'=>$v2['pid']))}">编辑</a>
+									<a class="layui-btn layui-btn-mini layui-btn-danger" href="{:U('GoodsType/del',array('id'=>$v2['id'],'pid'=>$v2['pid']))}">删除</a>
+								</td>
+							</tr>
+						</foreach>
 					</foreach>
 				</foreach>
 				<else />

@@ -19,7 +19,17 @@ class GoodsTypeController extends CommonController {
 		foreach ($list as $k => $v) {
 			$slist = M('goods_type')->where('pid=%d and statue=1',$v['id'])->order($order)->select();
 			$list[$k]['slist'] = $slist;
+            foreach ($slist as $k2 => $v2) {
+                $tlist = M('goods_type')->where('pid=%d and statue=1',$v2['id'])->order($order)->select();
+                $list[$k]['slist'][$k2]['tlist'] = $tlist;
+            }
 		}
+        
+        /*foreach ($slist as $k => $v) {
+            $tlist = M('goods_type')->where('pid=%d and statue=1',$v['id'])->order($order)->select();
+            $list[$k]['tlist'] = $tlist;
+        }*/
+
 //		dump($list);die;
 		$this->assign('page',$page->show());
 		$this->assign('list',$list);
