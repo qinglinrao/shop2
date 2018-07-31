@@ -869,6 +869,8 @@ class OrdersController extends CommonController {
                         $number_data2 = M('goods_size')->field("id, good_id, unique_sku")->where($where)->select();
                         if($number_data2[0]['unique_sku']){
                             $size_data[$k]['unique_sku'] = $number_data2[0]['unique_sku'];
+                        }else{
+                            $size_data[$k]['unique_sku'] = $size_data[$k]['goods_number'];
                         }
 
                         if($v['size']){
