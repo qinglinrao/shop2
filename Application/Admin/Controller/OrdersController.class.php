@@ -227,11 +227,14 @@ class OrdersController extends CommonController {
                 $where = array();
                 $where['good_id'] = $v['good_id'];
                 if($v['color']) $where['color'] = $v['color'];
-                if($v['size']) $where['size'] = $v['size'];
-                if($v['weight']) $where['weight'] = $v['weight'];
+                #if($v['size']) $where['size'] = $v['size'];
+                #if($v['weight']) $where['weight'] = $v['weight'];
                 $number_data = M('goods_size')->field("id, good_id, unique_sku")->where($where)->select();
                 if($number_data[0]['unique_sku']){
                     $size_data[$k]['unique_sku'] = $number_data[0]['unique_sku'];
+                }
+                if($v['size']){
+                    $size_data[$k]['unique_sku'] .= 'T'.$v['size'];
                 }
             }
 
@@ -989,11 +992,14 @@ class OrdersController extends CommonController {
                 $where = array();
                 $where['good_id'] = $good_array[$v['order_id']]['size_array'][0];
                 if($v['color']) $where['color'] = $v['color'];
-                if($v['size']) $where['size'] = $v['size'];
-                if($v['weight']) $where['weight'] = $v['weight'];
+                #if($v['size']) $where['size'] = $v['size'];
+                #if($v['weight']) $where['weight'] = $v['weight'];
                 $number_data = M('goods_size')->field("id, good_id, unique_sku")->where($where)->select();
                 if($number_data[0]['unique_sku']){
                     $list_new[$v['order_id']]['goods_number'] = $number_data[0]['unique_sku'];
+                }
+                if($v['size']){
+                    $list_new[$v['order_id']]['goods_number'] .= 'T'.$v['size'];
                 }
             }
         }
@@ -1375,11 +1381,14 @@ class OrdersController extends CommonController {
                 $where = array();
                 $where['good_id'] = $good_array[$v['order_id']]['size_array'][0];
                 if($v['color']) $where['color'] = $v['color'];
-                if($v['size']) $where['size'] = $v['size'];
-                if($v['weight']) $where['weight'] = $v['weight'];
+                #if($v['size']) $where['size'] = $v['size'];
+                #if($v['weight']) $where['weight'] = $v['weight'];
                 $number_data = M('goods_size')->field("id, good_id, unique_sku")->where($where)->select();
                 if($number_data[0]['unique_sku']){
                     $list_new[$v['order_id']]['goods_number'] = $number_data[0]['unique_sku'];
+                }
+                if($v['size']){
+                    $list_new[$v['order_id']]['goods_number'] .= 'T'.$v['size'];
                 }
             }
         }
