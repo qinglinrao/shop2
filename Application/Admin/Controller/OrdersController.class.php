@@ -859,6 +859,21 @@ class OrdersController extends CommonController {
                     if($val['id'] == $v['good_id']){
                         $size_data[$k]['goods_number'] = $val['goods_number'];
                         $size_data[$k]['goods_purchase_url'] = $val['goods_purchase_url'];
+
+                        # 查询唯一sku
+                        $where = array();
+                        $where['good_id'] = $v['good_id'];
+                        if($v['color']) $where['color'] = $v['color'];
+                        #if($v['size']) $where['size'] = $v['size'];
+                        #if($v['weight']) $where['weight'] = $v['weight'];
+                        $number_data2 = M('goods_size')->field("id, good_id, unique_sku")->where($where)->select();
+                        if($number_data2[0]['unique_sku']){
+                            $size_data[$k]['unique_sku'] = $number_data2[0]['unique_sku'];
+                        }
+
+                        if($v['size']){
+                            $size_data[$k]['unique_sku'] .= 'T'.$v['size'];
+                        }
                     }
                 }
             }
@@ -890,12 +905,12 @@ class OrdersController extends CommonController {
             array('2003','=B1', '23.5','2010-01-01 00:00:00','2012-12-31 00:00:00'),
         );*/
         $rows = array();
-        $rows[] = array("SKU编号", "采购个数", "颜色", "尺寸", "采购日期", "采购链接");
+        $rows[] = array("SKU编号","唯一SKU", "采购个数", "颜色", "尺寸", "采购日期", "采购链接");
         foreach ($size_data as $key=>$val){
             $val['goods_purchase_url'] = htmlspecialchars_decode(html_entity_decode($val['goods_purchase_url']));
             # 去掉html标签
             $val['goods_purchase_url'] = strip_tags($val['goods_purchase_url']);
-            $rows[] = array($val['goods_number'],$val['count'],$val['color'],$val['size'],$area,$val['goods_purchase_url']);
+            $rows[] = array($val['goods_number'],$val['unique_sku'], $val['count'],$val['color'],$val['size'],$area,$val['goods_purchase_url']);
         }
         $writer->setAuthor('Some Author');
         foreach($rows as $row)
