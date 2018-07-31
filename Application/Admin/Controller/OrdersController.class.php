@@ -58,12 +58,13 @@ class OrdersController extends CommonController {
 		$limit 	= $page->firstRow.','.$page->listRows;		
 		$table 	= 'pt_orders o';
 		$join 	= array('LEFT JOIN pt_goods g on o.good_id=g.id');
-		$field 	= 'o.admin_id as admin_belong,o.order_id,o.good_count,o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
+		$field 	= 'o.admin_id as admin_belong,o.order_id,o.good_id,o.id, o.good_count,o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
 		$order 	= 'o.id desc';
 		$list 	= M()->table($table)->join($join)->where($where)->field($field)->limit($limit)->order($order)->select();
 
 		# 查询投放人名称
         $order_ids = array();
+        $good_array = array();
         $admin_data = M('admin')->field('admin_id, admin_name')->select();
 		foreach($list as $k=>$v){
 			$userInfo = M('member')->field('phone,username,address')->find($v['user_id']);
@@ -80,9 +81,10 @@ class OrdersController extends CommonController {
                 }
             }
 
-
+            # 收集商品id用于查询唯一sku
+            $good_array[$v['id']]['size_array'][] = $v['good_id'];
 		}
-
+        # print_r($good_array);exit;
         $list_new = array();
         foreach($list as $v){
             //获取订单id
@@ -98,9 +100,24 @@ class OrdersController extends CommonController {
                 foreach ($size_data as $v){
                     # 合并规格信息
                     $list_new[$v['order_id']]['size_data'] = $v['color'] . '/' . $v['size'] . '/' . $v['weight'];
+                    # 收集商品id用于查询唯一sku
+                    /*$good_array[$v['order_id']]['size_array'][] = $v['color'];
+                    $good_array[$v['order_id']]['size_array'][] = $v['size'];
+                    $good_array[$v['order_id']]['size_array'][] = $v['weight'];*/
+                    # 查询唯一sku
+                    $where = array();
+                    $where['good_id'] = $good_array[$v['order_id']]['size_array'][0];
+                    if($v['color']) $where['color'] = $v['color'];
+                    if($v['size']) $where['size'] = $v['size'];
+                    if($v['weight']) $where['weight'] = $v['weight'];
+                    $number_data = M('goods_size')->field("id, good_id, unique_sku")->where($where)->select();
+                    if($number_data[0]['unique_sku']){
+                        $list_new[$v['order_id']]['goods_number'] = $number_data[0]['unique_sku'];
+                    }
                 }
             }
         }
+
         //print_r($list_new);exit;
         $is_edit = 1;
         if($_SESSION['admin_name'] == 'Wuliu'){
@@ -201,6 +218,20 @@ class OrdersController extends CommonController {
             # $size_data = M('orders_size')->where($where)->limit($limit)->order($order)->select();
             $size_data = M('orders_size')->field('good_id, sum(num) as sum,count(id) as count,color, size, weight')->where($where)->limit($limit)->group('good_id, color,size, weight')->select();
             $type = 1;
+
+            # 查询唯一sku
+            foreach ($size_data as $k=>$v) {
+                $where = array();
+                $where['good_id'] = $v['good_id'];
+                if($v['color']) $where['color'] = $v['color'];
+                if($v['size']) $where['size'] = $v['size'];
+                if($v['weight']) $where['weight'] = $v['weight'];
+                $number_data = M('goods_size')->field("id, good_id, unique_sku")->where($where)->select();
+                if($number_data[0]['unique_sku']){
+                    $size_data[$k]['unique_sku'] = $number_data[0]['unique_sku'];
+                }
+            }
+
         }else{
             # 先查询总数(一个大坑，使用group再使用count()方法是不准确的。)
             $count = M('orders_size')->field('good_id, sum(num) as count, color, size, weight')->where($where)->group('good_id')->select();
@@ -223,23 +254,25 @@ class OrdersController extends CommonController {
             # 这里改成查询goods_size表的唯一sku
             $w2['id'] = array('in',$good_ids);
             $number_data = M('goods')->field("id, goods_number")->where($w2)->select();
-            $w3['good_id'] = array('in',$good_ids);
-            $number_data3 = M('goods_size')->field("id, good_id, unique_sku")->where($w3)->select();
+            #$w3['good_id'] = array('in',$good_ids);
+            #$number_data3 = M('goods_size')->field("id, good_id, unique_sku")->where($w3)->select();
             foreach ($number_data as $key=>$val){
                     foreach ($size_data as $k=>$v) {
                         if ($val['id'] == $v['good_id']) {
                             $size_data[$k]['goods_number'] = $val['goods_number'];
+                            # 防止有的商品没有唯一sku
+                            if(!$size_data[$k]['unique_sku']) $size_data[$k]['unique_sku']=$val['goods_number'];
                         }
                     }
             }
-            foreach ($number_data3 as $key3=>$val3){
+/*            foreach ($number_data3 as $key3=>$val3){
                 foreach ($size_data as $k=>$v) {
                     if ($val3['good_id'] == $v['good_id']) {
                         # 如果存在唯一sku
                         if($val3['unique_sku']) $size_data[$k]['goods_number'] = $val3['unique_sku'];
                     }
                 }
-             }
+             }*/
 
             # 查询订单编号
             /*$w3['good_id'] = array('in',$good_ids);
@@ -931,11 +964,14 @@ class OrdersController extends CommonController {
         }
 
         $list_new = array();
+        $good_array = array();
         foreach($list as $v){
             //获取订单id
             $order_ids[] = $v['id'];
             $good_ids[] = $v['good_id'];
             $list_new[$v['id']] = $v;
+            # 收集商品id用于查询唯一sku
+            $good_array[$v['id']]['size_array'][] = $v['good_id'];
         }
         # 查询规格信息。
         $where = array();
@@ -945,23 +981,20 @@ class OrdersController extends CommonController {
             foreach ($size_data as $v){
                 # 合并规格信息
                 $list_new[$v['order_id']]['size_data'] = $v['color'] . ' ' . $v['size'] . ' ' . $v['weight'];
-            }
-        }
 
-        # 查询唯一sku
-        $where = array();
-        $where['good_id'] = array('in', $good_ids);
-        $number_data = M('goods_size')->field("id, good_id, unique_sku")->where($where)->select();
-        if($number_data){
-            foreach ($number_data as $val){
-                foreach ($list_new as $v){
-                    if($val['good_id'] == $v['good_id']){
-                        # 如果存在唯一sku
-                        if($val['unique_sku']) $list_new[$v['id']]['goods_number'] = $val['unique_sku'];
-                    }
+                # 查询唯一sku
+                $where = array();
+                $where['good_id'] = $good_array[$v['order_id']]['size_array'][0];
+                if($v['color']) $where['color'] = $v['color'];
+                if($v['size']) $where['size'] = $v['size'];
+                if($v['weight']) $where['weight'] = $v['weight'];
+                $number_data = M('goods_size')->field("id, good_id, unique_sku")->where($where)->select();
+                if($number_data[0]['unique_sku']){
+                    $list_new[$v['order_id']]['goods_number'] = $number_data[0]['unique_sku'];
                 }
             }
         }
+
         # 查询采购额外信息。
         $where = array();
         $where['good_id'] = array('in', $good_ids);
@@ -1318,11 +1351,14 @@ class OrdersController extends CommonController {
         }
 
         $list_new = array();
+        $good_array = array();
         foreach($list as $v){
             //获取订单id
             $order_ids[] = $v['id'];
             $good_ids[] = $v['good_id'];
             $list_new[$v['id']] = $v;
+            # 收集商品id用于查询唯一sku
+            $good_array[$v['id']]['size_array'][] = $v['good_id'];
         }
         # 查询规格信息。
         $where = array();
@@ -1332,20 +1368,15 @@ class OrdersController extends CommonController {
             foreach ($size_data as $v){
                 # 合并规格信息
                 $list_new[$v['order_id']]['size_data'] = $v['color'] . ' ' . $v['size'] . ' ' . $v['weight'];
-            }
-        }
-
-        # 查询唯一sku
-        $where = array();
-        $where['good_id'] = array('in', $good_ids);
-        $number_data = M('goods_size')->field("id, good_id, unique_sku")->where($where)->select();
-        if($number_data){
-            foreach ($number_data as $val){
-                foreach ($list_new as $v){
-                    if($val['good_id'] == $v['good_id']){
-                        # 如果存在唯一sku
-                        if($val['unique_sku']) $list_new[$v['id']]['goods_number'] = $val['unique_sku'];
-                    }
+                # 查询唯一sku
+                $where = array();
+                $where['good_id'] = $good_array[$v['order_id']]['size_array'][0];
+                if($v['color']) $where['color'] = $v['color'];
+                if($v['size']) $where['size'] = $v['size'];
+                if($v['weight']) $where['weight'] = $v['weight'];
+                $number_data = M('goods_size')->field("id, good_id, unique_sku")->where($where)->select();
+                if($number_data[0]['unique_sku']){
+                    $list_new[$v['order_id']]['goods_number'] = $number_data[0]['unique_sku'];
                 }
             }
         }
