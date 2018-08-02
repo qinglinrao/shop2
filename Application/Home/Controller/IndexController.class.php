@@ -134,7 +134,8 @@ class IndexController extends CommonController {
                 $html = 'index-paypal';
             }*/
             # 页面换成省市区的。
-            $html = 'index-more';
+            # 换回地址填空的形式。20180802
+            # $html = 'index-more';
 		}
 		$this->model = $goodInfo['goods_country'];
 		$province = M('province')->where("father = 0")->select();
