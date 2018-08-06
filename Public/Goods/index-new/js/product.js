@@ -394,7 +394,7 @@
         var re= /^[1-9][0-9]{4}$/;
         if(!re.test(code)) {
             /!*alert('邮编格式错误');*!/
-            showMessage('The post/zip code is error');
+            showMessage('Please enter the five digit zip code ');
             $('#postcode').focus();
             return false;
         }
