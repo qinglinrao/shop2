@@ -603,9 +603,9 @@ class GoodsController extends CommonController {
                 }
                 $data['size'] = I('size');
                 # 匹配唯一sku【尺寸】
-                if(I('size')){
+                /*if(I('size')){
                     $data['unique_sku'] .= 'T'.I('size');
-                }
+                }*/
 
                 # 如果有填写唯一sku和唯一sku说明
                 if(I('unique_sku')) $data['unique_sku'] = I('goods_number').I('unique_sku');
@@ -685,9 +685,9 @@ class GoodsController extends CommonController {
                 }
                 $data['size'] = I('size');
                 # 匹配唯一sku【尺寸】
-                if(I('size')){
+                /*if(I('size')){
                     $data['unique_sku'] .= 'T'.I('size');
-                }
+                }*/
 
                 # 如果有填写唯一sku和唯一sku说明
                 if(I('unique_sku')) $data['unique_sku'] = I('goods_number').I('unique_sku');

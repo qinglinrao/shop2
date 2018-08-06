@@ -114,9 +114,9 @@ class OrdersController extends CommonController {
                     if($number_data[0]['unique_sku']){
                         $list_new[$v['order_id']]['goods_number'] = $number_data[0]['unique_sku'];
                     }
-                    if($v['size']){
+                    /*if($v['size']){
                         $list_new[$v['order_id']]['goods_number'] .= 'T'.$v['size'];
-                    }
+                    }*/
                 }
             }
         }
@@ -233,9 +233,9 @@ class OrdersController extends CommonController {
                 if($number_data[0]['unique_sku']){
                     $size_data[$k]['unique_sku'] = $number_data[0]['unique_sku'];
                 }
-                if($v['size']){
+                /*if($v['size']){
                     $size_data[$k]['unique_sku'] .= 'T'.$v['size'];
-                }
+                }*/
             }
 
         }else{
@@ -873,9 +873,9 @@ class OrdersController extends CommonController {
                             $size_data[$k]['unique_sku'] = $size_data[$k]['goods_number'];
                         }
 
-                        if($v['size']){
+                        /*if($v['size']){
                             $size_data[$k]['unique_sku'] .= 'T'.$v['size'];
-                        }
+                        }*/
                     }
                 }
             }
@@ -1015,9 +1015,9 @@ class OrdersController extends CommonController {
                 if($number_data[0]['unique_sku']){
                     $list_new[$v['order_id']]['goods_number'] = $number_data[0]['unique_sku'];
                 }
-                if($v['size']){
+                /*if($v['size']){
                     $list_new[$v['order_id']]['goods_number'] .= 'T'.$v['size'];
-                }
+                }*/
             }
         }
 
@@ -1404,9 +1404,9 @@ class OrdersController extends CommonController {
                 if($number_data[0]['unique_sku']){
                     $list_new[$v['order_id']]['goods_number'] = $number_data[0]['unique_sku'];
                 }
-                if($v['size']){
+                /*if($v['size']){
                     $list_new[$v['order_id']]['goods_number'] .= 'T'.$v['size'];
-                }
+                }*/
             }
         }
 
