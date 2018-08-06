@@ -354,6 +354,12 @@
             return false;
         }
 
+        var re=/^[a-zA-Z][a-zA-Z0-9_-]+$/;
+        if(!re.test(name)){
+            showMessage('Please enter the correct name');
+            $("input[name='contact']").focus();
+            return false;
+        }
 
 
         if (phone.length<=0) {
@@ -385,13 +391,13 @@
             return false;
         }
 
-        /*var re= /^[1-9][0-9]{5}$/;
+        var re= /^[1-9][0-9]{4}$/;
         if(!re.test(code)) {
             /!*alert('邮编格式错误');*!/
             showMessage('The post/zip code is error');
             $('#postcode').focus();
             return false;
-        }*/
+        }
 
         /*if (email.length<=0) {
             showMessage('Please enter the email.');
