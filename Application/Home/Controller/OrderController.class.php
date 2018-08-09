@@ -380,7 +380,7 @@ class OrderController extends Controller {
         date_default_timezone_set(@date_default_timezone_get());
 
         #paypal的配置信息
-        $apiContext = $this->getApiContext('Ad7Kj7b8iL7yDANvVxl2dnitTladbv0C34-9GbHgPHZwzz3_AEulwsVqut7E84Zg4MPZPSw6O16ALlNV', 'EGmEQDy-P_s9Ly2ELrUJPWbfhpmWEjXq8inwY5rALjf7zOxYArmvflP4wMbxN1N_ycP3dK_g99LzaXax');
+        $apiContext = $this->getApiContext('ATMFmfgRKf0G_pP9pD65UJ8hQ3Gb-C6zK4oZfyjncVLpfovcjitvm4D4SOmPShBnGZ22YqQOdMkDQntZ', 'ECbCUQqPwKpB3WrcPIteM3Na7jTZ60J0DJaSK0sk7rZA1UYNmgupGwiJV8iHmej_l7vAMClHXWpCg3je');
 
         try {
             $payment->create($apiContext);
@@ -432,7 +432,7 @@ class OrderController extends Controller {
             $PayerID = I('get.PayerID');
             #paypal的配置信息
             #$apiContext = $this->getApiContext('AZgn_deHN3i9-ZuXk9q1aR8hBiuMrfUcmi4nMIdBtO51qn7adZpV2AJJukTvh0NNGOD29U8PG4bmfCNk', 'ELfc76frIqLeVhkLKv-T_D5i6v5OezPkAGn1WWQ5pL-pfpZtkD3NccuU-qflQGptFBX3yWLCqheB6SmC');
-            $apiContext = $this->getApiContext('Ad7Kj7b8iL7yDANvVxl2dnitTladbv0C34-9GbHgPHZwzz3_AEulwsVqut7E84Zg4MPZPSw6O16ALlNV', 'EGmEQDy-P_s9Ly2ELrUJPWbfhpmWEjXq8inwY5rALjf7zOxYArmvflP4wMbxN1N_ycP3dK_g99LzaXax');
+            $apiContext = $this->getApiContext('ATMFmfgRKf0G_pP9pD65UJ8hQ3Gb-C6zK4oZfyjncVLpfovcjitvm4D4SOmPShBnGZ22YqQOdMkDQntZ', 'ECbCUQqPwKpB3WrcPIteM3Na7jTZ60J0DJaSK0sk7rZA1UYNmgupGwiJV8iHmej_l7vAMClHXWpCg3je');
 
             $payment = Payment::get($paymentId, $apiContext);
 
