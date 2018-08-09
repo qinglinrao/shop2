@@ -30,5 +30,10 @@ return array(
 
             //新的首页2-20180703
             '__MORE-JS__' => __ROOT__ .'/Public/Goods/index-more/js/',
+
+            //域名根目录的首页（相当于商品列表页）
+            '__INDEX-PRODUCT-LIST-CSS__' => __ROOT__ .'/Public/Goods/index-product-list/css/',
+            '__INDEX-PRODUCT-LIST-IMG__' => __ROOT__ .'/Public/Goods/index-product-list/img/',
+            '__INDEX-PRODUCT-LIST-JS__' => __ROOT__ .'/Public/Goods/index-product-list/js/',
 	),
 );

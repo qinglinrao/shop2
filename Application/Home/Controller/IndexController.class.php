@@ -108,7 +108,13 @@ class IndexController extends CommonController {
 				$this->size = $size;
 			}
 		}else{
-            print_r('404');exit;
+            # print_r('404');exit;
+            # 添加一个新首页
+            $html = 'index-product-list';
+            $this->assign('o_code',$code);
+            $this->display($html);
+            exit;
+
         }
 		//$where['sid'] = array('in', $size_ids);
 		//$where['stype'] = 0;
