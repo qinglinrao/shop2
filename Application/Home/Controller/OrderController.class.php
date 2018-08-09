@@ -575,12 +575,12 @@ class OrderController extends Controller {
 
         $apiContext->setConfig(
             array(
-                'mode' => 'sandbox', //沙盒环境:sandbox  线上环境：live
+                'mode' => 'live', //沙盒环境:sandbox  线上环境：live
                 'log.LogEnabled' => true,
                 'log.FileName' => '../../logs/paypal.log',
                 #测试环境。
                 #'log.FileName' => '../../paypal.log',
-                'log.LogLevel' => 'DEBUG', // PLEASE USE `INFO` LEVEL FOR LOGGING IN LIVE ENVIRONMENTS
+                'log.LogLevel' => 'INFO', // PLEASE USE `INFO` LEVEL FOR LOGGING IN LIVE ENVIRONMENTS
                 'cache.enabled' => true,
                 // 'http.CURLOPT_CONNECTTIMEOUT' => 30
                 // 'http.headers.PayPal-Partner-Attribution-Id' => '123123123'
