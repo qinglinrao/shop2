@@ -136,9 +136,9 @@ class IndexController extends CommonController {
                 $html = 'index-more';
             }
             //if($id == 65){
-            /*if($id == 390){
+            if($id == 390){
                 $html = 'index-paypal';
-            }*/
+            }
             # 页面换成省市区的。
             # 换回地址填空的形式。20180802
             # $html = 'index-more';
