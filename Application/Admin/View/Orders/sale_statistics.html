@@ -152,7 +152,7 @@
             var statue = $("select[name='statue']").val();
             var time_area = $("input[name='time_area']").val();
             var admin_id = $("select[name='admin_id']").val();
-            var url = '{:U("Orders/sku_statistics")}';
+            var url = '{:U("Orders/sale_statistics")}';
             if(statue != 0){
                 url += '&statue='+ statue;
             }
