@@ -1625,7 +1625,7 @@ class OrdersController extends CommonController {
 
         $writer = new \Org\Excel\xlsxwriter();
 
-        $filename = "物流DPE上传表格(二)".date("Ymd",time())."-".rand(100,999).".xlsx";
+        $filename = "跨境一号物流上传表格".date("Ymd",time())."-".rand(100,999).".xlsx";
         header('Content-disposition: attachment; filename="'.$writer::sanitize_filename($filename).'"');
         header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         header('Content-Transfer-Encoding: binary');
