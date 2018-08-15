@@ -1675,9 +1675,26 @@ class OrdersController extends CommonController {
                 "Voling", "", "", "", "", "", "", "","", "", "NM", $val['money'], $val['is_sensitive'], $val['order_id']."\t",
                 $val['category'], $val['goods_number'], $val['remark']);*/
 
+            # 根据邮编判断省市区
+            /*<?php return
+            array (
+                0 =>
+                    array (
+                        'code' => 62007,
+                        'province' => 'Putrajaya',
+                        'city' => 'Putrajaya',
+                    ),
+                1 =>
+                    array (
+                        'code' => 62602,
+                        'province' => 'Putrajaya',
+                        'city' => 'Putrajaya',
+                    ),*/
+            $addressinfo_file = include('Config/address.config.php');
+            $addressinfo_file = $addressinfo_file ? $addressinfo_file : array();
             $is_sensitive = $val['is_sensitive'] == 1 ? "MY-DHL-COD-T" : "MY-DHL-COD-P";
             $is_sensitive2 = $val['is_sensitive'] == 1 ? "Y" : "N";
-            $rows[] = array("A10118A",$is_sensitive,$val['order_id']."\t",$val['username'],$val['address'],"","","","todo","todo",
+            $rows[] = array("A10118A",$is_sensitive,$val['order_id']."\t",$val['username'],$val['address'],"","","",$addressinfo_file[$val['code']]['city'],$addressinfo_file[$val['code']]['state'],
                 "MY",$val['code'],$val['phone'],"Y",$val['money'],"","MYR",$val['money'],1,"26*17*16*1","N","",$is_sensitive2,
                 "PDO","",
                 $val['goods_title'],$val['goods_title'],$val['goods_number'],"",$num,$val['declared_value'],
@@ -1892,16 +1909,19 @@ class OrdersController extends CommonController {
         unset($sheetData[1]);
         $data = array();
         foreach ($sheetData as $key=>$val){
-            $data[$val['A']][strtolower(trim($val['B']))][strtolower(trim($val['D']))][$val['C']]['name'] = $val['C'];
-            $data[$val['A']][strtolower(trim($val['B']))][strtolower(trim($val['D']))][$val['C']]['code'] = $val['E'];
+            //$data[$val['E']][strtolower(trim($val['B']))][strtolower(trim($val['D']))][$val['C']]['name'] = $val['C'];
+            $data[$val['A']] = array('city'=>$val['B'], 'state'=>$val['C']);
         }
 
+        $str = '<?php return'.PHP_EOL;
+        $str .= var_export($data, true);
+        $str .= ';';
 
-        $data_json = Json_encode($data);
-        $data_json = "var address=".$data_json;
-
-        $filename="./Address.js";
-        file_put_contents($filename,$data_json);exit;
+        $filename="Config/address.config.php";
+        file_put_contents($filename, $str);
+        $res = array('code'=>'ok','msg'=>'生成省市区成功！');
+        echo json_encode($res);
+        exit;
 
         $db = M('orders');
         foreach ($sheetData as $key=>$val){
