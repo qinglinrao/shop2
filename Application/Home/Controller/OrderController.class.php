@@ -252,6 +252,7 @@ class OrderController extends Controller {
             'remark' => $remark,
             'pay_type' => $payType,
             'admin_id' => $admin_id,
+            'ip' => $this->getClientIP()
         );
 
 
