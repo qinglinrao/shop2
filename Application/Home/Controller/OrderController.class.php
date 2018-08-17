@@ -161,7 +161,7 @@ class OrderController extends Controller {
         //$where2['statue'] = array("11", "12"); // 11拒签 12已重发
         $where2['phone'] = $phone;
         $phone_data_count = M('member')->where($where2)->count();
-        if($phone_data_count > 1){
+        if($phone_data_count > 0){
             $is_useful = 0;
             $is_useful_remark .= "<br>".'电话重复：'.$phone_data_count;
         }
