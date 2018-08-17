@@ -275,12 +275,12 @@ class OrderController extends Controller {
 
 
         # 判断邮编是否合法
-        if($code){
-            if(in_array((string)$code, $this->no_server_code2(), true)){
-                $is_useful = 0;
-                $is_useful_remark .= PHP_EOL.'邮编不在配送服务范围';
-            }
-        }
+//        if($code){
+//            if(in_array((string)$code, $this->no_server_code2(), true)){
+//                $is_useful = 0;
+//                $is_useful_remark .= PHP_EOL.'邮编不在配送服务范围';
+//            }
+//        }
 
         $orderData['is_useful'] = $is_useful;
         $orderData['is_useful_remark'] .= $is_useful_remark;
