@@ -55,6 +55,9 @@
 			<input type="text" name="keyword_num" value="{$keyword_num}" placeholder="输入商品编号" class="layui-input">
 		</div>
 		<div class="layui-input-inline" style="width: 295px;">
+			<input type="text" name="order_id" value="{$order_id}" placeholder="输入订单编号" class="layui-input">
+		</div>
+		<div class="layui-input-inline" style="width: 295px;">
 			<input type="text" name="keyword" value="{$keyword}" placeholder="输入商品名称" class="layui-input">
 		</div>
 		<div class="layui-input-inline" style="width: 295px;">
@@ -205,6 +208,7 @@
 			var time_area = $("input[name='time_area']").val();
             var admin_id = $("select[name='admin_id']").val();
             var ip = $("input[name='ip']").val();
+            var order_id = $("input[name='order_id']").val();
 			var url = '{:U("Orders/index")}';
 			if(statue != 0){
 				url += '&statue='+ statue;
@@ -220,6 +224,9 @@
 			}
             if(admin_id){
                 url += '&admin_id='+ admin_id;
+            }
+            if(order_id){
+                url += '&order_id='+ order_id;
             }
             if(ip){
                 url += '&ip='+ ip;

@@ -57,6 +57,10 @@ class OrdersController extends CommonController {
         if($ip){
             $where['o.ip'] = $ip;
         }
+        $order_id = I('get.order_id') ? I('get.order_id') : '';
+        if($order_id){
+            $where['o.order_id'] = $order_id;
+        }
 		$count 	= M('orders o')->join('pt_goods g on o.good_id=g.id')->where($where)->count();
 		$page 	= show_page($count,10);
 		$limit 	= $page->firstRow.','.$page->listRows;		
@@ -146,6 +150,7 @@ class OrdersController extends CommonController {
 		$this->assign('admin_list',$admin_list);
 		$this->assign('admin_list_id',$admin_id);
 		$this->assign('ip',$ip);
+		$this->assign('order_id',$order_id);
 		$this->display();
 	}
 
