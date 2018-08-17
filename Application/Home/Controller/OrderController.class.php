@@ -142,11 +142,11 @@ class OrderController extends Controller {
         $is_useful_remark = '';  //无效订单说明
         $where['ip'] = $this->getClientIP();
 
-         //一个月前
-        $start_at = time() - 60*60*24*30;
+         //一个月前(算28天)
+        $start_at = time() - 60*60*24*28;
 
-        $end_at = date("Y-m-d h:i:s",time());
-        $start_at = date("Y-m-d h:i:s",$start_at);
+        $end_at = date("Y-m-d H:i:s",time());
+        $start_at = date("Y-m-d H:i:s",$start_at);
 
         $where['create_at'] = array('between',"{$start_at},{$end_at}");
         $ip_data = M('orders')->where($where)->field('id, ip')->find();
@@ -647,7 +647,7 @@ class OrderController extends Controller {
                 }
             }
         }
-        return '';
+        return null;
     }
 
     /**
