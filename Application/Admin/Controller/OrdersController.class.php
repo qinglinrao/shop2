@@ -1707,7 +1707,7 @@ class OrdersController extends CommonController {
             $rows[] = array("A10118A",$is_sensitive,$val['order_id']."\t",$val['username'],$val['address'],"","","",$addressinfo_file[$val['code']]['city'],$addressinfo_file[$val['code']]['state'],
                 "MY",$val['code'],$val['phone'],"Y",$val['money'],"","MYR",$val['money'],1,"26*17*16*1","N","",$is_sensitive2,
                 "PDO","",
-                $val['goods_title'],$val['goods_title'],$val['goods_number'],"",$num,$val['declared_value'],
+                $val['description_english'],$val['description_chinese'],$val['goods_number'],"",$num,$val['declared_value'],
                 "","","","","","",
                 "","","","","","",
                 "","","","","","",
