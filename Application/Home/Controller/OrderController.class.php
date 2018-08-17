@@ -138,22 +138,32 @@ class OrderController extends Controller {
         $check = 123;
 
         //验证重复数据
+        $where1 = array();
+        $where2 = array();
         $is_useful = 1;  //是否是无效订单
         $is_useful_remark = '';  //无效订单说明
-        $where['ip'] = $this->getClientIP();
+        $where1['ip'] = $this->getClientIP();
 
-         //一个月前(算28天)
+         //1.判断ip：一个月前(算28天)
         $start_at = time() - 60*60*24*28;
 
         $end_at = date("Y-m-d H:i:s",time());
         $start_at = date("Y-m-d H:i:s",$start_at);
 
-        $where['create_at'] = array('between',"{$start_at},{$end_at}");
-        $ip_data = M('orders')->where($where)->field('id, ip')->find();
+        $where1['create_at'] = array('between',"{$start_at},{$end_at}");
+        $ip_data = M('orders')->where($where1)->field('id, ip')->find();
         if($ip_data){
             $is_useful = 0;
-            $is_useful_remark = '一个月前，这个ip下过单';
+            $is_useful_remark = '这个ip下过单';
 
+        }
+        //2.判断电话：
+        //$where2['statue'] = array("11", "12"); // 11拒签 12已重发
+        $where2['phone'] = $phone;
+        $phone_data_count = M('member')->where($where2)->count();
+        if($phone_data_count > 1){
+            $is_useful = 0;
+            $is_useful_remark .= "<br>".'电话重复：'.$phone_data_count;
         }
         //订单识别码
         $o_code = I('post.o_code');
@@ -278,7 +288,7 @@ class OrderController extends Controller {
 //        if($code){
 //            if(in_array((string)$code, $this->no_server_code2(), true)){
 //                $is_useful = 0;
-//                $is_useful_remark .= PHP_EOL.'邮编不在配送服务范围';
+//                $is_useful_remark .= "<br>".'邮编不在配送服务范围';
 //            }
 //        }
 

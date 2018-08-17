@@ -106,6 +106,7 @@
 				<tr>
 					<th>操作</th>
 					<th>ID</th>
+					<th>订单时间</th>
 					<th>商品归属</th>
 					<th style="color: red;">订单归属</th>
 					<th>商品编号</th>
@@ -120,7 +121,6 @@
 					<th style="color: red;">规格信息</th>
 					<th>物流信息</th>
 					<th>订单来源</th>
-					<th>订单时间</th>
 					<th>状态</th>
 				</tr>
 			</thead>
@@ -140,6 +140,7 @@
 							</td>
 						</if>
 						<td>{$vo.id}</td>
+						<td>{$vo.create_at}</td>
 						<td>{$vo.admin_name}</td>
 						<td><a style="color: red;">{$vo.admin_belong_name}</a></td>
 						<td>{$vo.goods_number}</td>
@@ -154,7 +155,6 @@
 						<td><a style="color: red;">{$vo.size_data}</a></td>
 						<td>{$vo.wl_info}</td>
 						<td>{$vo.from}</td>
-						<td>{$vo.create_at}</td>
 						<td>
 							<!--可能之前团购的状态是10，现在改成11，因为货到付款是10了。-->
 							<!--可能之前团购的状态是10，现在改成100，因为11现在改成了拒签。-->
