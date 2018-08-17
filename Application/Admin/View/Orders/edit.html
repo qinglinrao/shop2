@@ -61,6 +61,8 @@
 		<label class="layui-form-label">IP地址</label>
 		<div class="layui-input-inline">
 			<input type="text" name="pw_info" maxlength="10" value="{$info.ip}" class="layui-input"  >
+			<a href="https://www.baidu.com/s?wd={$info.ip}" style="color: red;">点击查看ip来源</a><br>
+			<a href="/admin.php?m=admin&c=Orders&a=index&ip={$info.ip}" style="color: red;">点击查看ip订单</a>
 		</div>
 	</div>
 	<div class="layui-form-item">

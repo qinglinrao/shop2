@@ -57,6 +57,9 @@
 		<div class="layui-input-inline" style="width: 295px;">
 			<input type="text" name="keyword" value="{$keyword}" placeholder="输入商品名称" class="layui-input">
 		</div>
+		<div class="layui-input-inline" style="width: 295px;">
+			<input type="text" name="ip" value="{$ip}" placeholder="输入ip地址" class="layui-input">
+		</div>
 		<div class="layui-input-inline" style="width:310px;">
 			<input type="text" class="layui-input" name="time_area" id="time_area" placeholder="选择时间区间" lay-key="6" required="required" value="{$time_area}">
 		</div>
@@ -121,10 +124,15 @@
 			<tbody>
 				<notempty name="list">
 				<foreach name="list" item="vo">
-					<tr>
+					<if condition="$vo['is_useful'] eq 0">
+						<tr style="background-color:LightCoral;">
+					<else />
+						<tr>
+					</if>
+
 						<if condition="$is_edit eq 1">
 							<td>
-								<a class="layui-btn layui-btn-mini" href="{:U('Orders/edit',array('id'=>$vo['id'],'r'=>$_SERVER['REQUEST_URI']))}">编辑</a>
+								<a style="height: 35px;line-height: 35px;" class="layui-btn layui-btn-mini" href="{:U('Orders/edit',array('id'=>$vo['id'],'r'=>$_SERVER['REQUEST_URI']))}">编辑</a>
 								<a class="layui-btn layui-btn-mini layui-btn-danger" onclick="javascript:if(confirm('确定要删除订单吗！慎重！慎重！')){del_action('{$vo.id}','{$vo.user_id}');return true;}return false;">删除</a>
 							</td>
 						</if>
@@ -196,6 +204,7 @@
 			var statue = $("select[name='statue']").val();
 			var time_area = $("input[name='time_area']").val();
             var admin_id = $("select[name='admin_id']").val();
+            var ip = $("input[name='ip']").val();
 			var url = '{:U("Orders/index")}';
 			if(statue != 0){
 				url += '&statue='+ statue;
@@ -211,6 +220,9 @@
 			}
             if(admin_id){
                 url += '&admin_id='+ admin_id;
+            }
+            if(ip){
+                url += '&ip='+ ip;
             }
 			window.location.href = url;
 		});

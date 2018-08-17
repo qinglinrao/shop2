@@ -53,12 +53,16 @@ class OrdersController extends CommonController {
 		if($admin_id){
             $where['o.admin_id'] = $admin_id;
         }
+        $ip = I('get.ip') ? I('get.ip') : '';
+        if($ip){
+            $where['o.ip'] = $ip;
+        }
 		$count 	= M('orders o')->join('pt_goods g on o.good_id=g.id')->where($where)->count();
 		$page 	= show_page($count,10);
 		$limit 	= $page->firstRow.','.$page->listRows;		
 		$table 	= 'pt_orders o';
 		$join 	= array('LEFT JOIN pt_goods g on o.good_id=g.id');
-		$field 	= 'o.admin_id as admin_belong,o.order_id,o.good_id,o.id, o.good_count,o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
+		$field 	= 'o.is_useful,o.admin_id as admin_belong,o.order_id,o.good_id,o.id, o.good_count,o.id,o.pw_info,o.wl_info,o.from,o.statue,o.create_at,o.user_id,g.goods_title,o.create_at,o.remark,g.admin_id,g.goods_number';
 		$order 	= 'o.id desc';
 		$list 	= M()->table($table)->join($join)->where($where)->field($field)->limit($limit)->order($order)->select();
 
@@ -141,6 +145,7 @@ class OrdersController extends CommonController {
 		$this->assign('list',$list_new);
 		$this->assign('admin_list',$admin_list);
 		$this->assign('admin_list_id',$admin_id);
+		$this->assign('ip',$ip);
 		$this->display();
 	}
 

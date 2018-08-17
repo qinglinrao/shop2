@@ -137,6 +137,24 @@ class OrderController extends Controller {
         //验证数据
         $check = 123;
 
+        //验证重复数据
+        $is_useful = 1;  //是否是无效订单
+        $is_useful_remark = '';  //无效订单说明
+        $where['ip'] = $this->getClientIP();
+
+         //一个月前
+        $start_at = time() - 60*60*24*30;
+
+        $end_at = date("Y-m-d h:i:s",time());
+        $start_at = date("Y-m-d h:i:s",$start_at);
+
+        $where['create_at'] = array('between',"{$start_at},{$end_at}");
+        $ip_data = M('orders')->where($where)->field('id, ip')->find();
+        if($ip_data){
+            $is_useful = 0;
+            $is_useful_remark = '一个月前，这个ip下过单';
+
+        }
         //订单识别码
         $o_code = I('post.o_code');
         $admin_id = 0;
@@ -259,11 +277,13 @@ class OrderController extends Controller {
         # 判断邮编是否合法
         if($code){
             if(in_array((string)$code, $this->no_server_code2(), true)){
-                $orderData['is_useful'] = 0;
-                $orderData['is_useful_remark'] = '邮编不在配送服务范围';
+                $is_useful = 0;
+                $is_useful_remark .= PHP_EOL.'邮编不在配送服务范围';
             }
         }
 
+        $orderData['is_useful'] = $is_useful;
+        $orderData['is_useful_remark'] .= $is_useful_remark;
 
         //添加订单
         $orderModel = M('orders');
