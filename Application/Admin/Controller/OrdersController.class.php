@@ -57,6 +57,19 @@ class OrdersController extends CommonController {
         if($ip){
             $where['o.ip'] = $ip;
         }
+        //电话
+        $phone = I('get.phone') ? I('get.phone') : '';
+        if($phone){
+            # 先查询这个phone的id
+            $where_phone['phone'] = $phone;
+            $phone_data = M('member')->where($where_phone)->field('id,phone')->select();
+            if($phone_data){
+                foreach ($phone_data as $v){
+                    $phones[] = $v['id'];
+                }
+            }
+            $where['o.user_id'] = array('in',$phones);
+        }
         $order_id = I('get.order_id') ? I('get.order_id') : '';
         if($order_id){
             $where['o.order_id'] = $order_id;
