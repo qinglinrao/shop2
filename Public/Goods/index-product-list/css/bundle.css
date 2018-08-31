@@ -2536,9 +2536,9 @@ ul {
     -webkit-box-align: center;
     -webkit-align-items: center;
     align-items: center;
-    background: #2874f0;
-    background: -webkit-linear-gradient(60deg, #2874f0, #0065c5);
-    background: linear-gradient(30deg, #2874f0, #0065c5);
+    background: #ee4054;
+    background: -webkit-linear-gradient(60deg, #ee4054, #ee3941);
+    background: linear-gradient(30deg, #ee4054, #ee3941);
     height: 60px;
 }
 
