@@ -31,4 +31,20 @@ $(function($) {
             });
         }
     });
+
+    //轮播图
+    var swiper = new Swiper('.swiper-container', {
+        //autoplay: true,
+        autoplay: {
+            delay: 2000,
+            disableOnInteraction: false,
+        },
+        navigation: {
+            nextEl: '.next',
+            prevEl: '.prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+        }
+    });
 });
